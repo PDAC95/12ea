@@ -1,0 +1,44 @@
+{
+  "mcpServers": {
+    "git": {
+      "command": "node",
+      "args": [
+        "C:\\dev\\12ea\\backend\\node_modules\\@cyanheads\\git-mcp-server\\dist\\index.js"
+      ],
+      "env": {
+        "GIT_WORKING_DIR": "C:\\dev\\12ea"
+      }
+    },
+    "filesystem": {
+      "command": "node",
+      "args": [
+        "C:\\dev\\12ea\\backend\\node_modules\\fast-filesystem-mcp\\dist\\index.js"
+      ],
+      "env": {
+        "FILESYSTEM_ROOT": "C:\\dev\\12ea",
+        "ALLOWED_DIRECTORIES": "C:\\dev\\12ea"
+      }
+    },
+    "mongodb": {
+      "command": "node",
+      "args": [
+        "C:\\dev\\12ea\\backend\\node_modules\\@sourabhshegane\\mongodb-mcp-that-works\\dist\\index.js"
+      ],
+      "env": {
+        "MONGODB_URI": "AQUI_TU_MONGODB_URI"
+      }
+    },
+    "playwright": {
+      "command": "node",
+      "args": [
+        "C:\\dev\\12ea\\frontend\\node_modules\\@playwright\\mcp\\cli.js"
+      ]
+    },
+    "context7": {
+      "command": "node",
+      "args": [
+        "C:\\dev\\12ea\\backend\\node_modules\\@upstash\\context7-mcp\\dist\\index.js"
+      ]
+    }
+  }
+}
