@@ -22,10 +22,10 @@
 
 ### Resumen de Progreso
 
-- ✅ **Completadas:** 2 tareas (Sprint 0: 2/7 = 29%)
+- ✅ **Completadas:** 3 tareas (Sprint 0: 3/7 = 43%)
 - 🔄 **En Progreso:** 0 tareas
 - ⏸️ **Bloqueadas:** 0 tareas
-- 📋 **Sin Empezar:** 5 tareas Sprint 0 + 47 tareas Sprint 1
+- 📋 **Sin Empezar:** 4 tareas Sprint 0 + 47 tareas Sprint 1
 
 ---
 
@@ -65,11 +65,18 @@
 
 ---
 
-- [ ] **[INFRA-003]** Configuración de AWS S3 - S (1-1.5 hrs)
-  - **Descripción:** Crear bucket, configurar IAM user, obtener credenciales, configurar CORS
-  - **Archivos:** .env (backend)
-  - **Dependencias:** Ninguna
-  - **Status:** 📋 Sin Empezar
+- ✅ **[INFRA-003]** [2025-11-06 12:45] Configuración de AWS S3 - S (1-1.5 hrs)
+  - **Completado:** AWS S3 configurado con credenciales y documentación
+  - **Archivos creados/modificados:**
+    - backend/.env actualizado con credenciales AWS (NO commiteado)
+    - backend/src/config/s3-cors-config.json (configuración CORS)
+    - backend/src/config/AWS_S3_SETUP.md (documentación completa)
+  - **Bucket:** entre-amigas-dev
+  - **Región:** us-east-1
+  - **Access Key ID:** AKIAT7OTX6CAKQLFNJNI
+  - **Commit:** 85dc184 - "chore: configuración de AWS S3"
+  - **Tiempo real:** 30 min
+  - **Status:** ✅ COMPLETADA
 
 ---
 
