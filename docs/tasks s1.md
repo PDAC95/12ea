@@ -22,10 +22,10 @@
 
 ### Resumen de Progreso
 
-- ✅ **Completadas:** 1 tarea (Sprint 0: 1/7 = 14%)
+- ✅ **Completadas:** 2 tareas (Sprint 0: 2/7 = 29%)
 - 🔄 **En Progreso:** 0 tareas
 - ⏸️ **Bloqueadas:** 0 tareas
-- 📋 **Sin Empezar:** 6 tareas Sprint 0 + 47 tareas Sprint 1
+- 📋 **Sin Empezar:** 5 tareas Sprint 0 + 47 tareas Sprint 1
 
 ---
 
@@ -48,11 +48,20 @@
 
 ---
 
-- [ ] **[INFRA-002]** Configuración de MongoDB Atlas - S (1 hr)
-  - **Descripción:** Configurar cluster gratuito M0, crear database, obtener connection string
-  - **Archivos:** .env (backend), .mcp.json
-  - **Dependencias:** Ninguna
-  - **Status:** 📋 Sin Empezar
+- ✅ **[INFRA-002]** [2025-11-06 12:10] Configuración de MongoDB Atlas - S (1 hr)
+  - **Completado:** MongoDB Atlas configurado y connection string integrado
+  - **Archivos creados/modificados:**
+    - backend/.env con MONGODB_URI y todas las variables
+    - backend/.env.example como template
+    - frontend/.env.local con VITE_API_URL
+    - frontend/.env.example como template
+    - .mcp.json actualizado con MONGODB_URI
+  - **Database:** entreamigas-dev
+  - **Usuario:** patricio_db_user
+  - **Cluster:** cluster0.3dlxql3.mongodb.net
+  - **Commit:** 5d61900 - "chore: configuración de variables de entorno y MongoDB Atlas"
+  - **Tiempo real:** 25 min
+  - **Status:** ✅ COMPLETADA
 
 ---
 
