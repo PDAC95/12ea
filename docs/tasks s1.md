@@ -22,10 +22,77 @@
 
 ### Resumen de Progreso
 
-- ✅ **Completadas:** 0 tareas (0%)
+- ✅ **Completadas:** 1 tarea (Sprint 0: 1/7 = 14%)
 - 🔄 **En Progreso:** 0 tareas
 - ⏸️ **Bloqueadas:** 0 tareas
-- 📋 **Sin Empezar:** 47 tareas
+- 📋 **Sin Empezar:** 6 tareas Sprint 0 + 47 tareas Sprint 1
+
+---
+
+## 🔧 Sprint 0 - Infraestructura (Prerequisito)
+
+**Objetivo:** Establecer infraestructura completa antes de Sprint 1
+
+### Tareas de Sprint 0
+
+- ✅ **[INFRA-001]** [2025-11-06 11:45] Setup de Repositorio y Estructura - S (30 min)
+  - **Completado:** Estructura completa de carpetas creada
+  - **Archivos creados:**
+    - README.md con instrucciones completas
+    - frontend/src/ con todas las carpetas features, shared, routes, assets, styles
+    - backend/src/ con todas las carpetas config, models, routes, controllers, middleware, services, utils, validators
+    - .gitkeep en todas las carpetas vacías
+  - **Commit:** a813ec5 - "chore: configuración inicial de estructura del proyecto"
+  - **Tiempo real:** 30 min
+  - **Status:** ✅ COMPLETADA
+
+---
+
+- [ ] **[INFRA-002]** Configuración de MongoDB Atlas - S (1 hr)
+  - **Descripción:** Configurar cluster gratuito M0, crear database, obtener connection string
+  - **Archivos:** .env (backend), .mcp.json
+  - **Dependencias:** Ninguna
+  - **Status:** 📋 Sin Empezar
+
+---
+
+- [ ] **[INFRA-003]** Configuración de AWS S3 - S (1-1.5 hrs)
+  - **Descripción:** Crear bucket, configurar IAM user, obtener credenciales, configurar CORS
+  - **Archivos:** .env (backend)
+  - **Dependencias:** Ninguna
+  - **Status:** 📋 Sin Empezar
+
+---
+
+- [ ] **[INFRA-004]** Configuración de Resend - S (2-3 hrs)
+  - **Descripción:** Crear cuenta, obtener API key, crear templates de email
+  - **Archivos:** .env (backend)
+  - **Dependencias:** Ninguna
+  - **Status:** 📋 Sin Empezar
+
+---
+
+- [ ] **[INFRA-005]** Configuración Frontend React + Vite - M (2 hrs)
+  - **Descripción:** Inicializar proyecto Vite, instalar dependencias, configurar Tailwind
+  - **Archivos:** package.json, vite.config.js, tailwind.config.js, .env.local
+  - **Dependencias:** INFRA-001
+  - **Status:** 📋 Sin Empezar
+
+---
+
+- [ ] **[INFRA-006]** Configuración Backend Node + Express - M (2-3 hrs)
+  - **Descripción:** Inicializar proyecto, instalar dependencias, configurar server.js, conectar MongoDB
+  - **Archivos:** package.json, server.js, .env, config/database.js
+  - **Dependencias:** INFRA-001, INFRA-002
+  - **Status:** 📋 Sin Empezar
+
+---
+
+- [ ] **[INFRA-007]** Configuración AWS S3 Upload Service - S (2 hrs)
+  - **Descripción:** Crear servicio de upload con AWS SDK, configurar multer
+  - **Archivos:** services/upload.service.js, middleware/upload.middleware.js, config/aws.js
+  - **Dependencias:** INFRA-003, INFRA-006
+  - **Status:** 📋 Sin Empezar
 
 ---
 
