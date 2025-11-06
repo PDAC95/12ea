@@ -25,7 +25,7 @@
         "C:\\dev\\12ea\\backend\\node_modules\\@sourabhshegane\\mongodb-mcp-that-works\\dist\\index.js"
       ],
       "env": {
-        "MONGODB_URI": "AQUI_TU_MONGODB_URI"
+        "MONGODB_URI": "mongodb+srv://patricio_db_user:MfvDpTdzrACkgIE9@cluster0.3dlxql3.mongodb.net/entreamigas-dev?retryWrites=true&w=majority"
       }
     },
     "playwright": {
