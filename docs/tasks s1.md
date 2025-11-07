@@ -22,10 +22,10 @@
 
 ### Resumen de Progreso
 
-- ✅ **Completadas:** 18 tareas (Sprint 0: 7/7 | Sprint 1: 11/47 = 23.4% ✨)
+- ✅ **Completadas:** 19 tareas (Sprint 0: 7/7 | Sprint 1: 12/47 = 25.5% ✨)
 - 🔄 **En Progreso:** 0 tareas
 - ⏸️ **Bloqueadas:** 0 tareas
-- 📋 **Sin Empezar:** 36 tareas Sprint 1
+- 📋 **Sin Empezar:** 35 tareas Sprint 1
 
 ---
 
@@ -564,7 +564,7 @@
 
 ---
 
-- [ ] **[TASK-016]** Crear componente RegisterForm
+- ✅ **[TASK-016]** [2025-11-07 17:45] Crear componente RegisterForm
 
   - **Capa:** 🎨 FRONTEND
   - **Estimado:** M (2 hrs)
@@ -578,7 +578,21 @@
     - Al éxito: mostrar mensaje "Revisa tu email para verificar cuenta"
     - Diseño con Tailwind CSS responsive
   - **Dependencias:** TASK-015
-  - **Status:** 📋 Sin Empezar
+  - **Status:** ✅ COMPLETADA
+  - **Tiempo real:** 1.5 hrs
+  - **Notas:**
+    - RegisterForm completo con React Hook Form + Yup
+    - 8 campos validados: fullName, preferredName, email, phone, birthday, city, password, confirmPassword
+    - Schema de Yup robusto con validaciones custom (edad 18+, contraseña fuerte, regex)
+    - UI/UX profesional: mostrar/ocultar passwords con iconos Eye/EyeOff
+    - Loading state con spinner animado (Lucide React Loader2)
+    - Select de ciudades principales de Canadá
+    - Mensaje de éxito después de registro con reset del formulario
+    - Manejo de errores del backend con display claro
+    - Validación en tiempo real (onBlur)
+    - Diseño responsive con Tailwind CSS
+    - README.md completo con ejemplos de uso y testing
+    - Accesibilidad: labels, aria-invalid, tab order
 
 ---
 
@@ -1193,7 +1207,7 @@
 **Frontend Core:**
 
 - ✅ [TASK-015] [US-001] 🎨 Crear servicio de autenticación - S (30min) - Completada 2025-11-07
-- [ ] [TASK-016] [US-001] 🎨 Crear componente RegisterForm - M (2hrs)
+- ✅ [TASK-016] [US-001] 🎨 Crear componente RegisterForm - M (1.5hrs) - Completada 2025-11-07
 - [ ] [TASK-017] [US-001] 🎨 Crear página RegisterPage - S (30min)
 - [ ] [TASK-018] [US-001] 🎨 Crear componente LoginForm - M (1hr)
 - [ ] [TASK-019] [US-001] 🎨 Crear página LoginPage - S (30min)
