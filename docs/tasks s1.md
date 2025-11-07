@@ -22,10 +22,10 @@
 
 ### Resumen de Progreso
 
-- ✅ **Completadas:** 3 tareas (Sprint 0: 3/7 = 43%)
+- ✅ **Completadas:** 4 tareas (Sprint 0: 4/7 = 57%)
 - 🔄 **En Progreso:** 0 tareas
 - ⏸️ **Bloqueadas:** 0 tareas
-- 📋 **Sin Empezar:** 4 tareas Sprint 0 + 47 tareas Sprint 1
+- 📋 **Sin Empezar:** 3 tareas Sprint 0 + 47 tareas Sprint 1
 
 ---
 
@@ -80,11 +80,24 @@
 
 ---
 
-- [ ] **[INFRA-004]** Configuración de Resend - S (2-3 hrs)
-  - **Descripción:** Crear cuenta, obtener API key, crear templates de email
-  - **Archivos:** .env (backend)
-  - **Dependencias:** Ninguna
-  - **Status:** 📋 Sin Empezar
+- ✅ **[INFRA-004]** [2025-11-07 13:30] Configuración de Resend - S (2-3 hrs)
+  - **Completado:** Resend Email Service configurado con API key y documentación
+  - **Archivos creados/modificados:**
+    - backend/.env actualizado con RESEND_API_KEY (NO commiteado)
+    - backend/src/config/RESEND_SETUP.md (documentación completa)
+  - **API Key:** re_SPVSdTZe_7yVhVDj6RssNL1kDquvU8Q4A (configurada)
+  - **Free Tier:** 3,000 emails/mes, 100 emails/día
+  - **Documentación incluye:**
+    - Instrucciones de configuración paso a paso
+    - Ejemplos de uso del SDK de Resend
+    - 5 tipos de emails del sistema definidos
+    - Templates HTML recomendados
+    - Testing y troubleshooting
+    - Límites y cuotas
+    - Buenas prácticas de seguridad
+  - **Commit:** eb005c2 - "chore: configuración de Resend email service"
+  - **Tiempo real:** 30 min
+  - **Status:** ✅ COMPLETADA
 
 ---
 
