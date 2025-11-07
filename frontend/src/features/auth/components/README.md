@@ -562,3 +562,232 @@ test('permite mostrar/ocultar contraseña', () => {
 4. **"Recordarme"**: Actualmente el checkbox no hace nada. En el futuro, podríamos implementar tokens de larga duración (30 días) vs tokens de sesión (7 días).
 
 5. **Link a recuperar contraseña**: Usa `<a href>` en lugar de `<Link>` para mantener simplicidad. Cambiar a `<Link>` si se implementa React Router en toda la app.
+
+---
+
+## ForgotPasswordForm
+
+Formulario simple para solicitar recuperación de contraseña. Envía un email con instrucciones para restablecer.
+
+### Características
+
+✅ 1 campo validado:
+- Email (validación de formato)
+
+✅ Funcionalidades:
+- Validación en tiempo real (onBlur)
+- Loading state en botón con spinner
+- Mensajes de error claros en español
+- Mensaje de éxito después de envío
+- Instrucciones claras para el usuario
+- Link de regreso a login
+- Diseño responsive con Tailwind CSS
+- Input disabled durante submit
+- autoFocus en el campo de email
+
+✅ UX/UI:
+- Banner informativo azul con instrucciones
+- Mensaje de éxito con CheckCircle icon verde
+- Reset del formulario después de éxito
+- Botón para volver a login después de éxito
+
+### Uso Básico
+
+```jsx
+import ForgotPasswordForm from '@/features/auth/components/ForgotPasswordForm';
+
+const ForgotPasswordPage = () => {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <div className="w-full max-w-md">
+        <h1 className="text-3xl font-bold text-center mb-8">
+          ¿Olvidaste tu Contraseña?
+        </h1>
+        <ForgotPasswordForm />
+      </div>
+    </div>
+  );
+};
+```
+
+### Props
+
+El componente no recibe props. Es auto-contenido.
+
+### Estados Internos
+
+- `isSubmitting`: Indica si el formulario se está enviando
+- `submitError`: Error general del backend (si hay)
+- `submitSuccess`: Indica si la solicitud fue exitosa
+
+### Validaciones de Yup
+
+```javascript
+// Schema de validación:
+email: formato válido, lowercase, trim
+```
+
+### Flujo de Recuperación
+
+1. **Usuario ingresa email**
+   - Validación en tiempo real al perder foco
+   - Mensaje de error si formato es inválido
+
+2. **Usuario hace submit**
+   - Botón cambia a estado "loading"
+   - Validación final de Yup
+   - Llamada a `authService.forgotPassword(email)`
+
+3. **Casos de respuesta:**
+
+   **a) Éxito (200):**
+   - Formulario se limpia
+   - Se muestra mensaje de éxito con CheckCircle icon
+   - Botón para volver a login
+   - Instrucción de revisar bandeja de entrada y spam
+
+   **b) Error del backend (400/404/500):**
+   - Mensaje de error se muestra arriba del formulario
+   - Usuario puede corregir e intentar de nuevo
+
+   **c) Error de red:**
+   - Mensaje: "No se pudo conectar con el servidor"
+
+### Ejemplo de Respuesta Exitosa
+
+```javascript
+{
+  success: true,
+  message: "Si el email existe en nuestro sistema, recibirás instrucciones para restablecer tu contraseña."
+}
+```
+
+### Ejemplo de Error
+
+```javascript
+// Error: Email inválido
+{
+  success: false,
+  error: {
+    code: "VALIDATION_ERROR",
+    message: "El email no es válido"
+  }
+}
+
+// Error: Servicio de email no disponible
+{
+  success: false,
+  error: {
+    code: "EMAIL_SERVICE_ERROR",
+    message: "No se pudo enviar el email. Intenta de nuevo más tarde."
+  }
+}
+```
+
+### Iconos Usados
+
+- `CheckCircle`: Confirmación de éxito (Lucide React)
+- `Loader2`: Spinner de loading (Lucide React)
+
+### Accesibilidad
+
+- Label asociado al input con `htmlFor`
+- Mensaje de error con `aria-invalid` implícito
+- Botón disabled durante submit
+- autoFocus en campo de email para mejor UX
+- autoComplete="email" para sugerencias del navegador
+- Placeholders informativos
+
+### Responsive Design
+
+- Desktop: Formulario centrado con max-w-md
+- Mobile: Padding lateral para evitar overflow
+- Input con width 100%
+- Botón full-width en mobile
+- Banner de instrucciones responsive
+
+### Testing
+
+Para testear el componente:
+
+```javascript
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import ForgotPasswordForm from './ForgotPasswordForm';
+
+// Mockear authService
+jest.mock('../services/authService');
+
+test('muestra mensaje de éxito después de solicitud exitosa', async () => {
+  authService.forgotPassword.mockResolvedValue({
+    success: true,
+    message: 'Email enviado'
+  });
+
+  render(<ForgotPasswordForm />);
+
+  const emailInput = screen.getByLabelText(/Email/i);
+  fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+  fireEvent.click(screen.getByText('Enviar Instrucciones'));
+
+  await waitFor(() => {
+    expect(screen.getByText(/Email Enviado/i)).toBeInTheDocument();
+    expect(screen.getByText(/Volver al Inicio de Sesión/i)).toBeInTheDocument();
+  });
+});
+
+test('muestra error del backend', async () => {
+  authService.forgotPassword.mockRejectedValue(
+    new Error('No se pudo enviar el email')
+  );
+
+  render(<ForgotPasswordForm />);
+
+  const emailInput = screen.getByLabelText(/Email/i);
+  fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+  fireEvent.click(screen.getByText('Enviar Instrucciones'));
+
+  await waitFor(() => {
+    expect(screen.getByText('No se pudo enviar el email')).toBeInTheDocument();
+  });
+});
+
+test('valida formato de email', async () => {
+  render(<ForgotPasswordForm />);
+
+  const emailInput = screen.getByLabelText(/Email/i);
+  fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
+  fireEvent.blur(emailInput);
+
+  await waitFor(() => {
+    expect(screen.getByText('El email no es válido')).toBeInTheDocument();
+  });
+});
+```
+
+### Mejoras Futuras
+
+- [ ] Agregar rate limiting visual (máximo 3 intentos por hora)
+- [ ] Agregar botón "Reenviar email" si el usuario no lo recibió
+- [ ] Mostrar tiempo de expiración del link (ej: "El link expira en 1 hora")
+- [ ] Agregar captcha para prevenir spam/bots
+- [ ] Permitir copiar email ingresado al portapapeles
+
+### Dependencias
+
+- `react-hook-form`: ^7.53.0
+- `@hookform/resolvers`: (viene con react-hook-form)
+- `yup`: ^1.4.0
+- `lucide-react`: ^0.445.0
+- `authService`: Servicio de autenticación (TASK-015)
+
+### Notas Importantes
+
+1. **Mensaje genérico por seguridad**: El backend siempre retorna el mismo mensaje exitoso, independientemente de si el email existe o no. Esto previene enumeration attacks donde un atacante podría descubrir qué emails están registrados.
+
+2. **No muestra si el email existe**: Por razones de seguridad, NUNCA decimos "Este email no existe" al usuario.
+
+3. **Link de recuperación**: El backend genera un token JWT de corta duración (1 hora) que se envía por email.
+
+4. **Limpieza del formulario**: Después de éxito, el formulario se limpia automáticamente con `reset()`.
+
+5. **autoFocus**: El campo de email tiene autofocus para mejor UX al cargar la página.

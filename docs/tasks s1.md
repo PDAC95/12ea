@@ -22,10 +22,10 @@
 
 ### Resumen de Progreso
 
-- ✅ **Completadas:** 23 tareas (Sprint 0: 7/7 | Sprint 1: 16/47 = 34.0% ✨)
+- ✅ **Completadas:** 24 tareas (Sprint 0: 7/7 | Sprint 1: 17/47 = 36.2% ✨)
 - 🔄 **En Progreso:** 0 tareas
 - ⏸️ **Bloqueadas:** 0 tareas
-- 📋 **Sin Empezar:** 31 tareas Sprint 1
+- 📋 **Sin Empezar:** 30 tareas Sprint 1
 
 ---
 
@@ -730,7 +730,7 @@
 
 ---
 
-- [ ] **[TASK-021]** Crear componente ForgotPasswordForm
+- ✅ **[TASK-021]** [2025-11-07 19:15] Crear componente ForgotPasswordForm
 
   - **Capa:** 🎨 FRONTEND
   - **Estimado:** S (45 min)
@@ -743,7 +743,29 @@
     - Al éxito: mensaje "Revisa tu email para instrucciones"
     - Mostrar errores
   - **Dependencias:** TASK-015
-  - **Status:** 📋 Sin Empezar
+  - **Status:** ✅ COMPLETADA
+  - **Tiempo real:** 30 min
+  - **Notas:**
+    - ForgotPasswordForm completo con React Hook Form + Yup
+    - 1 campo validado: email (formato válido)
+    - Yup schema con validación de formato
+    - Loading state con spinner animado Loader2
+    - Integración con authService.forgotPassword()
+    - Banner informativo azul con instrucciones claras
+    - Estado success con CheckCircle icon verde
+    - Mensaje de éxito: "¡Email Enviado!"
+    - Instrucción de revisar bandeja + spam
+    - Botón para volver a login después de éxito
+    - Reset del formulario después de éxito
+    - autoFocus en campo de email para mejor UX
+    - autoComplete="email" para sugerencias del navegador
+    - Link "Volver al Inicio de Sesión" siempre disponible
+    - Manejo de errores del backend
+    - Validación en tiempo real (onBlur)
+    - Diseño responsive con Tailwind CSS
+    - README.md actualizado con documentación completa
+    - Ejemplos de testing con mocks incluidos
+    - Notas de seguridad sobre mensajes genéricos
 
 ---
 
