@@ -22,10 +22,10 @@
 
 ### Resumen de Progreso
 
-- ✅ **Completadas:** 20 tareas (Sprint 0: 7/7 | Sprint 1: 13/47 = 27.7% ✨)
+- ✅ **Completadas:** 21 tareas (Sprint 0: 7/7 | Sprint 1: 14/47 = 29.8% ✨)
 - 🔄 **En Progreso:** 0 tareas
 - ⏸️ **Bloqueadas:** 0 tareas
-- 📋 **Sin Empezar:** 34 tareas Sprint 1
+- 📋 **Sin Empezar:** 33 tareas Sprint 1
 
 ---
 
@@ -626,7 +626,7 @@
 
 ---
 
-- [ ] **[TASK-018]** Crear componente LoginForm
+- ✅ **[TASK-018]** [2025-11-07 18:30] Crear componente LoginForm
 
   - **Capa:** 🎨 FRONTEND
   - **Estimado:** M (1 hr)
@@ -641,7 +641,26 @@
     - Al éxito: guardar token con useAuth y redirect a /dashboard
     - Link a "¿Olvidaste tu contraseña?"
   - **Dependencias:** TASK-015, TASK-005
-  - **Status:** 📋 Sin Empezar
+  - **Status:** ✅ COMPLETADA
+  - **Tiempo real:** 45 min
+  - **Notas:**
+    - LoginForm completo con React Hook Form + Yup validation
+    - 2 campos: email (formato válido) + password (min 6 chars)
+    - Checkbox "Recordarme" (UI funcional, lógica pendiente)
+    - Yup schema con validación de formato
+    - Show/hide password con Eye/EyeOff icons
+    - Loading state con spinner animado Loader2
+    - Integración con authService.login()
+    - Integración con useAuth().login() para guardar token
+    - Redirect automático a /dashboard después de éxito
+    - Manejo de errores del backend (401, 403, 500)
+    - Link a "¿Olvidaste tu contraseña?" funcional
+    - autoComplete="email" y "current-password" para mejor UX
+    - Diseño responsive con Tailwind
+    - README.md actualizado con documentación completa
+    - Ejemplos de testing con mocks incluidos
+    - Accesibilidad: labels, tab order, placeholders
+    - Validación en tiempo real (onBlur)
 
 ---
 
