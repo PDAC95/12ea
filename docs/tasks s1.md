@@ -22,10 +22,10 @@
 
 ### Resumen de Progreso
 
-- ✅ **Completadas:** 8 tareas (Sprint 0: 7/7 | Sprint 1: 1/47 = 2.1% ✨)
+- ✅ **Completadas:** 9 tareas (Sprint 0: 7/7 | Sprint 1: 2/47 = 4.3% ✨)
 - 🔄 **En Progreso:** 0 tareas
 - ⏸️ **Bloqueadas:** 0 tareas
-- 📋 **Sin Empezar:** 46 tareas Sprint 1
+- 📋 **Sin Empezar:** 45 tareas Sprint 1
 
 ---
 
@@ -307,7 +307,7 @@
 
 ---
 
-- [ ] **[TASK-006]** Configurar axios con interceptor
+- ✅ **[TASK-006]** [2025-11-07 16:30] Configurar axios con interceptor
 
   - **Capa:** 🎨 FRONTEND
   - **Estimado:** S (30 min)
@@ -319,7 +319,17 @@
     - Si 401, hacer logout automático
     - Export instancia configurada
   - **Dependencias:** TASK-005
-  - **Status:** 📋 Sin Empezar
+  - **Status:** ✅ COMPLETADA
+  - **Tiempo real:** 20 min
+  - **Notas:**
+    - Instancia de axios configurada con baseURL desde VITE_API_URL
+    - Request interceptor agrega JWT automáticamente desde localStorage
+    - Response interceptor maneja 401 con logout automático y redirect a /login
+    - Manejo adicional de errores 403, 404, 500 con logs informativos
+    - Timeout configurado a 10 segundos
+    - README.md completo con ejemplos de uso para GET, POST, PUT, DELETE
+    - Compatible con FormData para uploads
+    - Documentación de manejo de errores robusto
 
 ---
 
@@ -1102,7 +1112,7 @@
 **Frontend Setup:**
 
 - ✅ [TASK-005] [US-001] 🎨 Crear AuthContext - S (25min) - Completada 2025-11-07
-- [ ] [TASK-006] [US-001] 🎨 Configurar axios con interceptor - S (30min)
+- ✅ [TASK-006] [US-001] 🎨 Configurar axios con interceptor - S (20min) - Completada 2025-11-07
 
 **Landing Prep:**
 
