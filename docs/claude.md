@@ -7,24 +7,24 @@
 
 ---
 
-## 🎯 CURRENT SPRINT CONTEXT (Updated each sprint)
+## ðŸŽ¯ CURRENT SPRINT CONTEXT (Updated each sprint)
 
 ### Sprint Information
 
 - **Sprint Number:** 1
 - **Sprint Goal:** Usuarias pueden registrarse, verificar su email, hacer login y ver una landing page acogedora que explica el proyecto
 - **Sprint Duration:** [Fecha Inicio] a [Fecha Inicio + 2 semanas]
-- **Days Remaining:** 10 días
-- **Current Day:** Día 1 de 10
+- **Days Remaining:** 10 dÃ­as
+- **Current Day:** DÃ­a 1 de 10
 
 ### Active User Stories
 
-1. **US-001:** Sistema de Autenticación Completo - 8 SP - Status: Sin Empezar
-2. **US-002:** Landing Page Pública - 5 SP - Status: Sin Empezar
+1. **US-001:** Sistema de AutenticaciÃ³n Completo - 8 SP - Status: Sin Empezar
+2. **US-002:** Landing Page PÃºblica - 5 SP - Status: Sin Empezar
 
 ### Next Priority Tasks
 
-**P0 - CRÍTICO (Hacer primero en orden):**
+**P0 - CRÃTICO (Hacer primero en orden):**
 
 1. **[TASK-001]** Crear modelo User en Mongoose
 
@@ -45,21 +45,21 @@
 
 ### Sprint Health
 
-- Progress: 0% complete (Día 1)
-- Status: 🟢 On Track
+- Progress: 0% complete (DÃ­a 1)
+- Status: ðŸŸ¢ On Track
 - Blockers: 0 active
 - Total Tasks: 47 tareas
 - Estimated Hours: 52-60 hrs
 
 ---
 
-## 🚀 MANDATORY WORKFLOW
+## ðŸš€ MANDATORY WORKFLOW
 
 ### START OF EVERY SESSION
 
 **CRITICAL: Read files in this EXACT order:**
 
-1. **CLAUDE.md** (this file - you're reading it now ✅)
+1. **CLAUDE.md** (this file - you're reading it now âœ…)
 2. **ARCHITECTURE.md** - Technical setup and conventions
 3. **TASKS.md** - Find next P0 task to work on
 4. **Sprint Planning** - Current sprint context
@@ -67,10 +67,10 @@
 **Then announce your work plan:**
 
 ```
-📋 Archivos cargados exitosamente.
+ðŸ“‹ Archivos cargados exitosamente.
 
-Sprint Actual: Sprint 1 - Autenticación + Landing Page
-Próxima Tarea: [TASK-XXX] - [Título]
+Sprint Actual: Sprint 1 - AutenticaciÃ³n + Landing Page
+PrÃ³xima Tarea: [TASK-XXX] - [TÃ­tulo]
 Prioridad: P0/P1/P2
 Tiempo Estimado: X minutos/horas
 Archivos a modificar: [Lista]
@@ -92,8 +92,8 @@ Comenzando trabajo...
 
 ```
 Modificando: [ruta/completa/al/archivo.ext]
-Componente/Función: [nombre]
-Propósito: [qué y por qué]
+Componente/FunciÃ³n: [nombre]
+PropÃ³sito: [quÃ© y por quÃ©]
 User Story: US-XX
 Tarea: [TASK-XXX]
 ```
@@ -133,7 +133,7 @@ Tarea: [TASK-XXX]
 - Add npm packages without mentioning it
 - Store passwords in plain text
 - Skip input validation
-- Mix languages (código en inglés, mensajes en español)
+- Mix languages (cÃ³digo en inglÃ©s, mensajes en espaÃ±ol)
 
 #### After Each Change
 
@@ -150,7 +150,7 @@ Tarea: [TASK-XXX]
    - Copy EXACT error message
    - Note file and line number
    - Attempt to fix
-   - If can't fix in 10 minutes → mark task as blocked
+   - If can't fix in 10 minutes â†’ mark task as blocked
 
 ### END OF SESSION OR TASK COMPLETION
 
@@ -159,8 +159,8 @@ Tarea: [TASK-XXX]
 1. **Update TASKS.md immediately:**
 
 ```markdown
-- ✅ [2025-11-05 14:30] [TASK-XXX] [US-XX] Descripción de tarea - Actual: 45min
-  - Notas: [Detalles importantes de implementación]
+- âœ… [2025-11-05 14:30] [TASK-XXX] [US-XX] DescripciÃ³n de tarea - Actual: 45min
+  - Notas: [Detalles importantes de implementaciÃ³n]
 ```
 
 2. **Move completed task to "Tareas Completadas" section in TASKS.md**
@@ -168,9 +168,9 @@ Tarea: [TASK-XXX]
 3. **Announce completion:**
 
 ```
-✅ Tarea [TASK-XXX] completada
+âœ… Tarea [TASK-XXX] completada
 
-Qué se hizo:
+QuÃ© se hizo:
 - [Cambio 1]
 - [Cambio 2]
 
@@ -178,8 +178,8 @@ Archivos modificados:
 - [archivo1]
 - [archivo2]
 
-Testing: [Qué se probó]
-Listo para: [Próxima tarea o revisión]
+Testing: [QuÃ© se probÃ³]
+Listo para: [PrÃ³xima tarea o revisiÃ³n]
 ```
 
 #### Session Summary
@@ -187,29 +187,29 @@ Listo para: [Próxima tarea o revisión]
 At end of work session, provide:
 
 ```
-📊 Resumen de Sesión
+ðŸ“Š Resumen de SesiÃ³n
 
-Duración: X horas
-Tareas Completadas: [Número]
-- [TASK-XXX]: [Breve descripción]
-- [TASK-YYY]: [Breve descripción]
+DuraciÃ³n: X horas
+Tareas Completadas: [NÃºmero]
+- [TASK-XXX]: [Breve descripciÃ³n]
+- [TASK-YYY]: [Breve descripciÃ³n]
 
-Tareas En Progreso: [Número]
-- [TASK-ZZZ]: X% completo - Siguiente: [Qué se necesita]
+Tareas En Progreso: [NÃºmero]
+- [TASK-ZZZ]: X% completo - Siguiente: [QuÃ© se necesita]
 
-Bloqueadores Encontrados: [Número]
-- [Descripción si hay]
+Bloqueadores Encontrados: [NÃºmero]
+- [DescripciÃ³n si hay]
 
-Prioridad Próxima Sesión:
+Prioridad PrÃ³xima SesiÃ³n:
 1. [Tarea con la que empezar]
-2. [Tarea después]
+2. [Tarea despuÃ©s]
 
-Progreso del Sprint: 0% → X% (incrementó Z%)
+Progreso del Sprint: 0% â†’ X% (incrementÃ³ Z%)
 ```
 
 ---
 
-## 💻 TECHNICAL STANDARDS
+## ðŸ’» TECHNICAL STANDARDS
 
 ### Technology Stack
 
@@ -238,7 +238,7 @@ Progreso del Sprint: 0% → X% (incrementó Z%)
 - **ODM:** Mongoose 8.6.x
 - **Authentication:** jsonwebtoken 9.0.x + bcryptjs 2.4.x
 - **Validation:** express-validator 7.2.x
-- **File Upload:** Multer 1.4.x + Cloudinary SDK
+- **File Upload:** Multer 1.4.x + AWS SDK v3
 - **Email Service:** @resend/node 4.0.x
 - **Security:** helmet 7.x, cors 2.8.x, express-rate-limit 7.x
 - **Environment:** dotenv 16.4.x
@@ -249,58 +249,58 @@ Progreso del Sprint: 0% → X% (incrementó Z%)
 
 ```
 entre-amigas/
-│
-├── frontend/
-│   ├── src/
-│   │   ├── features/
-│   │   │   ├── auth/
-│   │   │   │   ├── components/
-│   │   │   │   ├── context/
-│   │   │   │   ├── services/
-│   │   │   │   └── pages/
-│   │   │   ├── dashboard/
-│   │   │   ├── events/
-│   │   │   ├── business/
-│   │   │   ├── services/
-│   │   │   ├── blog/
-│   │   │   ├── admin/
-│   │   │   ├── landing/
-│   │   │   └── profile/
-│   │   ├── shared/
-│   │   │   ├── components/
-│   │   │   │   ├── ui/
-│   │   │   │   ├── layout/
-│   │   │   │   └── common/
-│   │   │   ├── hooks/
-│   │   │   └── utils/
-│   │   ├── routes/
-│   │   ├── assets/
-│   │   ├── styles/
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   └── package.json
-│
-├── backend/
-│   ├── src/
-│   │   ├── config/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── controllers/
-│   │   ├── middleware/
-│   │   ├── services/
-│   │   ├── utils/
-│   │   └── validators/
-│   │   └── server.js
-│   └── package.json
-│
-└── docs/
-    ├── PRD.md
-    ├── ARCHITECTURE.md
-    ├── BACKLOG.md
-    └── sprints/
-        └── sprint-1/
-            ├── planning.md
-            └── tasks.md
+â”‚
+â”œâ”€â”€ frontend/
+â”‚   â”œâ”€â”€ src/
+â”‚   â”‚   â”œâ”€â”€ features/
+â”‚   â”‚   â”‚   â”œâ”€â”€ auth/
+â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ components/
+â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ context/
+â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ services/
+â”‚   â”‚   â”‚   â”‚   â””â”€â”€ pages/
+â”‚   â”‚   â”‚   â”œâ”€â”€ dashboard/
+â”‚   â”‚   â”‚   â”œâ”€â”€ events/
+â”‚   â”‚   â”‚   â”œâ”€â”€ business/
+â”‚   â”‚   â”‚   â”œâ”€â”€ services/
+â”‚   â”‚   â”‚   â”œâ”€â”€ blog/
+â”‚   â”‚   â”‚   â”œâ”€â”€ admin/
+â”‚   â”‚   â”‚   â”œâ”€â”€ landing/
+â”‚   â”‚   â”‚   â””â”€â”€ profile/
+â”‚   â”‚   â”œâ”€â”€ shared/
+â”‚   â”‚   â”‚   â”œâ”€â”€ components/
+â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ ui/
+â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ layout/
+â”‚   â”‚   â”‚   â”‚   â””â”€â”€ common/
+â”‚   â”‚   â”‚   â”œâ”€â”€ hooks/
+â”‚   â”‚   â”‚   â””â”€â”€ utils/
+â”‚   â”‚   â”œâ”€â”€ routes/
+â”‚   â”‚   â”œâ”€â”€ assets/
+â”‚   â”‚   â”œâ”€â”€ styles/
+â”‚   â”‚   â”œâ”€â”€ App.jsx
+â”‚   â”‚   â””â”€â”€ main.jsx
+â”‚   â””â”€â”€ package.json
+â”‚
+â”œâ”€â”€ backend/
+â”‚   â”œâ”€â”€ src/
+â”‚   â”‚   â”œâ”€â”€ config/
+â”‚   â”‚   â”œâ”€â”€ models/
+â”‚   â”‚   â”œâ”€â”€ routes/
+â”‚   â”‚   â”œâ”€â”€ controllers/
+â”‚   â”‚   â”œâ”€â”€ middleware/
+â”‚   â”‚   â”œâ”€â”€ services/
+â”‚   â”‚   â”œâ”€â”€ utils/
+â”‚   â”‚   â””â”€â”€ validators/
+â”‚   â”‚   â””â”€â”€ server.js
+â”‚   â””â”€â”€ package.json
+â”‚
+â””â”€â”€ docs/
+    â”œâ”€â”€ PRD.md
+    â”œâ”€â”€ ARCHITECTURE.md
+    â”œâ”€â”€ BACKLOG.md
+    â””â”€â”€ sprints/
+        â””â”€â”€ sprint-1/
+            â”œâ”€â”€ planning.md
+            â””â”€â”€ tasks.md
 ```
 
 ### Naming Conventions
@@ -369,7 +369,7 @@ validateMiddleware;
   "data": {
     // actual data here
   },
-  "message": "Operación exitosa" // Mensaje en español
+  "message": "OperaciÃ³n exitosa" // Mensaje en espaÃ±ol
 }
 
 // Error Response
@@ -377,11 +377,11 @@ validateMiddleware;
   "success": false,
   "error": {
     "code": "VALIDATION_ERROR",
-    "message": "Error de validación", // Mensaje en español
+    "message": "Error de validaciÃ³n", // Mensaje en espaÃ±ol
     "details": [
       {
         "field": "email",
-        "message": "Email inválido"
+        "message": "Email invÃ¡lido"
       }
     ]
   }
@@ -402,25 +402,25 @@ validateMiddleware;
 
 ### Git Commit Convention
 
-**CRITICAL: Commits en ESPAÑOL usando Conventional Commits**
+**CRITICAL: Commits en ESPAÃ‘OL usando Conventional Commits**
 
 ```bash
-# Formato: <tipo>: <descripción corta>
+# Formato: <tipo>: <descripciÃ³n corta>
 
 # Tipos principales:
 feat: agregar funcionalidad de registro de usuarios
-fix: corregir validación de email en formulario
+fix: corregir validaciÃ³n de email en formulario
 docs: actualizar README con instrucciones
-style: formatear código con prettier
+style: formatear cÃ³digo con prettier
 refactor: reorganizar estructura de auth
 test: agregar tests para login
 chore: actualizar dependencias
 perf: optimizar consulta de eventos
 
 # Ejemplos buenos:
-feat: implementar sistema de autenticación JWT
-fix: corregir envío de email de verificación
-refactor: simplificar lógica de validación
+feat: implementar sistema de autenticaciÃ³n JWT
+fix: corregir envÃ­o de email de verificaciÃ³n
+refactor: simplificar lÃ³gica de validaciÃ³n
 docs: documentar API de eventos
 ```
 
@@ -430,7 +430,7 @@ docs: documentar API de eventos
 
 ```javascript
 // Use const/let, never var
-const user = { name: 'María' };
+const user = { name: 'MarÃ­a' };
 let count = 0;
 
 // Arrow functions preferidas
@@ -447,7 +447,7 @@ const message = `Bienvenida ${user.preferredName}`;
 const userName = user?.profile?.name;
 
 // Nullish coalescing
-const title = post.title ?? 'Sin título';
+const title = post.title ?? 'Sin tÃ­tulo';
 
 // Async/await sobre promises
 const data = await fetchData();
@@ -462,7 +462,7 @@ try {
 
 ---
 
-## 🚫 FORBIDDEN ACTIONS
+## ðŸš« FORBIDDEN ACTIONS
 
 **NEVER DO THESE - NO EXCEPTIONS:**
 
@@ -515,13 +515,13 @@ try {
 
 ---
 
-## ✅ REQUIRED ACTIONS
+## âœ… REQUIRED ACTIONS
 
 **ALWAYS DO THESE:**
 
 1. **Read Context First**
 
-   - CLAUDE.md → ARCHITECTURE.md → TASKS.md
+   - CLAUDE.md â†’ ARCHITECTURE.md â†’ TASKS.md
    - Every session, every time
 
 2. **Follow Priority Order**
@@ -567,16 +567,16 @@ try {
 
 ---
 
-## 🎯 TASK PRIORITY SYSTEM
+## ðŸŽ¯ TASK PRIORITY SYSTEM
 
 ### Priority Levels
 
-**P0 - CRÍTICO (Always First)**
+**P0 - CRÃTICO (Always First)**
 
 - Blockers para otras tareas
 - Setup necesario
-- Dependencias críticas
-- Bugs de producción
+- Dependencias crÃ­ticas
+- Bugs de producciÃ³n
 
 **Current P0 Tasks:**
 
@@ -611,7 +611,7 @@ try {
 
 ---
 
-## 🐛 ERROR HANDLING PROTOCOL
+## ðŸ› ERROR HANDLING PROTOCOL
 
 ### Backend Error Handling Pattern
 
@@ -626,13 +626,13 @@ const register = async (req, res) => {
         success: false,
         error: {
           code: "VALIDATION_ERROR",
-          message: "Error de validación",
+          message: "Error de validaciÃ³n",
           details: errors.array(),
         },
       });
     }
 
-    // Lógica de negocio
+    // LÃ³gica de negocio
     const user = await User.create(req.body);
 
     // Respuesta exitosa
@@ -692,7 +692,7 @@ const handleSubmit = async (data) => {
 
 ---
 
-## 📋 QUALITY CHECKLIST
+## ðŸ“‹ QUALITY CHECKLIST
 
 **Before marking ANY task as complete:**
 
@@ -742,7 +742,7 @@ const handleSubmit = async (data) => {
 
 ---
 
-## 🔐 SECURITY STANDARDS
+## ðŸ” SECURITY STANDARDS
 
 **CRITICAL SECURITY RULES:**
 
@@ -761,10 +761,10 @@ const handleSubmit = async (data) => {
 
 ```javascript
 const registerValidation = [
-  body("email").isEmail().withMessage("Email inválido"),
+  body("email").isEmail().withMessage("Email invÃ¡lido"),
   body("password")
     .isLength({ min: 8 })
-    .withMessage("Password mínimo 8 caracteres"),
+    .withMessage("Password mÃ­nimo 8 caracteres"),
   body("fullName").trim().notEmpty().withMessage("Nombre requerido"),
 ];
 ```
@@ -773,10 +773,10 @@ const registerValidation = [
 
 ```javascript
 const schema = yup.object({
-  email: yup.string().email("Email inválido").required("Email requerido"),
+  email: yup.string().email("Email invÃ¡lido").required("Email requerido"),
   password: yup
     .string()
-    .min(8, "Mínimo 8 caracteres")
+    .min(8, "MÃ­nimo 8 caracteres")
     .required("Password requerido"),
 });
 ```
@@ -798,7 +798,10 @@ const schema = yup.object({
 JWT_SECRET=minimum_32_characters_random_string
 MONGODB_URI=mongodb+srv://...
 RESEND_API_KEY=re_...
-CLOUDINARY_API_KEY=...
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
+AWS_REGION=us-east-1
+AWS_S3_BUCKET_NAME=entre-amigas-dev
 
 # Frontend
 VITE_API_URL=http://localhost:5000/api/v1
@@ -823,7 +826,7 @@ VITE_API_URL=http://localhost:5000/api/v1
 
 ---
 
-## 📝 COMMON CODE PATTERNS
+## ðŸ“ COMMON CODE PATTERNS
 
 ### Model Pattern (Mongoose)
 
@@ -843,21 +846,21 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      match: [/^\S+@\S+\.\S+$/, "Email inválido"],
+      match: [/^\S+@\S+\.\S+$/, "Email invÃ¡lido"],
     },
     password: {
       type: String,
-      required: [true, "La contraseña es requerida"],
+      required: [true, "La contraseÃ±a es requerida"],
       minlength: 8,
       select: false, // No incluir en queries por defecto
     },
   },
   {
-    timestamps: true, // createdAt, updatedAt automáticos
+    timestamps: true, // createdAt, updatedAt automÃ¡ticos
   }
 );
 
-// Índices
+// Ãndices
 userSchema.index({ email: 1 });
 
 // Hook: Hash password antes de guardar
@@ -867,7 +870,7 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// Método de instancia
+// MÃ©todo de instancia
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
@@ -887,13 +890,13 @@ const register = async (req, res) => {
         success: false,
         error: {
           code: "VALIDATION_ERROR",
-          message: "Error de validación",
+          message: "Error de validaciÃ³n",
           details: errors.array(),
         },
       });
     }
 
-    // 2. Lógica de negocio
+    // 2. LÃ³gica de negocio
     const { fullName, email, password } = req.body;
 
     const existingUser = await User.findOne({ email });
@@ -902,7 +905,7 @@ const register = async (req, res) => {
         success: false,
         error: {
           code: "USER_EXISTS",
-          message: "El email ya está registrado",
+          message: "El email ya estÃ¡ registrado",
         },
       });
     }
@@ -937,8 +940,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 const schema = yup.object({
-  email: yup.string().email("Email inválido").required("Email requerido"),
-  password: yup.string().min(8, "Mínimo 8 caracteres").required("Requerido"),
+  email: yup.string().email("Email invÃ¡lido").required("Email requerido"),
+  password: yup.string().min(8, "MÃ­nimo 8 caracteres").required("Requerido"),
 });
 
 export const LoginForm = () => {
@@ -982,7 +985,7 @@ export const LoginForm = () => {
       </div>
 
       <div>
-        <label htmlFor="password">Contraseña</label>
+        <label htmlFor="password">ContraseÃ±a</label>
         <input
           id="password"
           type="password"
@@ -1001,7 +1004,7 @@ export const LoginForm = () => {
         disabled={isLoading}
         className="w-full bg-blue-500 text-white py-2 rounded disabled:opacity-50"
       >
-        {isLoading ? "Cargando..." : "Iniciar Sesión"}
+        {isLoading ? "Cargando..." : "Iniciar SesiÃ³n"}
       </button>
     </form>
   );
@@ -1033,7 +1036,7 @@ const authService = {
       return { token, user };
     } catch (error) {
       throw new Error(
-        error.response?.data?.error?.message || "Error al iniciar sesión"
+        error.response?.data?.error?.message || "Error al iniciar sesiÃ³n"
       );
     }
   },
@@ -1048,7 +1051,7 @@ export default authService;
 
 ---
 
-## 🎯 SPRINT COMMITMENT
+## ðŸŽ¯ SPRINT COMMITMENT
 
 **Sprint Goal:**
 
@@ -1056,12 +1059,12 @@ export default authService;
 
 **To achieve this goal, we must complete:**
 
-1. **US-001:** Sistema de Autenticación Completo (8 SP) - CRÍTICO
-2. **US-002:** Landing Page Pública (5 SP) - CRÍTICO
+1. **US-001:** Sistema de AutenticaciÃ³n Completo (8 SP) - CRÃTICO
+2. **US-002:** Landing Page PÃºblica (5 SP) - CRÃTICO
 
-**Current progress toward goal:** 0% (Día 1)
+**Current progress toward goal:** 0% (DÃ­a 1)
 
-**Days remaining:** 10 días
+**Days remaining:** 10 dÃ­as
 
 **Blockers to goal:** Ninguno
 
@@ -1073,7 +1076,7 @@ export default authService;
 
 ---
 
-## 📚 QUICK REFERENCE
+## ðŸ“š QUICK REFERENCE
 
 ### File Reading Order (Every Session)
 
@@ -1091,21 +1094,21 @@ export default authService;
 
 ### Update Requirements
 
-- ✅ TASKS.md after EVERY task completion
-- ✅ Session summary at end of work
-- ✅ Blockers IMMEDIATELY when discovered
-- ✅ Progress notes daily
+- âœ… TASKS.md after EVERY task completion
+- âœ… Session summary at end of work
+- âœ… Blockers IMMEDIATELY when discovered
+- âœ… Progress notes daily
 
 ### Quality Gates
 
-- All items in Quality Checklist ✅
+- All items in Quality Checklist âœ…
 - Code tested and working
 - Conventions followed exactly
 - Documentation/comments updated
 
 ---
 
-## 🔄 DOCUMENT UPDATES
+## ðŸ”„ DOCUMENT UPDATES
 
 **This document is updated:**
 
@@ -1119,7 +1122,7 @@ export default authService;
 
 ---
 
-## 🆘 WHEN STUCK PROTOCOL
+## ðŸ†˜ WHEN STUCK PROTOCOL
 
 ### First 10 Minutes
 
@@ -1132,110 +1135,110 @@ export default authService;
 ### After 10 Minutes (Still Stuck)
 
 ```
-🤔 INVESTIGANDO BLOQUEADOR
+ðŸ¤” INVESTIGANDO BLOQUEADOR
 
 Tarea: [TASK-XXX]
-Issue: [Descripción clara del problema]
+Issue: [DescripciÃ³n clara del problema]
 Tiempo invertido: 10 minutos
 
-Intenté:
+IntentÃ©:
 1. [Fix 1 - resultado]
 2. [Fix 2 - resultado]
 3. [Fix 3 - resultado]
 
 Error exacto: [Mensaje de error completo]
 
-Siguiente: [Qué intentaré ahora]
+Siguiente: [QuÃ© intentarÃ© ahora]
 ```
 
 ### After 20 Minutes (Can't Resolve)
 
 ```
-🚧 MARCANDO COMO BLOQUEADA
+ðŸš§ MARCANDO COMO BLOQUEADA
 
-Tarea [TASK-XXX] está bloqueada.
-Razón: [Explicación clara]
-Impacto: [Qué no se puede hacer]
+Tarea [TASK-XXX] estÃ¡ bloqueada.
+RazÃ³n: [ExplicaciÃ³n clara]
+Impacto: [QuÃ© no se puede hacer]
 
-Moviéndome a: [TASK-YYY] (próxima tarea P1)
+MoviÃ©ndome a: [TASK-YYY] (prÃ³xima tarea P1)
 
-Acción necesaria del usuario: [Qué debe investigar el usuario]
+AcciÃ³n necesaria del usuario: [QuÃ© debe investigar el usuario]
 ```
 
 **Update TASKS.md:**
 
 ```markdown
-⏸️ [TASK-XXX] [US-XX] Descripción - P1 - M (1hr)
+â¸ï¸ [TASK-XXX] [US-XX] DescripciÃ³n - P1 - M (1hr)
 
-- **Bloqueada por:** [Razón específica]
-- **Intentado:** [Qué se intentó]
-- **Necesita:** [Qué se necesita para desbloquear]
-- **Acción:** [Próximo paso]
+- **Bloqueada por:** [RazÃ³n especÃ­fica]
+- **Intentado:** [QuÃ© se intentÃ³]
+- **Necesita:** [QuÃ© se necesita para desbloquear]
+- **AcciÃ³n:** [PrÃ³ximo paso]
 - **Fecha Bloqueada:** 2025-11-05
 ```
 
 ---
 
-## 📈 SUCCESS METRICS
+## ðŸ“ˆ SUCCESS METRICS
 
 **You're doing great when:**
 
-- ✅ Completing P0 tasks in order
-- ✅ TASKS.md always reflects current reality
-- ✅ No errors introduced in working code
-- ✅ All code follows conventions exactly
-- ✅ Sprint progressing on schedule (10% per day)
-- ✅ All completions tested manually
-- ✅ Communication is clear and frequent
-- ✅ Commits in Spanish with good messages
-- ✅ Security standards maintained
+- âœ… Completing P0 tasks in order
+- âœ… TASKS.md always reflects current reality
+- âœ… No errors introduced in working code
+- âœ… All code follows conventions exactly
+- âœ… Sprint progressing on schedule (10% per day)
+- âœ… All completions tested manually
+- âœ… Communication is clear and frequent
+- âœ… Commits in Spanish with good messages
+- âœ… Security standards maintained
 
 **Signs you need to adjust:**
 
-- ⚠️ P0 tasks skipped for P1/P2
-- ⚠️ TASKS.md not updated after completions
-- ⚠️ Bugs being introduced
-- ⚠️ Sprint falling behind schedule
-- ⚠️ Convention violations
-- ⚠️ Skipping testing
-- ⚠️ Working silently without communication
-- ⚠️ English commits or messages
+- âš ï¸ P0 tasks skipped for P1/P2
+- âš ï¸ TASKS.md not updated after completions
+- âš ï¸ Bugs being introduced
+- âš ï¸ Sprint falling behind schedule
+- âš ï¸ Convention violations
+- âš ï¸ Skipping testing
+- âš ï¸ Working silently without communication
+- âš ï¸ English commits or messages
 
 ---
 
-## 💬 COMMUNICATION STYLE
+## ðŸ’¬ COMMUNICATION STYLE
 
 ### Good Communication (Examples)
 
 ```
-✅ "Implementando autenticación de usuarios en backend/src/controllers/auth.controller.js"
-✅ "Error específico: Cannot read property 'id' of undefined en línea 45 de User.js"
-✅ "Agregué validación null check antes de acceder a user.id"
-✅ "Completadas 3 tareas (TASK-001, 002, 003), 2 en progreso (TASK-004, 005)"
-✅ "Bloqueador: Resend API key no funciona. Necesito nueva key del usuario."
+âœ… "Implementando autenticaciÃ³n de usuarios en backend/src/controllers/auth.controller.js"
+âœ… "Error especÃ­fico: Cannot read property 'id' of undefined en lÃ­nea 45 de User.js"
+âœ… "AgreguÃ© validaciÃ³n null check antes de acceder a user.id"
+âœ… "Completadas 3 tareas (TASK-001, 002, 003), 2 en progreso (TASK-004, 005)"
+âœ… "Bloqueador: Resend API key no funciona. Necesito nueva key del usuario."
 ```
 
 ### Poor Communication (Avoid)
 
 ```
-❌ "Trabajando en cosas"
-❌ "Hay un error en algún lado"
-❌ "Lo arreglé"
-❌ "Listo"
-❌ "No funciona"
+âŒ "Trabajando en cosas"
+âŒ "Hay un error en algÃºn lado"
+âŒ "Lo arreglÃ©"
+âŒ "Listo"
+âŒ "No funciona"
 ```
 
 **Always be:**
 
-- **Específico** sobre qué estás haciendo
+- **EspecÃ­fico** sobre quÃ© estÃ¡s haciendo
 - **Claro** sobre problemas encontrados
 - **Honesto** sobre progreso y bloqueadores
-- **Proactivo** haciendo preguntas de clarificación
-- **Detallado** en anuncios y resúmenes
+- **Proactivo** haciendo preguntas de clarificaciÃ³n
+- **Detallado** en anuncios y resÃºmenes
 
 ---
 
-## 🎓 LEARNING MODE
+## ðŸŽ“ LEARNING MODE
 
 ### When Working with New Technology
 
@@ -1244,12 +1247,12 @@ If you encounter a library/pattern you're not familiar with:
 1. **Acknowledge:**
 
 ```
-📚 NUEVO TERRITORIO
+ðŸ“š NUEVO TERRITORIO
 
-Trabajando con: [Tecnología/Patrón]
+Trabajando con: [TecnologÃ­a/PatrÃ³n]
 Nivel de confianza: Bajo/Medio/Alto
 
-Plan: [Enfoque que tomaré]
+Plan: [Enfoque que tomarÃ©]
 ```
 
 2. **Research approach:**
@@ -1268,7 +1271,7 @@ Plan: [Enfoque que tomaré]
 Example:
 
 ```javascript
-// Using React Hook Form con Yup para validación
+// Using React Hook Form con Yup para validaciÃ³n
 // Docs: https://react-hook-form.com/get-started
 // NOTA: resolver debe ser yupResolver, no validationSchema
 const { register, handleSubmit } = useForm({
@@ -1278,24 +1281,24 @@ const { register, handleSubmit } = useForm({
 
 ---
 
-## ⚡ TL;DR - CRITICAL RULES
+## âš¡ TL;DR - CRITICAL RULES
 
 **If you remember ONLY these 10 rules:**
 
-1. 📖 **Read CLAUDE.md, ARCHITECTURE.md, TASKS.md at every session start**
-2. 🔴 **P0 tasks ALWAYS come first - never skip**
-3. ✍️ **Update TASKS.md after EVERY completion**
-4. 🎯 **Stay focused on Sprint Goal**
-5. 🏗️ **Follow ARCHITECTURE.md conventions exactly**
-6. 🧪 **Test everything before marking complete**
-7. 🚫 **Never skip error handling**
-8. 💬 **Communicate clearly and specifically**
-9. ⏸️ **Mark blockers immediately after 20min stuck**
-10. ✅ **Complete Quality Checklist before task done**
+1. ðŸ“– **Read CLAUDE.md, ARCHITECTURE.md, TASKS.md at every session start**
+2. ðŸ”´ **P0 tasks ALWAYS come first - never skip**
+3. âœï¸ **Update TASKS.md after EVERY completion**
+4. ðŸŽ¯ **Stay focused on Sprint Goal**
+5. ðŸ—ï¸ **Follow ARCHITECTURE.md conventions exactly**
+6. ðŸ§ª **Test everything before marking complete**
+7. ðŸš« **Never skip error handling**
+8. ðŸ’¬ **Communicate clearly and specifically**
+9. â¸ï¸ **Mark blockers immediately after 20min stuck**
+10. âœ… **Complete Quality Checklist before task done**
 
 ---
 
-## 📞 PROJECT-SPECIFIC RULES
+## ðŸ“ž PROJECT-SPECIFIC RULES
 
 ### Critical Business Rules
 
@@ -1342,10 +1345,10 @@ const { register, handleSubmit } = useForm({
 - From: noreply@entreamigas.com
 - Templates needed: welcome, verification, password-reset, event-confirmation
 
-**Cloudinary (Images):**
+**AWS S3 (Images):**
 
-- Cloud name, API key, API secret in env variables
-- Folder: entre-amigas/
+- Access Key ID, Secret Access Key, Region, Bucket Name in env variables
+- Bucket: entre-amigas-dev (development) / entre-amigas-production (production)
 - Max file size: 5MB
 - Allowed formats: jpg, jpeg, png, webp
 
@@ -1365,42 +1368,42 @@ As project grows, delicate areas will be documented here.
 
 ---
 
-## 📊 CURRENT SPRINT STATUS
+## ðŸ“Š CURRENT SPRINT STATUS
 
 **Sprint 1 Progress Tracker**
 
 ```
 Week 1 (Days 1-5):
 - Target: 50% complete (US-001 done)
-- Current: 0% (Día 1)
-- On track: 🟢 Yes
+- Current: 0% (DÃ­a 1)
+- On track: ðŸŸ¢ Yes
 
 Week 2 (Days 6-10):
 - Target: 100% complete (US-002 done + polish)
 - Current: 0%
-- On track: ⏳ TBD
+- On track: â³ TBD
 ```
 
 **Daily Targets:**
 
-- Día 1-2: Backend auth setup (TASK-001 to TASK-004)
-- Día 3-4: Backend auth controllers (TASK-007 to TASK-014)
-- Día 5: Frontend auth setup + forms start
-- Día 6-7: Frontend auth complete + landing prep
-- Día 8-9: Landing page complete
-- Día 10: Testing + Sprint Review
+- DÃ­a 1-2: Backend auth setup (TASK-001 to TASK-004)
+- DÃ­a 3-4: Backend auth controllers (TASK-007 to TASK-014)
+- DÃ­a 5: Frontend auth setup + forms start
+- DÃ­a 6-7: Frontend auth complete + landing prep
+- DÃ­a 8-9: Landing page complete
+- DÃ­a 10: Testing + Sprint Review
 
 ---
 
-**"Código de calidad, bien documentado, entregado a tiempo. Ese es el estándar."**
+**"CÃ³digo de calidad, bien documentado, entregado a tiempo. Ese es el estÃ¡ndar."**
 
 ---
 
 **Sprint Actual:** Sprint 1  
-**Meta del Sprint:** Autenticación + Landing Page  
-**Días Restantes:** 10  
-**Próxima Tarea P0:** TASK-001 - Crear modelo User
+**Meta del Sprint:** AutenticaciÃ³n + Landing Page  
+**DÃ­as Restantes:** 10  
+**PrÃ³xima Tarea P0:** TASK-001 - Crear modelo User
 
 ---
 
-_Este es tu fuente de verdad. Síguelo estrictamente. Cuando tengas dudas, consulta este documento._
+_Este es tu fuente de verdad. SÃ­guelo estrictamente. Cuando tengas dudas, consulta este documento._

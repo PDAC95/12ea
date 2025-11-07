@@ -1,8 +1,8 @@
 # Product Backlog
 
 **Product:** Entre Amigas  
-**Version:** 1.0  
-**Last Updated:** 5 de noviembre, 2025  
+**Version:** 1.1  
+**Last Updated:** 6 de noviembre, 2025  
 **Owner:** Equipo Entre Amigas
 
 ---
@@ -85,28 +85,33 @@
 
 **Acceptance Criteria:**
 
-- [ ] Formulario de registro solicita: nombre completo, nombre preferido, email, teléfono, cumpleaños, ciudad
-- [ ] Sistema valida datos en frontend y backend
-- [ ] Password se hashea con bcrypt antes de guardar
-- [ ] Sistema envía email de verificación al registrarse
+- [ ] Formulario de registro solicita: nombre completo, nombre preferido, email, teléfono, cumpleaños, ciudad, contraseña
+- [ ] Sistema valida datos en frontend (React Hook Form + Yup)
+- [ ] Sistema valida datos en backend (express-validator)
+- [ ] Password se hashea con bcrypt antes de guardar en DB
+- [ ] Sistema envía email de verificación al registrarse (Resend)
+- [ ] Email incluye link de verificación válido por 24 horas
 - [ ] Usuaria puede hacer login con email y contraseña
 - [ ] Login retorna JWT token válido por 7 días
-- [ ] Sistema permite recuperación de contraseña por email
-- [ ] Token de recuperación expira en 1 hora
+- [ ] Sistema permite solicitar recuperación de contraseña por email
+- [ ] Link de recuperación expira en 1 hora
+- [ ] Formulario de cambio de contraseña funcional
 - [ ] Mensajes de error claros en español
+- [ ] Protected routes funcionando (redirige a login si no autenticado)
 
 **Technical Notes:**
 
-- **Stack:** Frontend (React Hook Form + Yup) + Backend (Express + JWT + bcryptjs) + Email (Resend)
-- **Dependencies:** Ninguna - Esta es la base de todo
+- **Stack:** Full Stack (React + Express + MongoDB + Resend)
+- **Dependencies:** Sprint 0 completo (MongoDB, email service configurado)
 - **Complexity Factors:**
-  - Múltiples flujos (registro, login, recuperar password, verificar email)
-  - Seguridad crítica (hashing, tokens, validación)
-  - Integración con servicio de email
-  - Manejo de errores comprehensivo
+  - JWT token generation y verificación
+  - Email service integration
+  - Password hashing con bcrypt
+  - Validación dual (frontend + backend)
+  - Protected routes en React Router
 
 **Estimation:** **L (Large)**  
-**Priority:** MUST HAVE - CRÍTICO  
+**Priority:** MUST HAVE - CRITICAL  
 **Status:** 📋 Backlog  
 **Sprint Sugerido:** Sprint 1
 
@@ -116,27 +121,29 @@
 
 **ID:** US-002  
 **Epic:** Experiencia Pública  
-**Story:** Como visitante, quiero entender qué es Entre Amigas antes de registrarme para decidir si unirme
+**Story:** Como visitante nueva, quiero entender qué es Entre Amigas y cómo puedo unirme
 
 **Acceptance Criteria:**
 
-- [ ] Hero section con título claro y call-to-action
-- [ ] Sección que explica misión y valores del proyecto
-- [ ] Sección de beneficios de unirse (3-4 beneficios clave)
-- [ ] Testimonios o historias de impacto (mínimo 2)
-- [ ] Call-to-action secundario en footer
-- [ ] Diseño responsive (mobile y desktop)
-- [ ] Carga rápida (< 3 segundos)
-- [ ] SEO básico (meta tags, título, descripción)
+- [ ] Hero section con título claro y call to action
+- [ ] Sección "Quiénes Somos" explicando el propósito
+- [ ] Sección "Qué Ofrecemos" con iconos y descripciones breves
+- [ ] Sección "Cómo Funciona" en 3 pasos simples
+- [ ] Botón prominente "Únete a la Comunidad" que lleva a registro
+- [ ] Footer con información de contacto y redes sociales
+- [ ] Diseño acogedor y profesional
+- [ ] Responsive (mobile y desktop)
+- [ ] Paleta de colores cálida y femenina
+- [ ] Imágenes representativas de comunidad (stock photos o propias)
 
 **Technical Notes:**
 
 - **Stack:** Frontend (React + TailwindCSS)
-- **Dependencies:** Ninguna - Puede desarrollarse en paralelo
+- **Dependencies:** Ninguna - puede desarrollarse en paralelo
 - **Complexity Factors:**
-  - Diseño atractivo y acogedor
-  - Responsive en múltiples dispositivos
-  - Copy persuasivo en español
+  - Diseño responsive sin framework UI (TailwindCSS puro)
+  - Optimización de imágenes
+  - SEO básico (meta tags)
 
 **Estimation:** **M (Medium)**  
 **Priority:** MUST HAVE  
@@ -329,7 +336,7 @@
 
 - [ ] Panel admin accesible solo con rol "admin"
 - [ ] Formulario simple para crear evento: título, descripción, fecha, hora, modalidad, ubicación/link, cupos, imagen
-- [ ] Upload de imagen para evento (Cloudinary)
+- [ ] Upload de imagen para evento (AWS S3)
 - [ ] Lista de todos los eventos creados (upcoming, completed, cancelled)
 - [ ] Botón "Editar" abre formulario pre-llenado
 - [ ] Botón "Cancelar evento" con confirmación
@@ -340,11 +347,11 @@
 
 **Technical Notes:**
 
-- **Stack:** Full Stack (React + Express + MongoDB + Cloudinary)
+- **Stack:** Full Stack (React + Express + MongoDB + AWS S3)
 - **Dependencies:** US-001 (Auth con roles), US-004 (Eventos)
 - **Complexity Factors:**
   - Admin middleware y protected routes
-  - Upload de imágenes
+  - Upload de imágenes con AWS S3
   - CRUD completo con validaciones
   - UX super simple para usuario no técnico
 
@@ -411,11 +418,11 @@
 
 **Technical Notes:**
 
-- **Stack:** Full Stack (React + Editor rico + Express + MongoDB + Cloudinary)
+- **Stack:** Full Stack (React + Editor rico + Express + MongoDB + AWS S3)
 - **Dependencies:** US-001 (Auth admin), US-007 (Blog)
 - **Complexity Factors:**
   - Editor WYSIWYG (librería como TinyMCE, Quill, o Draft.js)
-  - Manejo de imágenes múltiples
+  - Manejo de imágenes múltiples con AWS S3
   - Sistema de drafts vs published
   - Slugs únicos
 
@@ -512,25 +519,24 @@
 
 ---
 
-#### 14. Notificaciones de Nuevos Eventos por Email
+#### 14. Notificaciones de Recordatorio de Eventos
 
 **ID:** US-014  
 **Epic:** Eventos y Comunidad  
-**Story:** Como usuaria, quiero recibir notificaciones de nuevos eventos por email
+**Story:** Como usuaria registrada, quiero recibir un recordatorio por email 24 horas antes del evento
 
 **Acceptance Criteria:**
 
-- [ ] Email automático cuando admin crea evento nuevo
-- [ ] Email incluye: título, fecha, modalidad, link a ver detalles
-- [ ] Opción de desuscribirse en email
-- [ ] Configuración en perfil: "Recibir notificaciones de eventos"
-- [ ] Batch email para no hacer spam
+- [ ] Email automático enviado 24 hrs antes del evento
+- [ ] Email incluye detalles del evento y link directo
+- [ ] Opción de darse de baja de recordatorios en settings
+- [ ] Cron job o scheduled task configurado
 
 **Technical Notes:**
 
-- **Stack:** Backend + Email service
-- **Dependencies:** US-008
-- **Complexity Factors:** Email masivo, unsubscribe, configuración
+- **Stack:** Backend (Node + Cron job + Email service)
+- **Dependencies:** US-004 (Eventos)
+- **Complexity Factors:** Scheduled tasks, job queue
 
 **Estimation:** **S (Small)**  
 **Priority:** SHOULD HAVE  
@@ -539,28 +545,25 @@
 
 ---
 
-#### 15. Estadísticas Básicas para Admin
+#### 15. Dashboard Admin con Estadísticas
 
 **ID:** US-015  
 **Epic:** Panel de Administración  
-**Story:** Como administradora, quiero ver estadísticas básicas para entender el engagement de la comunidad
+**Story:** Como administradora, quiero ver estadísticas básicas para entender el uso de la plataforma
 
 **Acceptance Criteria:**
 
-- [ ] Dashboard admin muestra:
-  - Total de usuarias registradas
-  - Nuevas usuarias última semana
-  - Próximos eventos
-  - Evento más popular (más registros)
-  - Total de negocios y servicios en directorios
-- [ ] Gráfico simple de crecimiento mensual
-- [ ] Exportar datos básicos a CSV
+- [ ] Dashboard muestra: total usuarias registradas, eventos próximos, registros totales
+- [ ] Gráfico simple de registros por mes (últimos 6 meses)
+- [ ] Top 3 eventos más populares
+- [ ] Top 3 categorías de negocios más consultadas
+- [ ] Diseño visual simple con números grandes
 
 **Technical Notes:**
 
-- **Stack:** Full Stack + agregaciones
-- **Dependencies:** Todas las features anteriores
-- **Complexity Factors:** Queries de agregación, visualización
+- **Stack:** Full Stack (React + Chart library + MongoDB aggregation)
+- **Dependencies:** US-001, US-004, US-005
+- **Complexity Factors:** MongoDB aggregations, gráficos
 
 **Estimation:** **M (Medium)**  
 **Priority:** SHOULD HAVE  
@@ -569,258 +572,370 @@
 
 ---
 
-### 🟢 COULD HAVE (Nice to Have)
+### 🟢 COULD HAVE (Nice to Have - Fase 2)
 
 ---
 
-#### 16. Chat Privado entre Usuarias
+#### 16. Sistema de Favoritos
 
 **ID:** US-016  
-**Story:** Como usuaria, quiero enviar mensajes privados a otras miembras para conectar directamente
+**Epic:** Experiencia Pública  
+**Story:** Como usuaria, quiero guardar negocios y servicios como favoritos para encontrarlos fácilmente después
 
-**Why it matters:** Facilita conexiones 1-1 más profundas entre miembras
+**Acceptance Criteria:**
 
-**Estimation:** **XL (Extra Large)**  
-**Priority:** COULD HAVE  
-**Status:** 📋 Backlog  
-**Notes:** Requiere WebSockets o similar, complejidad alta
+- [ ] Botón "Agregar a favoritos" en cada negocio/servicio
+- [ ] Sección "Mis Favoritos" en dashboard
+- [ ] Organizado por tipo (negocios, servicios)
+- [ ] Opción de eliminar de favoritos
 
----
+**Technical Notes:**
 
-#### 17. Foro de Discusión
-
-**ID:** US-017  
-**Story:** Como usuaria, quiero participar en foros de discusión sobre temas relevantes
-
-**Why it matters:** Crea conversaciones más ricas y engagement continuo
-
-**Estimation:** **L (Large)**  
-**Priority:** COULD HAVE  
-**Status:** 📋 Backlog  
-**Notes:** Requiere moderación activa
-
----
-
-#### 18. Usuarias Crean Sus Propios Eventos
-
-**ID:** US-018  
-**Story:** Como usuaria activa, quiero crear mis propios eventos para organizar encuentros
-
-**Why it matters:** Empodera a la comunidad y escala los eventos
-
-**Estimation:** **M (Medium)**  
-**Priority:** COULD HAVE  
-**Status:** 📋 Backlog  
-**Notes:** Requiere proceso de aprobación por admin
-
----
-
-#### 19. Usuarias Agregan Sus Negocios al Directorio
-
-**ID:** US-019  
-**Story:** Como usuaria emprendedora, quiero agregar mi negocio al directorio yo misma
-
-**Why it matters:** Reduce carga de admin y empodera a emprendedoras
+- **Stack:** Full Stack
+- **Dependencies:** US-005, US-006
+- **Complexity Factors:** Modelo de datos para favoritos
 
 **Estimation:** **S (Small)**  
 **Priority:** COULD HAVE  
 **Status:** 📋 Backlog  
-**Notes:** Versión simplificada del form admin
+**Sprint Sugerido:** Fase 2
 
 ---
 
-#### 20. App Móvil Nativa (iOS/Android)
+#### 17. Filtro de Eventos por Ciudad
 
-**ID:** US-020  
-**Story:** Como usuaria, quiero una app nativa en mi teléfono para acceder más fácilmente
+**ID:** US-017  
+**Epic:** Eventos y Comunidad  
+**Story:** Como usuaria, quiero filtrar eventos por ciudad para ver solo los relevantes para mí
 
-**Why it matters:** Mayor engagement y notificaciones push
+**Acceptance Criteria:**
 
-**Estimation:** **XL (Extra Large)**  
+- [ ] Dropdown de ciudades disponibles
+- [ ] Filtro combina con otros filtros existentes
+- [ ] Muestra contador de eventos por ciudad
+- [ ] Opción "Todas las ciudades"
+
+**Technical Notes:**
+
+- **Stack:** Full Stack
+- **Dependencies:** US-004
+- **Complexity Factors:** Query optimization
+
+**Estimation:** **XS (Extra Small)**  
 **Priority:** COULD HAVE  
 **Status:** 📋 Backlog  
-**Notes:** Considerar PWA como alternativa más rápida
+**Sprint Sugerido:** Fase 2
 
 ---
 
-### ⚪ WON'T HAVE (Out of Scope)
+#### 18. Newsletter Mensual
 
-- **Videollamadas integradas** - Razón: Se usará Zoom/Google Meet con links externos
-- **Pagos o membresías** - Razón: Proyecto non-profit, gratis para todas
-- **Marketplace de productos** - Razón: Solo directorio, no ecommerce
-- **Traducción automática a otros idiomas** - Razón: Enfocado en comunidad hispana
-- **Integración con redes sociales para login** - Razón: MVP usa email/password simple
+**ID:** US-018  
+**Epic:** Contenido (Blog)  
+**Story:** Como administradora, quiero enviar un newsletter mensual con highlights de la comunidad
 
----
+**Acceptance Criteria:**
 
-## Technical Debt & Infrastructure
+- [ ] Panel para crear newsletter con editor rico
+- [ ] Incluye: eventos próximos, artículos destacados, nuevos negocios
+- [ ] Vista previa antes de enviar
+- [ ] Envío masivo a todas las usuarias verificadas
+- [ ] Template de email responsive
 
-### Technical Debt Items
+**Technical Notes:**
 
-**Ninguno al inicio** - Se creará conforme avance el desarrollo
+- **Stack:** Backend (Email service bulk sending)
+- **Dependencies:** US-001, US-010
+- **Complexity Factors:** Bulk email sending, template design
 
-### Infrastructure Tasks
-
-- **INFRA-001:** Setup de repositorio GitHub con estructura de carpetas - **S** - Sprint 1
-- **INFRA-002:** Configuración de MongoDB Atlas y conexión - **XS** - Sprint 1
-- **INFRA-003:** Setup de Cloudinary para imágenes - **XS** - Sprint 1
-- **INFRA-004:** Configuración de Resend/Brevo para emails - **S** - Sprint 1
-- **INFRA-005:** CI/CD con GitHub Actions - **M** - Sprint 3
-- **INFRA-006:** Deploy inicial a Vercel + Railway - **S** - Sprint 4
-
----
-
-## Definition of Ready (DoR)
-
-Una User Story está "Ready" para Sprint Planning cuando:
-
-- [ ] Tiene descripción clara en formato: "Como X, quiero Y, para Z"
-- [ ] Tiene criterios de aceptación específicos y verificables
-- [ ] Tiene estimación de complejidad (T-Shirt Size)
-- [ ] Dependencias técnicas identificadas
-- [ ] Dudas técnicas principales resueltas con el equipo
-- [ ] Es completable en 1 sprint (2 semanas)
-- [ ] No tiene bloqueadores externos
+**Estimation:** **M (Medium)**  
+**Priority:** COULD HAVE  
+**Status:** 📋 Backlog  
+**Sprint Sugerido:** Fase 2
 
 ---
 
-## Definition of Done (DoD)
+#### 19. Búsqueda Global
 
-Una User Story está "Done" cuando:
+**ID:** US-019  
+**Epic:** Experiencia Pública  
+**Story:** Como usuaria, quiero buscar en toda la plataforma (eventos, negocios, servicios, blog) desde un solo lugar
 
-- [ ] Todos los criterios de aceptación cumplidos y verificados
-- [ ] Código escrito siguiendo convenciones del proyecto
-- [ ] Código funciona en local sin errores
-- [ ] Testing manual realizado en múltiples escenarios
-- [ ] Responsive (funciona en móvil y desktop)
-- [ ] Sin bugs críticos conocidos
-- [ ] Texto en español correcto (sin typos)
-- [ ] Validaciones de formularios funcionando
-- [ ] Mensajes de error/éxito implementados
-- [ ] Documentación básica en README si introduce algo nuevo
-- [ ] Commit con mensaje descriptivo en español
-- [ ] Deployado en ambiente de desarrollo/staging
-- [ ] Demo funcional preparada
+**Acceptance Criteria:**
 
----
+- [ ] Barra de búsqueda global en header
+- [ ] Resultados categorizados por tipo
+- [ ] Muestra top 5 resultados de cada categoría
+- [ ] Link a "Ver todos" en cada categoría
+- [ ] Búsqueda por palabra clave funciona en todos los modelos
 
-## Sprint Planning Guide
+**Technical Notes:**
 
-### Velocity Estimada por Sprint
+- **Stack:** Full Stack
+- **Dependencies:** US-004, US-005, US-006, US-007
+- **Complexity Factors:** Text search en múltiples colecciones
 
-Asumiendo trabajo individual con ~20-25 horas/semana dedicadas:
-
-- **Sprint 1-2 (Learning Curve):** 8-10 puntos equivalentes
-- **Sprint 3+ (Velocity Normal):** 12-15 puntos equivalentes
-
-**Conversión:**
-
-- XS = 2 pts
-- S = 3 pts
-- M = 5 pts
-- L = 8 pts
-- XL = 13 pts
-
-### Propuesta de Sprints para MVP (8 semanas)
-
-#### Sprint 1 (Semanas 1-2): Fundación
-
-**Objetivo:** Infraestructura y autenticación funcionando
-
-**Stories Planeadas:**
-
-- INFRA-001, 002, 003, 004 (Setup completo)
-- US-001: Sistema de Autenticación Completo (L = 8 pts)
-- US-002: Landing Page Pública (M = 5 pts)
-
-**Total:** ~13 puntos + infra
-
-**Entregable:** Usuarias pueden registrarse, verificar email, y hacer login. Landing page pública visible.
+**Estimation:** **M (Medium)**  
+**Priority:** COULD HAVE  
+**Status:** 📋 Backlog  
+**Sprint Sugerido:** Fase 2
 
 ---
 
-#### Sprint 2 (Semanas 3-4): Core Features Usuaria
+#### 20. Integración con Google Calendar
 
-**Objetivo:** Usuarias pueden navegar y usar features principales
+**ID:** US-020  
+**Epic:** Eventos y Comunidad  
+**Story:** Como usuaria registrada, quiero agregar el evento a mi Google Calendar con un click
 
-**Stories Planeadas:**
+**Acceptance Criteria:**
 
-- US-003: Dashboard Principal (M = 5 pts)
-- US-005: Directorio de Negocios (M = 5 pts)
-- US-006: Directorio de Servicios (M = 5 pts)
+- [ ] Botón "Agregar a Google Calendar" en confirmación de registro
+- [ ] Genera archivo .ics automáticamente
+- [ ] Incluye todos los detalles del evento
+- [ ] Funciona en diferentes dispositivos
 
-**Total:** 15 puntos
+**Technical Notes:**
 
-**Entregable:** Usuarias autenticadas ven dashboard y pueden buscar en directorios.
+- **Stack:** Backend (ics file generation)
+- **Dependencies:** US-004
+- **Complexity Factors:** .ics format generation
 
----
-
-#### Sprint 3 (Semanas 5-6): Eventos + Admin parte 1
-
-**Objetivo:** Sistema de eventos funcionando end-to-end
-
-**Stories Planeadas:**
-
-- US-004: Ver y Registrarse en Eventos (L = 8 pts)
-- US-007: Blog con Artículos (S = 3 pts)
-- US-009: Panel Admin - Directorios (M = 5 pts)
-
-**Total:** 16 puntos
-
-**Entregable:** Usuarias pueden registrarse a eventos y reciben emails. Admin puede gestionar directorios.
+**Estimation:** **S (Small)**  
+**Priority:** COULD HAVE  
+**Status:** 📋 Backlog  
+**Sprint Sugerido:** Fase 2
 
 ---
 
-#### Sprint 4 (Semanas 7-8): Admin completo + Polish + Deploy
+## Infrastructure Items (Sprint 0)
 
-**Objetivo:** Panel admin completo, contenido inicial, y deploy a producción
-
-**Stories Planeadas:**
-
-- US-008: Panel Admin - Eventos (L = 8 pts)
-- US-010: Panel Admin - Blog (M = 5 pts)
-- INFRA-005: CI/CD (M = 5 pts)
-- INFRA-006: Deploy producción (S = 3 pts)
-- Polish & Testing final
-
-**Total:** 21 puntos (sprint más intenso, última semana)
-
-**Entregable:** MVP completo funcionando en producción. Admin puede gestionar todo sin ayuda técnica.
+### 🔧 Technical Setup Stories
 
 ---
 
-## Backlog Refinement Notes
+#### ✅ INFRA-001: Setup de Repositorio y Estructura Inicial
 
-**Frequency:** Cada 5-7 días (mitad de cada sprint)  
-**Next Review:** Sprint 1 - Día 7  
-**Duration:** 30-60 minutos
+**Descripción:** Crear repositorio GitHub y estructura base de carpetas para frontend y backend
 
-**Objetivos de Refinement:**
+**Tareas:**
 
-1. Revisar stories del siguiente sprint
-2. Aclarar dudas técnicas
-3. Ajustar estimaciones si es necesario
-4. Identificar dependencias o bloqueadores
-5. Preparar 2-3 sprints hacia adelante
+- [ ] Crear repositorio en GitHub (privado o público)
+- [ ] Crear carpetas /frontend y /backend
+- [ ] Inicializar Git con .gitignore apropiado
+- [ ] Crear README.md con instrucciones básicas
+- [ ] Crear branches: main, develop
 
-**Items que necesitan refinamiento:**
+**Estimación:** 30 minutos  
+**Prioridad:** 1  
+**Dependencias:** Ninguna
 
-- [ ] US-008 y US-010 (Admin panels) - Definir UX exacta antes de Sprint 3
-- [ ] US-004 (Eventos) - Confirmar flujo de emails antes de Sprint 3
+**Criterio de Terminado:**
+
+- [ ] Repositorio creado
+- [ ] Estructura de carpetas lista
+- [ ] .gitignore configurado
+- [ ] README con instrucciones
 
 ---
 
-## Sprint Velocity Tracking
+#### ✅ INFRA-002: Configuración de MongoDB Atlas
 
-| Sprint   | Planned Points | Completed Points | Velocity | Notes            |
-| -------- | -------------- | ---------------- | -------- | ---------------- |
-| Sprint 1 | 13 + infra     | -                | -        | Fundación + Auth |
-| Sprint 2 | 15             | -                | -        | Core features    |
-| Sprint 3 | 16             | -                | -        | Eventos + Admin  |
-| Sprint 4 | 21             | -                | -        | Polish + Deploy  |
+**Descripción:** Configurar base de datos MongoDB Atlas (tier gratuito)
 
-**Average Velocity:** [Calcular después de Sprint 2]  
-**MVP Completion:** Sprint 4 (100%)
+**Tareas:**
+
+- [ ] Crear cuenta en MongoDB Atlas
+- [ ] Crear cluster (M0 tier gratuito)
+- [ ] Configurar network access (IP whitelist o 0.0.0.0/0 para desarrollo)
+- [ ] Crear database user con credenciales
+- [ ] Obtener connection string
+- [ ] Probar conexión desde local
+
+**Estimación:** 1 hora  
+**Prioridad:** 2  
+**Dependencias:** INFRA-001
+
+**Criterio de Terminado:**
+
+- [ ] Cluster MongoDB creado y funcionando
+- [ ] Conexión probada exitosamente
+- [ ] Connection string guardada de forma segura
+- [ ] Base de datos creada
+
+---
+
+#### ✅ INFRA-003: Configuración de AWS S3
+
+**Descripción:** Configurar servicio de almacenamiento de imágenes AWS S3 (tier gratuito)
+
+**Tareas:**
+
+- [ ] Crear cuenta en AWS (si no existe)
+- [ ] Crear bucket S3 con nombre único (ej: entre-amigas-production)
+- [ ] Configurar permisos del bucket (public-read para imágenes o private con signed URLs)
+- [ ] Crear usuario IAM con permisos S3
+- [ ] Obtener credenciales (Access Key ID y Secret Access Key)
+- [ ] Configurar CORS policy en el bucket
+- [ ] Probar upload de imagen de prueba
+- [ ] Documentar credenciales en archivo seguro
+
+**Estimación:** 1-1.5 horas  
+**Prioridad:** 3  
+**Dependencias:** INFRA-001
+
+**Criterio de Terminado:**
+
+- [ ] Bucket S3 creado y configurado
+- [ ] Usuario IAM con credenciales obtenidas
+- [ ] CORS configurado correctamente
+- [ ] Upload de prueba exitoso
+- [ ] Credenciales documentadas
+
+---
+
+#### ✅ INFRA-004: Configuración de Servicio de Email (Resend)
+
+**Descripción:** Configurar Resend para envío de emails transaccionales
+
+**Tareas:**
+
+- [ ] Crear cuenta en Resend (5,000 emails/mes gratis)
+- [ ] Obtener API key
+- [ ] Configurar dominio de envío (si se tiene, sino usar default de Resend)
+- [ ] Probar envío de email de prueba
+- [ ] Crear templates básicos para:
+  - Email de bienvenida
+  - Verificación de cuenta
+  - Confirmación de registro a evento
+  - Recuperación de contraseña
+- [ ] Documentar API key en archivo seguro
+
+**Estimación:** 2-3 horas  
+**Prioridad:** 4  
+**Dependencias:** INFRA-001
+
+**Criterio de Terminado:**
+
+- [ ] Cuenta Resend creada
+- [ ] API key obtenida
+- [ ] Email de prueba enviado exitosamente
+- [ ] Templates básicos creados
+- [ ] Credenciales documentadas
+
+---
+
+#### ✅ INFRA-005: Configuración de Proyecto Frontend (React + Vite)
+
+**Descripción:** Inicializar proyecto React con Vite y configurar dependencias base
+
+**Tareas:**
+
+- [ ] Ejecutar `npm create vite@latest frontend -- --template react`
+- [ ] Instalar dependencias base: TailwindCSS, React Router, Axios, React Hook Form, Yup
+- [ ] Configurar Tailwind (postcss.config.js, tailwind.config.js)
+- [ ] Configurar ESLint y Prettier
+- [ ] Crear estructura de carpetas según ARCHITECTURE.md
+- [ ] Crear archivo .env.example con variables necesarias
+- [ ] Probar que servidor de desarrollo corre sin errores
+
+**Estimación:** 2 horas  
+**Prioridad:** 5  
+**Dependencias:** INFRA-001
+
+**Criterio de Terminado:**
+
+- [ ] Proyecto React inicializado
+- [ ] Todas las dependencias instaladas
+- [ ] TailwindCSS funcionando
+- [ ] Estructura de carpetas completa
+- [ ] Servidor dev corriendo en localhost:5173
+
+---
+
+#### ✅ INFRA-006: Configuración de Proyecto Backend (Node + Express)
+
+**Descripción:** Inicializar proyecto Node.js con Express y configurar dependencias base
+
+**Tareas:**
+
+- [ ] Ejecutar `npm init -y` en carpeta /backend
+- [ ] Instalar dependencias: Express, Mongoose, dotenv, bcryptjs, jsonwebtoken, express-validator, cors, helmet
+- [ ] Instalar dev dependencies: nodemon
+- [ ] Crear estructura de carpetas según ARCHITECTURE.md
+- [ ] Crear archivo .env.example con variables necesarias
+- [ ] Configurar scripts en package.json (dev, start)
+- [ ] Crear server.js básico con Express
+- [ ] Configurar conexión a MongoDB
+- [ ] Crear endpoint de health check
+- [ ] Probar que servidor corre sin errores
+
+**Estimación:** 2-3 horas  
+**Prioridad:** 6  
+**Dependencias:** INFRA-001, INFRA-002
+
+**Criterio de Terminado:**
+
+- [ ] Proyecto Node inicializado
+- [ ] Todas las dependencias instaladas
+- [ ] Estructura de carpetas completa
+- [ ] Servidor corriendo en localhost:5000
+- [ ] Conexión a MongoDB exitosa
+- [ ] Health check endpoint responde
+
+---
+
+#### ✅ INFRA-007: Configuración Inicial de AWS S3 Upload Service
+
+**Descripción:** Configurar servicio de upload de imágenes con AWS S3 en backend
+
+**Tareas:**
+
+- [ ] Instalar dependencias: `@aws-sdk/client-s3`, `multer`
+- [ ] Crear archivo de configuración `/backend/src/config/aws.js`
+- [ ] Crear servicio `/backend/src/services/upload.service.js` con funciones:
+  - `uploadToS3(file, folder)` - sube archivo a S3
+  - `deleteFromS3(fileKey)` - elimina archivo de S3
+- [ ] Crear middleware `/backend/src/middleware/upload.middleware.js` con Multer
+- [ ] Probar upload de imagen de prueba
+- [ ] Documentar uso en README
+
+**Estimación:** 2 horas  
+**Prioridad:** 7  
+**Dependencias:** INFRA-003, INFRA-006
+
+**Criterio de Terminado:**
+
+- [ ] Servicio de upload configurado
+- [ ] Upload de prueba exitoso
+- [ ] Delete de prueba exitoso
+- [ ] Middleware funcionando
+- [ ] Documentado en README
+
+---
+
+### ⏱ Sprint 0 Timeline Sugerido
+
+**Total Estimado:** 8-12 horas  
+**Duración Sugerida:** 2-3 días
+
+**Día 1 (3-4 horas):**
+
+- INFRA-001: Repo y estructura (30 min)
+- INFRA-002: MongoDB Atlas (1 hr)
+- INFRA-003: AWS S3 (1-1.5 hrs)
+- INFRA-004: Resend (2-3 hrs)
+
+**Día 2 (3-4 horas):**
+
+- INFRA-005: Frontend setup (2 hrs)
+- INFRA-006: Backend setup (2-3 hrs)
+
+**Día 3 (2 horas):**
+
+- INFRA-007: AWS S3 service (2 hrs)
+- Testing completo
+- Documentar troubleshooting común
 
 ---
 
@@ -956,7 +1071,7 @@ US-002 (Landing) → Independiente (puede ir en paralelo)
 
 ---
 
-**Última actualización:** 5 de noviembre, 2025  
+**Última actualización:** 6 de noviembre, 2025  
 **Próxima revisión:** Sprint 1 - Día 7  
 **Maintained by:** Equipo Entre Amigas
 

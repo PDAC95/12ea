@@ -1,8 +1,8 @@
 # ARCHITECTURE.md - Entre Amigas
 
-**Version:** 1.0  
+**Version:** 1.1  
 **Created:** 5 de noviembre, 2025  
-**Last Updated:** 5 de noviembre, 2025  
+**Last Updated:** 6 de noviembre, 2025  
 **Maintained by:** Equipo Entre Amigas
 
 ---
@@ -34,17 +34,17 @@ Plataforma comunitaria para mujeres migrantes hispanas en Canadá que incluye:
 ### High-Level Architecture
 
 ```
-┌─────────────────────────────────────────────────────┐
+┌──────────────────────────────────────────────────┐
 │                   USUARIO FINAL                      │
 │              (Navegador Web - Mobile/Desktop)        │
-└──────────────────────┬──────────────────────────────┘
+└──────────────────┬───────────────────────────────┘
                        │
                        │ HTTPS
                        ▼
-┌─────────────────────────────────────────────────────┐
+┌──────────────────────────────────────────────────┐
 │                 CDN (Cloudflare)                     │
 │              (Assets estáticos + Cache)              │
-└──────────────────────┬──────────────────────────────┘
+└──────────────────┬───────────────────────────────┘
                        │
         ┌──────────────┴──────────────┐
         │                              │
@@ -55,13 +55,13 @@ Plataforma comunitaria para mujeres migrantes hispanas en Canadá que incluye:
 │  (Vercel/Netlify)│   API    │   (Railway)      │
 └──────────────────┘  Calls   └────────┬─────────┘
                                        │
-                    ┌──────────────────┼──────────────────┐
-                    │                  │                  │
-                    ▼                  ▼                  ▼
-            ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-            │   MongoDB    │  │  Cloudinary  │  │ Resend/Brevo │
-            │    Atlas     │  │  (Imágenes)  │  │   (Emails)   │
-            └──────────────┘  └──────────────┘  └──────────────┘
+             ┌─────────────────────────┼──────────────────┐
+             │                         │                  │
+             ▼                         ▼                  ▼
+     ┌──────────────┐          ┌──────────────┐  ┌──────────────┐
+     │   MongoDB    │          │   AWS S3     │  │ Resend/Brevo │
+     │    Atlas     │          │  (Imágenes)  │  │   (Emails)   │
+     └──────────────┘          └──────────────┘  └──────────────┘
 ```
 
 ### Architecture Principles
@@ -90,7 +90,7 @@ Router: React Router DOM 6.26.x
 Form Handling: React Hook Form 7.53.x
 Form Validation: Yup 1.4.x
 Date Handling: date-fns 3.6.x
-Icons: Lucide React 0.index445.x (o React Icons)
+Icons: Lucide React 0.445.x (o React Icons)
 Testing: Vitest 2.0.x + React Testing Library 16.x
 Linting: ESLint 9.x + Prettier 3.3.x
 Package Manager: npm
@@ -107,7 +107,7 @@ Database: MongoDB 7.0.x
 ODM: Mongoose 8.6.x
 Authentication: jsonwebtoken 9.0.x + bcryptjs 2.4.x
 Validation: express-validator 7.2.x
-File Upload: Multer 1.4.x + Cloudinary SDK
+File Upload: Multer 1.4.x + AWS SDK v3
 Email Service: @resend/node 4.0.x (o Brevo SDK)
 Security: helmet 7.x, cors 2.8.x, express-rate-limit 7.x
 Environment Variables: dotenv 16.4.x
@@ -123,7 +123,7 @@ Version Control: Git + GitHub
 Hosting Frontend: Vercel (opción 1) / Netlify (opción 2)
 Hosting Backend: Railway (opción 1) / Render (opción 2)
 Database Hosting: MongoDB Atlas (tier gratuito M0)
-File Storage: Cloudinary (tier gratuito)
+File Storage: AWS S3 (tier gratuito 5GB)
 Email Service: Resend (5k emails/mes gratis) / Brevo (300/día gratis)
 CI/CD: GitHub Actions
 Monitoring: Sentry (opcional post-MVP)
@@ -185,32 +185,38 @@ entre-amigas/
 │   │   │   │   │   └── eventService.js
 │   │   │   │   └── pages/
 │   │   │   │       ├── EventsPage.jsx
-│   │   │   │       └── EventDetailPage.jsx
+│   │   │   │       ├── EventDetailPage.jsx
+│   │   │   │       └── MyEventsPage.jsx
 │   │   │   │
-│   │   │   ├── business/                # Directorio Negocios
+│   │   │   ├── business/                # Directorio de negocios
 │   │   │   │   ├── components/
 │   │   │   │   │   ├── BusinessCard.jsx
 │   │   │   │   │   ├── BusinessList.jsx
-│   │   │   │   │   └── BusinessFilters.jsx
+│   │   │   │   │   ├── BusinessFilters.jsx
+│   │   │   │   │   └── BusinessDetail.jsx
 │   │   │   │   ├── services/
 │   │   │   │   │   └── businessService.js
 │   │   │   │   └── pages/
-│   │   │   │       └── BusinessPage.jsx
+│   │   │   │       ├── BusinessPage.jsx
+│   │   │   │       └── BusinessDetailPage.jsx
 │   │   │   │
-│   │   │   ├── services/                # Directorio Servicios
+│   │   │   ├── services/                # Directorio de servicios
 │   │   │   │   ├── components/
 │   │   │   │   │   ├── ServiceCard.jsx
 │   │   │   │   │   ├── ServiceList.jsx
-│   │   │   │   │   └── ServiceFilters.jsx
+│   │   │   │   │   ├── ServiceFilters.jsx
+│   │   │   │   │   └── ServiceDetail.jsx
 │   │   │   │   ├── services/
-│   │   │   │   │   └── serviceDirectoryService.js
+│   │   │   │   │   └── serviceService.js
 │   │   │   │   └── pages/
-│   │   │   │       └── ServicesPage.jsx
+│   │   │   │       ├── ServicesPage.jsx
+│   │   │   │       └── ServiceDetailPage.jsx
 │   │   │   │
 │   │   │   ├── blog/                    # Blog
 │   │   │   │   ├── components/
 │   │   │   │   │   ├── BlogCard.jsx
 │   │   │   │   │   ├── BlogList.jsx
+│   │   │   │   │   ├── BlogFilters.jsx
 │   │   │   │   │   └── BlogPost.jsx
 │   │   │   │   ├── services/
 │   │   │   │   │   └── blogService.js
@@ -218,14 +224,14 @@ entre-amigas/
 │   │   │   │       ├── BlogPage.jsx
 │   │   │   │       └── BlogPostPage.jsx
 │   │   │   │
-│   │   │   ├── admin/                   # Panel Admin
+│   │   │   ├── admin/                   # Panel de administración
 │   │   │   │   ├── components/
 │   │   │   │   │   ├── AdminSidebar.jsx
-│   │   │   │   │   ├── AdminStats.jsx
 │   │   │   │   │   ├── EventForm.jsx
 │   │   │   │   │   ├── BusinessForm.jsx
 │   │   │   │   │   ├── ServiceForm.jsx
-│   │   │   │   │   └── BlogPostEditor.jsx
+│   │   │   │   │   ├── BlogEditor.jsx
+│   │   │   │   │   └── DataTable.jsx
 │   │   │   │   ├── services/
 │   │   │   │   │   └── adminService.js
 │   │   │   │   └── pages/
@@ -235,53 +241,54 @@ entre-amigas/
 │   │   │   │       ├── ManageServices.jsx
 │   │   │   │       └── ManageBlog.jsx
 │   │   │   │
-│   │   │   ├── landing/                 # Landing Page
+│   │   │   ├── landing/                 # Landing page pública
 │   │   │   │   ├── components/
 │   │   │   │   │   ├── Hero.jsx
 │   │   │   │   │   ├── Features.jsx
 │   │   │   │   │   ├── Testimonials.jsx
-│   │   │   │   │   └── CTA.jsx
+│   │   │   │   │   ├── CallToAction.jsx
+│   │   │   │   │   └── Footer.jsx
 │   │   │   │   └── pages/
 │   │   │   │       └── LandingPage.jsx
 │   │   │   │
-│   │   │   └── profile/                 # Perfil Usuario
+│   │   │   └── profile/                 # Perfil de usuaria
 │   │   │       ├── components/
-│   │   │       │   ├── ProfileInfo.jsx
-│   │   │       │   └── MyRegisteredEvents.jsx
+│   │   │       │   ├── ProfileForm.jsx
+│   │   │       │   └── ProfileSettings.jsx
 │   │   │       └── pages/
 │   │   │           └── ProfilePage.jsx
 │   │   │
-│   │   ├── shared/                      # Componentes compartidos
-│   │   │   ├── components/
-│   │   │   │   ├── ui/                  # Componentes UI base
+│   │   ├── shared/                      # Compartido entre features
+│   │   │   ├── components/              # Componentes UI reutilizables
+│   │   │   │   ├── ui/
 │   │   │   │   │   ├── Button.jsx
 │   │   │   │   │   ├── Input.jsx
 │   │   │   │   │   ├── Card.jsx
 │   │   │   │   │   ├── Modal.jsx
-│   │   │   │   │   ├── Spinner.jsx
-│   │   │   │   │   ├── Alert.jsx
-│   │   │   │   │   └── Badge.jsx
-│   │   │   │   ├── layout/              # Layout components
+│   │   │   │   │   ├── Dropdown.jsx
+│   │   │   │   │   └── Spinner.jsx
+│   │   │   │   ├── layout/
 │   │   │   │   │   ├── Header.jsx
-│   │   │   │   │   ├── Footer.jsx
 │   │   │   │   │   ├── Sidebar.jsx
-│   │   │   │   │   └── Container.jsx
-│   │   │   │   └── common/              # Componentes comunes
-│   │   │   │       ├── LoadingScreen.jsx
+│   │   │   │   │   ├── Footer.jsx
+│   │   │   │   │   └── Layout.jsx
+│   │   │   │   └── common/
 │   │   │   │       ├── ErrorBoundary.jsx
+│   │   │   │       ├── LoadingScreen.jsx
 │   │   │   │       └── NotFound.jsx
 │   │   │   │
 │   │   │   ├── hooks/                   # Custom hooks
-│   │   │   │   ├── useForm.js
 │   │   │   │   ├── useDebounce.js
 │   │   │   │   ├── useLocalStorage.js
-│   │   │   │   └── useToast.js
+│   │   │   │   ├── useForm.js
+│   │   │   │   └── useApi.js
 │   │   │   │
 │   │   │   └── utils/                   # Utilidades
 │   │   │       ├── api.js               # Axios config
-│   │   │       ├── constants.js
-│   │   │       ├── formatters.js        # Date, currency, etc
-│   │   │       └── validators.js
+│   │   │       ├── validators.js        # Validaciones Yup
+│   │   │       ├── formatters.js        # Formato de fechas, texto
+│   │   │       ├── constants.js         # Constantes globales
+│   │   │       └── helpers.js           # Funciones helper
 │   │   │
 │   │   ├── routes/                      # Configuración de rutas
 │   │   │   ├── AppRoutes.jsx
@@ -315,7 +322,7 @@ entre-amigas/
 │   │   ├── config/                      # Configuraciones
 │   │   │   ├── database.js              # MongoDB connection
 │   │   │   ├── email.js                 # Email service config
-│   │   │   ├── cloudinary.js            # Cloudinary config
+│   │   │   ├── aws.js                   # AWS S3 config
 │   │   │   └── constants.js             # Constantes del sistema
 │   │   │
 │   │   ├── models/                      # Modelos de datos (Mongoose)
@@ -354,7 +361,7 @@ entre-amigas/
 │   │   ├── services/                    # Servicios auxiliares
 │   │   │   ├── email.service.js         # Envío de emails
 │   │   │   ├── token.service.js         # JWT tokens
-│   │   │   └── upload.service.js        # Cloudinary uploads
+│   │   │   └── upload.service.js        # AWS S3 uploads
 │   │   │
 │   │   ├── utils/                       # Utilidades
 │   │   │   ├── asyncHandler.js          # Wrapper para async
@@ -380,1003 +387,679 @@ entre-amigas/
 ├── .gitignore                           # Git ignore global
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml                   # GitHub Actions CI/CD
+│       └── deploy.yml                   # CI/CD pipeline
 │
 └── README.md                            # Documentación principal
 ```
 
 ---
 
-## Naming Conventions
+## Data Models
 
-### JavaScript/React
-
-```javascript
-// Components: PascalCase
-// Archivo: LoginForm.jsx
-export const LoginForm = () => { ... }
-
-// Functions & Variables: camelCase
-const getUserData = async (userId) => { ... }
-const isAuthenticated = true;
-
-// Constants: UPPER_SNAKE_CASE
-const API_BASE_URL = 'https://api.example.com';
-const MAX_FILE_SIZE = 5242880;
-
-// Hooks: camelCase con prefijo 'use'
-const useAuth = () => { ... }
-
-// Context: PascalCase con sufijo 'Context'
-const AuthContext = createContext();
-
-// Services: camelCase con sufijo 'Service'
-const authService = { login, register, logout };
-
-// Handlers: camelCase con prefijo 'handle'
-const handleSubmit = (e) => { ... }
-const handleChange = (e) => { ... }
-
-// Boolean variables: is/has/should prefixes
-const isLoading = false;
-const hasPermission = true;
-const shouldRender = false;
-```
-
-### Files & Folders
-
-```bash
-# Components: PascalCase.jsx
-LoginForm.jsx
-EventCard.jsx
-
-# Pages: PascalCase + Page.jsx
-LoginPage.jsx
-EventsPage.jsx
-
-# Utilities & Services: camelCase.js
-authService.js
-formatDate.js
-
-# Hooks: camelCase.js con prefijo 'use'
-useAuth.js
-useForm.js
-
-# Folders: kebab-case o camelCase (consistente)
-auth/
-events/
-shared/components/
-```
-
-### Backend (Node.js/Express)
+### User Model
 
 ```javascript
-// Models: PascalCase singular
-// Archivo: User.js
-const User = mongoose.model('User', userSchema);
-
-// Controllers: camelCase con sufijo Controller
-// Archivo: auth.controller.js
-const authController = { register, login, logout };
-
-// Routes: camelCase con sufijo .routes.js
-// Archivo: auth.routes.js
-router.post('/register', register);
-
-// Middleware: camelCase con sufijo .middleware.js
-// Archivo: auth.middleware.js
-const authMiddleware = (req, res, next) => { ... }
-
-// Services: camelCase con sufijo .service.js
-// Archivo: email.service.js
-const emailService = { sendWelcome, sendConfirmation };
-```
-
-### Database (MongoDB)
-
-```javascript
-// Collections: PascalCase singular en código, plural en DB
-User -> users (collection)
-Event -> events (collection)
-
-// Fields: camelCase
 {
-  fullName: String,
-  preferredName: String,
-  createdAt: Date
+  _id: ObjectId,
+  fullName: String (required),
+  preferredName: String (required),
+  email: String (required, unique, lowercase),
+  password: String (required, hashed),
+  phone: String (required),
+  birthday: Date (required),
+  city: String (required),
+  role: String (enum: ['user', 'admin'], default: 'user'),
+  isVerified: Boolean (default: false),
+  verificationToken: String,
+  verificationTokenExpires: Date,
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
+  createdAt: Date (auto),
+  updatedAt: Date (auto)
+}
+```
+
+### Event Model
+
+```javascript
+{
+  _id: ObjectId,
+  title: String (required),
+  description: String (required),
+  date: Date (required),
+  time: String (required),
+  modality: String (enum: ['virtual', 'presencial'], required),
+  location: String (required if presencial),
+  meetingLink: String (required if virtual),
+  maxCapacity: Number (optional),
+  currentRegistrations: Number (default: 0),
+  imageUrl: String (optional),
+  status: String (enum: ['upcoming', 'completed', 'cancelled'], default: 'upcoming'),
+  createdBy: ObjectId (ref: 'User', required),
+  createdAt: Date (auto),
+  updatedAt: Date (auto)
+}
+```
+
+### EventRegistration Model
+
+```javascript
+{
+  _id: ObjectId,
+  userId: ObjectId (ref: 'User', required),
+  eventId: ObjectId (ref: 'Event', required),
+  registeredAt: Date (auto),
+  status: String (enum: ['registered', 'cancelled'], default: 'registered'),
+  createdAt: Date (auto),
+  updatedAt: Date (auto)
 }
 
-// IDs: _id (Mongo default)
+// Unique compound index: [userId, eventId]
 ```
 
-### Git Commits (Español - Conventional Commits)
+### Business Model
 
-```bash
-# Formato: <tipo>: <descripción corta>
-
-# Tipos principales:
-feat: nueva funcionalidad de eventos
-fix: corregir validación de email
-docs: actualizar README
-style: formatear código con prettier
-refactor: reorganizar estructura de carpetas
-test: agregar tests para auth
-chore: actualizar dependencias
-perf: optimizar consulta de eventos
-
-# Ejemplos:
-feat: agregar registro a eventos
-fix: corregir envío de email de confirmación
-docs: documentar API de eventos
-refactor: simplificar lógica de autenticación
+```javascript
+{
+  _id: ObjectId,
+  name: String (required),
+  owner: String (required),
+  category: String (enum: ['Comida', 'Belleza', 'Salud', 'Educación', 'Servicios', 'Otro'], required),
+  description: String (required),
+  phone: String (required),
+  email: String (optional),
+  city: String (required),
+  createdBy: ObjectId (ref: 'User', required),
+  createdAt: Date (auto),
+  updatedAt: Date (auto)
+}
 ```
 
-### API Endpoints
+### Service Model
 
-```bash
-# RESTful conventions
-GET    /api/v1/events              # Listar todos
-GET    /api/v1/events/:id          # Obtener uno
-POST   /api/v1/events              # Crear
-PUT    /api/v1/events/:id          # Actualizar completo
-PATCH  /api/v1/events/:id          # Actualizar parcial
-DELETE /api/v1/events/:id          # Eliminar
+```javascript
+{
+  _id: ObjectId,
+  name: String (required),
+  category: String (enum: ['Salud', 'Dental', 'Salud Mental', 'Legal', 'Educación', 'Emergencias', 'Gobierno'], required),
+  specialty: String (optional),
+  phone: String (required),
+  address: String (required),
+  website: String (optional),
+  notes: String (optional),
+  city: String (required),
+  createdBy: ObjectId (ref: 'User', required),
+  createdAt: Date (auto),
+  updatedAt: Date (auto)
+}
+```
 
-# Nested resources
-POST   /api/v1/events/:id/register         # Registrarse a evento
-GET    /api/v1/users/:id/events            # Eventos de un usuario
+### BlogPost Model
 
-# Auth endpoints
-POST   /api/v1/auth/register
-POST   /api/v1/auth/login
-POST   /api/v1/auth/logout
-POST   /api/v1/auth/forgot-password
-POST   /api/v1/auth/reset-password
-GET    /api/v1/auth/verify-email/:token
+```javascript
+{
+  _id: ObjectId,
+  title: String (required),
+  slug: String (required, unique),
+  excerpt: String (required),
+  content: String (required),
+  featuredImage: String (optional),
+  category: String (enum: ['Wellness', 'Amistad', 'Amor Propio', 'Migración', 'Consejos', 'Historias'], required),
+  status: String (enum: ['draft', 'published', 'archived'], default: 'draft'),
+  publishedAt: Date (optional),
+  author: ObjectId (ref: 'User', required),
+  createdAt: Date (auto),
+  updatedAt: Date (auto)
+}
 ```
 
 ---
 
 ## API Design
 
-### API Architecture
+### API Versioning
 
-**Type:** RESTful API  
-**Base URL:** `https://api.entreamigas.com/api/v1/`  
-**Content-Type:** `application/json`  
-**Authentication:** Bearer Token (JWT)
+- Base URL: `/api/v1`
+- Version in URL path
+- Current version: v1
 
-### Standard Response Format
+### REST Conventions
 
-#### Success Response
+```
+GET    /api/v1/resource       - List all
+GET    /api/v1/resource/:id   - Get one
+POST   /api/v1/resource       - Create
+PUT    /api/v1/resource/:id   - Update (full)
+PATCH  /api/v1/resource/:id   - Update (partial)
+DELETE /api/v1/resource/:id   - Delete
+```
 
-```json
+### Authentication Endpoints
+
+```
+POST   /api/v1/auth/register              - Registro de usuario
+POST   /api/v1/auth/login                 - Login
+GET    /api/v1/auth/verify-email/:token   - Verificar email
+POST   /api/v1/auth/forgot-password       - Solicitar reset
+POST   /api/v1/auth/reset-password/:token - Resetear password
+GET    /api/v1/auth/me                    - Obtener usuario actual
+PUT    /api/v1/auth/update-profile        - Actualizar perfil
+```
+
+### Events Endpoints
+
+```
+GET    /api/v1/events                - Listar eventos (público)
+GET    /api/v1/events/:id            - Ver detalle de evento
+POST   /api/v1/events/:id/register   - Registrarse a evento (auth)
+GET    /api/v1/events/my-events      - Mis eventos registrados (auth)
+```
+
+### Business Endpoints
+
+```
+GET    /api/v1/business              - Listar negocios
+GET    /api/v1/business/:id          - Ver detalle de negocio
+```
+
+### Services Endpoints
+
+```
+GET    /api/v1/services              - Listar servicios
+GET    /api/v1/services/:id          - Ver detalle de servicio
+```
+
+### Blog Endpoints
+
+```
+GET    /api/v1/blog                  - Listar artículos publicados
+GET    /api/v1/blog/:slug            - Ver artículo por slug
+```
+
+### Admin Endpoints (Protected - Admin Only)
+
+```
+POST   /api/v1/admin/events          - Crear evento
+PUT    /api/v1/admin/events/:id      - Editar evento
+DELETE /api/v1/admin/events/:id      - Eliminar evento
+GET    /api/v1/admin/events/:id/registrations - Ver registros
+
+POST   /api/v1/admin/business        - Crear negocio
+PUT    /api/v1/admin/business/:id    - Editar negocio
+DELETE /api/v1/admin/business/:id    - Eliminar negocio
+
+POST   /api/v1/admin/services        - Crear servicio
+PUT    /api/v1/admin/services/:id    - Editar servicio
+DELETE /api/v1/admin/services/:id    - Eliminar servicio
+
+POST   /api/v1/admin/blog            - Crear artículo
+PUT    /api/v1/admin/blog/:id        - Editar artículo
+DELETE /api/v1/admin/blog/:id        - Eliminar artículo
+```
+
+### Query Parameters (Common)
+
+```javascript
+// Pagination
+?page=1&limit=20
+
+// Filtering
+?city=Toronto&category=Salud
+
+// Search
+?search=palabra
+
+// Sorting
+?sort=date&order=asc
+```
+
+---
+
+## Authentication & Authorization
+
+### JWT Token Structure
+
+```javascript
 {
-  "success": true,
-  "data": {
-    // Response data here
+  header: {
+    alg: 'HS256',
+    typ: 'JWT'
   },
-  "message": "Operación exitosa"
+  payload: {
+    userId: '64f5a1b2c3d4e5f6g7h8i9j0',
+    email: 'usuario@example.com',
+    role: 'user',
+    iat: 1699123456,
+    exp: 1699728256  // 7 días
+  },
+  signature: '...'
 }
-```
-
-#### Error Response
-
-```json
-{
-  "success": false,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Error de validación",
-    "details": [
-      {
-        "field": "email",
-        "message": "Email inválido"
-      }
-    ]
-  }
-}
-```
-
-#### Paginated Response
-
-```json
-{
-  "success": true,
-  "data": [...],
-  "pagination": {
-    "page": 1,
-    "limit": 20,
-    "total": 150,
-    "totalPages": 8
-  }
-}
-```
-
-### HTTP Status Codes
-
-```yaml
-200 OK: Solicitud exitosa (GET, PUT, PATCH)
-201 Created: Recurso creado exitosamente (POST)
-204 No Content: Solicitud exitosa sin contenido (DELETE)
-400 Bad Request: Datos inválidos o malformados
-401 Unauthorized: No autenticado o token inválido
-403 Forbidden: No autorizado (sin permisos)
-404 Not Found: Recurso no encontrado
-409 Conflict: Conflicto (ej: email ya existe)
-429 Too Many Requests: Rate limit excedido
-500 Internal Server Error: Error del servidor
 ```
 
 ### Authentication Flow
 
-```
-1. Register/Login
-   POST /api/v1/auth/register
-   POST /api/v1/auth/login
-   → Returns: { token, user }
+1. User submits credentials → `/api/v1/auth/login`
+2. Backend validates credentials
+3. Backend generates JWT token
+4. Token sent to client
+5. Client stores token in localStorage
+6. Client includes token in Authorization header: `Bearer <token>`
+7. Backend middleware verifies token on protected routes
 
-2. Store token in client
-   localStorage.setItem('token', token)
+### Password Security
 
-3. Include token in headers for protected routes
-   Authorization: Bearer <token>
+- Hashed with bcrypt
+- Salt rounds: 10
+- Never stored in plain text
+- Never sent in responses
 
-4. Backend verifies token in middleware
-   jwt.verify(token, SECRET_KEY)
-
-5. Attach user to request
-   req.user = decodedToken
-```
-
-### API Endpoints Documentation
-
-#### Authentication
-
-```http
-POST /api/v1/auth/register
-Body: { fullName, preferredName, email, password, phone, birthday, city }
-Response: { success, data: { token, user }, message }
-
-POST /api/v1/auth/login
-Body: { email, password }
-Response: { success, data: { token, user }, message }
-
-POST /api/v1/auth/forgot-password
-Body: { email }
-Response: { success, message }
-
-POST /api/v1/auth/reset-password/:token
-Body: { password }
-Response: { success, message }
-
-GET /api/v1/auth/verify-email/:token
-Response: { success, message }
-
-GET /api/v1/auth/me (Protected)
-Headers: Authorization: Bearer <token>
-Response: { success, data: user }
-```
-
-#### Events
-
-```http
-GET /api/v1/events
-Query: ?page=1&limit=20&modality=virtual&city=Toronto
-Response: { success, data: [events], pagination }
-
-GET /api/v1/events/:id
-Response: { success, data: event }
-
-POST /api/v1/events (Admin only)
-Headers: Authorization: Bearer <token>
-Body: { title, description, date, time, modality, location, virtualLink, maxCapacity, imageUrl }
-Response: { success, data: event, message }
-
-PUT /api/v1/events/:id (Admin only)
-Headers: Authorization: Bearer <token>
-Body: { ... }
-Response: { success, data: event, message }
-
-DELETE /api/v1/events/:id (Admin only)
-Headers: Authorization: Bearer <token>
-Response: { success, message }
-
-POST /api/v1/events/:id/register (Protected)
-Headers: Authorization: Bearer <token>
-Response: { success, data: registration, message }
-
-GET /api/v1/events/my-events (Protected)
-Headers: Authorization: Bearer <token>
-Response: { success, data: [events] }
-```
-
-#### Business Directory
-
-```http
-GET /api/v1/business
-Query: ?category=gastronomia&city=Toronto&search=keyword
-Response: { success, data: [businesses] }
-
-GET /api/v1/business/:id
-Response: { success, data: business }
-
-POST /api/v1/business (Admin only)
-Headers: Authorization: Bearer <token>
-Body: { businessName, ownerName, category, description, phone, email, city }
-Response: { success, data: business, message }
-
-PUT /api/v1/business/:id (Admin only)
-Headers: Authorization: Bearer <token>
-Body: { ... }
-Response: { success, data: business, message }
-
-DELETE /api/v1/business/:id (Admin only)
-Headers: Authorization: Bearer <token>
-Response: { success, message }
-```
-
-#### Services Directory
-
-```http
-GET /api/v1/services
-Query: ?category=salud&city=Toronto&search=keyword
-Response: { success, data: [services] }
-
-GET /api/v1/services/:id
-Response: { success, data: service }
-
-POST /api/v1/services (Admin only)
-Headers: Authorization: Bearer <token>
-Body: { serviceName, category, specialty, phone, address, website, notes, city }
-Response: { success, data: service, message }
-
-PUT /api/v1/services/:id (Admin only)
-Headers: Authorization: Bearer <token>
-Body: { ... }
-Response: { success, data: service, message }
-
-DELETE /api/v1/services/:id (Admin only)
-Headers: Authorization: Bearer <token>
-Response: { success, message }
-```
-
-#### Blog
-
-```http
-GET /api/v1/blog
-Query: ?category=wellness&page=1&limit=10
-Response: { success, data: [posts], pagination }
-
-GET /api/v1/blog/:slug
-Response: { success, data: post }
-
-POST /api/v1/blog (Admin only)
-Headers: Authorization: Bearer <token>
-Body: { title, content, excerpt, category, featuredImage, status }
-Response: { success, data: post, message }
-
-PUT /api/v1/blog/:id (Admin only)
-Headers: Authorization: Bearer <token>
-Body: { ... }
-Response: { success, data: post, message }
-
-DELETE /api/v1/blog/:id (Admin only)
-Headers: Authorization: Bearer <token>
-Response: { success, message }
-```
-
----
-
-## Database Schema
-
-### User Model
+### Protected Routes Pattern
 
 ```javascript
-const userSchema = new mongoose.Schema(
-  {
-    fullName: {
-      type: String,
-      required: [true, "El nombre completo es requerido"],
-      trim: true,
-      minlength: 2,
-      maxlength: 100,
-    },
-    preferredName: {
-      type: String,
-      required: [true, "El nombre preferido es requerido"],
-      trim: true,
-      minlength: 2,
-      maxlength: 50,
-    },
-    email: {
-      type: String,
-      required: [true, "El email es requerido"],
-      unique: true,
-      lowercase: true,
-      trim: true,
-      match: [/^\S+@\S+\.\S+$/, "Email inválido"],
-    },
-    password: {
-      type: String,
-      required: [true, "La contraseña es requerida"],
-      minlength: 8,
-      select: false, // No incluir en queries por defecto
-    },
-    phone: {
-      type: String,
-      required: [true, "El teléfono es requerido"],
-      trim: true,
-    },
-    birthday: {
-      type: Date,
-      required: [true, "La fecha de nacimiento es requerida"],
-    },
-    city: {
-      type: String,
-      required: [true, "La ciudad es requerida"],
-      trim: true,
-    },
-    role: {
-      type: String,
-      enum: ["user", "admin"],
-      default: "user",
-    },
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
-    verificationToken: String,
-    resetPasswordToken: String,
-    resetPasswordExpires: Date,
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-// Indexes
-userSchema.index({ email: 1 });
-userSchema.index({ role: 1 });
-userSchema.index({ city: 1 });
-
-// Hooks: Hash password antes de guardar
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
-});
-```
-
-### Event Model
-
-```javascript
-const eventSchema = new mongoose.Schema(
-  {
-    title: {
-      type: String,
-      required: [true, "El título es requerido"],
-      trim: true,
-      maxlength: 150,
-    },
-    description: {
-      type: String,
-      required: [true, "La descripción es requerida"],
-      trim: true,
-      maxlength: 2000,
-    },
-    date: {
-      type: Date,
-      required: [true, "La fecha es requerida"],
-    },
-    time: {
-      type: String,
-      required: [true, "La hora es requerida"],
-    },
-    modality: {
-      type: String,
-      enum: ["virtual", "presencial"],
-      required: [true, "La modalidad es requerida"],
-    },
-    location: {
-      type: String,
-      required: function () {
-        return this.modality === "presencial";
-      },
-    },
-    virtualLink: {
-      type: String,
-      required: function () {
-        return this.modality === "virtual";
-      },
-    },
-    maxCapacity: {
-      type: Number,
-      min: 0,
-    },
-    currentRegistrations: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
-    imageUrl: {
-      type: String,
-      default: null,
-    },
-    status: {
-      type: String,
-      enum: ["upcoming", "completed", "cancelled"],
-      default: "upcoming",
-    },
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-// Indexes
-eventSchema.index({ date: 1 });
-eventSchema.index({ status: 1 });
-eventSchema.index({ modality: 1 });
-eventSchema.index({ createdBy: 1 });
-```
-
-### EventRegistration Model
-
-```javascript
-const eventRegistrationSchema = new mongoose.Schema(
-  {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    eventId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Event",
-      required: true,
-    },
-    registeredAt: {
-      type: Date,
-      default: Date.now,
-    },
-    status: {
-      type: String,
-      enum: ["registered", "cancelled"],
-      default: "registered",
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-// Compound index para evitar registros duplicados
-eventRegistrationSchema.index({ userId: 1, eventId: 1 }, { unique: true });
-```
-
-### Business Model
-
-```javascript
-const businessSchema = new mongoose.Schema(
-  {
-    businessName: {
-      type: String,
-      required: [true, "El nombre del negocio es requerido"],
-      trim: true,
-      maxlength: 150,
-    },
-    ownerName: {
-      type: String,
-      trim: true,
-      maxlength: 100,
-    },
-    category: {
-      type: String,
-      required: [true, "La categoría es requerida"],
-      trim: true,
-    },
-    description: {
-      type: String,
-      trim: true,
-      maxlength: 500,
-    },
-    phone: {
-      type: String,
-      required: [true, "El teléfono es requerido"],
-      trim: true,
-    },
-    email: {
-      type: String,
-      trim: true,
-      lowercase: true,
-    },
-    city: {
-      type: String,
-      required: [true, "La ciudad es requerida"],
-      trim: true,
-    },
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-// Indexes
-businessSchema.index({ category: 1 });
-businessSchema.index({ city: 1 });
-businessSchema.index({ businessName: "text", description: "text" }); // Text search
-```
-
-### Service Model
-
-```javascript
-const serviceSchema = new mongoose.Schema(
-  {
-    serviceName: {
-      type: String,
-      required: [true, "El nombre del servicio es requerido"],
-      trim: true,
-      maxlength: 150,
-    },
-    category: {
-      type: String,
-      required: [true, "La categoría es requerida"],
-      enum: [
-        "salud",
-        "dental",
-        "salud-mental",
-        "legal",
-        "educacion",
-        "emergencias",
-        "gobierno",
-        "otros",
-      ],
-    },
-    specialty: {
-      type: String,
-      trim: true,
-      maxlength: 100,
-    },
-    phone: {
-      type: String,
-      required: [true, "El teléfono es requerido"],
-      trim: true,
-    },
-    address: {
-      type: String,
-      trim: true,
-      maxlength: 250,
-    },
-    website: {
-      type: String,
-      trim: true,
-    },
-    notes: {
-      type: String,
-      trim: true,
-      maxlength: 500,
-    },
-    city: {
-      type: String,
-      required: [true, "La ciudad es requerida"],
-      trim: true,
-    },
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-// Indexes
-serviceSchema.index({ category: 1 });
-serviceSchema.index({ city: 1 });
-serviceSchema.index({ serviceName: "text", notes: "text" }); // Text search
-```
-
-### BlogPost Model
-
-```javascript
-const blogPostSchema = new mongoose.Schema(
-  {
-    title: {
-      type: String,
-      required: [true, "El título es requerido"],
-      trim: true,
-      maxlength: 200,
-    },
-    slug: {
-      type: String,
-      unique: true,
-      lowercase: true,
-      trim: true,
-    },
-    content: {
-      type: String,
-      required: [true, "El contenido es requerido"],
-    },
-    excerpt: {
-      type: String,
-      trim: true,
-      maxlength: 300,
-    },
-    category: {
-      type: String,
-      required: [true, "La categoría es requerida"],
-      enum: [
-        "wellness",
-        "amistad",
-        "amor-propio",
-        "migracion",
-        "consejos",
-        "historias",
-      ],
-    },
-    featuredImage: {
-      type: String,
-      default: null,
-    },
-    author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    status: {
-      type: String,
-      enum: ["draft", "published", "archived"],
-      default: "draft",
-    },
-    publishedAt: {
-      type: Date,
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-// Indexes
-blogPostSchema.index({ slug: 1 });
-blogPostSchema.index({ category: 1 });
-blogPostSchema.index({ status: 1 });
-blogPostSchema.index({ publishedAt: -1 });
-
-// Hook: Generar slug antes de guardar
-blogPostSchema.pre("save", function (next) {
-  if (this.isModified("title")) {
-    this.slug = slugify(this.title);
-  }
-  next();
-});
-```
-
----
-
-## Security Implementation
-
-### Authentication & Authorization
-
-```javascript
-// JWT Configuration
-const JWT_SECRET = process.env.JWT_SECRET; // Strong random string
-const JWT_EXPIRE = "7d";
-
-// Generate JWT
-const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, JWT_SECRET, {
-    expiresIn: JWT_EXPIRE,
-  });
-};
-
-// Verify JWT Middleware
+// Backend middleware
 const authMiddleware = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
+    if (!token) throw new Error("No token");
 
-    if (!token) {
-      return res.status(401).json({
-        success: false,
-        error: { message: "No autorizado - Token no proporcionado" },
-      });
-    }
-
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = await User.findById(decoded.id).select("-password");
-
-    if (!req.user) {
-      return res.status(401).json({
-        success: false,
-        error: { message: "Usuario no encontrado" },
-      });
-    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = await User.findById(decoded.userId).select("-password");
 
     next();
   } catch (error) {
-    res.status(401).json({
-      success: false,
-      error: { message: "Token inválido o expirado" },
-    });
+    res.status(401).json({ error: "No autorizado" });
   }
 };
 
-// Admin Middleware
+// Admin middleware
 const adminMiddleware = (req, res, next) => {
   if (req.user.role !== "admin") {
-    return res.status(403).json({
-      success: false,
-      error: { message: "Acceso denegado - Solo administradores" },
-    });
+    return res.status(403).json({ error: "Acceso denegado" });
   }
   next();
 };
+
+// Usage
+router.get("/profile", authMiddleware, getProfile);
+router.post("/admin/events", authMiddleware, adminMiddleware, createEvent);
 ```
 
-### Password Hashing
+---
+
+## File Upload Strategy (AWS S3)
+
+### AWS S3 Configuration
 
 ```javascript
-// Using bcryptjs
-const bcrypt = require("bcryptjs");
+// backend/src/config/aws.js
+const {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} = require("@aws-sdk/client-s3");
 
-// Hash password (en modelo User)
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
+const s3Client = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
 });
 
-// Compare password method
-userSchema.methods.comparePassword = async function (candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
+module.exports = { s3Client };
+```
+
+### Upload Service
+
+```javascript
+// backend/src/services/upload.service.js
+const { s3Client } = require("../config/aws");
+const { PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const crypto = require("crypto");
+
+const uploadToS3 = async (file, folder = "uploads") => {
+  try {
+    // Generate unique filename
+    const fileExtension = file.originalname.split(".").pop();
+    const fileName = `${folder}/${crypto
+      .randomBytes(16)
+      .toString("hex")}.${fileExtension}`;
+
+    const command = new PutObjectCommand({
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: fileName,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+      ACL: "public-read", // or 'private' if using signed URLs
+    });
+
+    await s3Client.send(command);
+
+    // Return public URL
+    const fileUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+
+    return {
+      url: fileUrl,
+      key: fileName,
+    };
+  } catch (error) {
+    throw new Error(`Error uploading to S3: ${error.message}`);
+  }
+};
+
+const deleteFromS3 = async (fileKey) => {
+  try {
+    const command = new DeleteObjectCommand({
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: fileKey,
+    });
+
+    await s3Client.send(command);
+    return true;
+  } catch (error) {
+    throw new Error(`Error deleting from S3: ${error.message}`);
+  }
+};
+
+module.exports = {
+  uploadToS3,
+  deleteFromS3,
 };
 ```
 
-### Rate Limiting
+### Multer Configuration
 
 ```javascript
-const rateLimit = require("express-rate-limit");
+// backend/src/middleware/upload.middleware.js
+const multer = require("multer");
 
-// General API rate limiter
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // 100 requests por ventana
-  message: {
-    success: false,
-    error: { message: "Demasiadas solicitudes, intenta más tarde" },
+// Use memory storage to pass buffer to S3
+const storage = multer.memoryStorage();
+
+const fileFilter = (req, file, cb) => {
+  // Accept images only
+  const allowedMimes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
+  if (allowedMimes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(
+      new Error(
+        "Formato de archivo no válido. Solo se permiten imágenes (jpg, png, webp)"
+      ),
+      false
+    );
+  }
+};
+
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB max
   },
-  standardHeaders: true,
-  legacyHeaders: false,
 });
 
-// Auth endpoints limiter (más restrictivo)
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 5, // 5 intentos por ventana
-  message: {
-    success: false,
-    error: { message: "Demasiados intentos de inicio de sesión" },
-  },
-});
-
-// Apply
-app.use("/api/v1/", apiLimiter);
-app.use("/api/v1/auth/login", authLimiter);
-app.use("/api/v1/auth/register", authLimiter);
+module.exports = upload;
 ```
 
-### Input Validation
+### Usage in Controller
 
 ```javascript
-// Using express-validator
-const { body, validationResult } = require("express-validator");
+// Example: Upload event image
+const createEvent = async (req, res) => {
+  try {
+    const eventData = req.body;
 
-// Validation middleware
-const validate = (validations) => {
-  return async (req, res, next) => {
-    await Promise.all(validations.map((validation) => validation.run(req)));
-
-    const errors = validationResult(req);
-    if (errors.isEmpty()) {
-      return next();
+    // If image was uploaded
+    if (req.file) {
+      const uploadResult = await uploadToS3(req.file, "events");
+      eventData.imageUrl = uploadResult.url;
+      eventData.imageKey = uploadResult.key; // Store key for deletion
     }
 
-    res.status(400).json({
+    const event = await Event.create(eventData);
+
+    res.status(201).json({
+      success: true,
+      data: event,
+      message: "Evento creado exitosamente",
+    });
+  } catch (error) {
+    res.status(500).json({
       success: false,
       error: {
-        code: "VALIDATION_ERROR",
-        message: "Error de validación",
-        details: errors.array(),
+        code: "SERVER_ERROR",
+        message: error.message,
       },
     });
-  };
+  }
+};
+```
+
+### AWS S3 Bucket Structure
+
+```
+entre-amigas-bucket/
+├── events/
+│   ├── abc123def456.jpg
+│   └── xyz789ghi012.png
+├── blog/
+│   ├── post1_featured.jpg
+│   └── post2_content_img.jpg
+├── business/
+│   └── logo_business1.png
+└── profile/
+    └── avatar_user1.jpg
+```
+
+---
+
+## Email Service (Resend)
+
+### Email Configuration
+
+```javascript
+// backend/src/config/email.js
+const { Resend } = require("resend");
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const emailConfig = {
+  from: process.env.EMAIL_FROM || "noreply@entreamigas.com",
+  replyTo: process.env.EMAIL_REPLY_TO || "hola@entreamigas.com",
 };
 
-// Example: Register validation
-const registerValidation = [
-  body("fullName")
-    .trim()
-    .notEmpty()
-    .withMessage("El nombre completo es requerido")
-    .isLength({ min: 2, max: 100 }),
-  body("email")
-    .trim()
-    .notEmpty()
-    .withMessage("El email es requerido")
-    .isEmail()
-    .withMessage("Email inválido")
-    .normalizeEmail(),
-  body("password")
-    .notEmpty()
-    .withMessage("La contraseña es requerida")
-    .isLength({ min: 8 })
-    .withMessage("La contraseña debe tener al menos 8 caracteres"),
-  body("phone").trim().notEmpty().withMessage("El teléfono es requerido"),
-  body("birthday")
-    .notEmpty()
-    .withMessage("La fecha de nacimiento es requerida")
-    .isISO8601()
-    .withMessage("Fecha inválida"),
-  body("city").trim().notEmpty().withMessage("La ciudad es requerida"),
-];
+module.exports = { resend, emailConfig };
+```
 
-// Use in route
-router.post("/register", validate(registerValidation), authController.register);
+### Email Service
+
+```javascript
+// backend/src/services/email.service.js
+const { resend, emailConfig } = require("../config/email");
+
+const sendEmail = async ({ to, subject, html }) => {
+  try {
+    const data = await resend.emails.send({
+      from: emailConfig.from,
+      to,
+      subject,
+      html,
+    });
+
+    return data;
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw new Error("Error al enviar email");
+  }
+};
+
+const sendVerificationEmail = async (user, verificationToken) => {
+  const verificationUrl = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
+
+  const html = `
+    <h1>¡Bienvenida a Entre Amigas!</h1>
+    <p>Hola ${user.preferredName},</p>
+    <p>Gracias por registrarte. Por favor verifica tu email haciendo click en el siguiente link:</p>
+    <a href="${verificationUrl}">Verificar Email</a>
+    <p>Este link expira en 24 horas.</p>
+    <p>Si no creaste esta cuenta, ignora este email.</p>
+  `;
+
+  await sendEmail({
+    to: user.email,
+    subject: "Verifica tu email - Entre Amigas",
+    html,
+  });
+};
+
+const sendPasswordResetEmail = async (user, resetToken) => {
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+  const html = `
+    <h1>Recuperación de contraseña</h1>
+    <p>Hola ${user.preferredName},</p>
+    <p>Recibimos una solicitud para resetear tu contraseña. Haz click aquí:</p>
+    <a href="${resetUrl}">Resetear Contraseña</a>
+    <p>Este link expira en 1 hora.</p>
+    <p>Si no solicitaste esto, ignora este email.</p>
+  `;
+
+  await sendEmail({
+    to: user.email,
+    subject: "Recuperación de contraseña - Entre Amigas",
+    html,
+  });
+};
+
+const sendEventConfirmationEmail = async (user, event) => {
+  const eventDetailsUrl = `${process.env.FRONTEND_URL}/events/${event._id}`;
+
+  const html = `
+    <h1>¡Te registraste exitosamente!</h1>
+    <p>Hola ${user.preferredName},</p>
+    <p>Confirmamos tu registro para el evento:</p>
+    <h2>${event.title}</h2>
+    <p><strong>Fecha:</strong> ${new Date(event.date).toLocaleDateString(
+      "es-ES"
+    )}</p>
+    <p><strong>Hora:</strong> ${event.time}</p>
+    <p><strong>Modalidad:</strong> ${event.modality}</p>
+    ${
+      event.modality === "presencial"
+        ? `<p><strong>Ubicación:</strong> ${event.location}</p>`
+        : `<p><strong>Link:</strong> <a href="${event.meetingLink}">${event.meetingLink}</a></p>`
+    }
+    <p><a href="${eventDetailsUrl}">Ver detalles del evento</a></p>
+    <p>¡Nos vemos pronto!</p>
+  `;
+
+  await sendEmail({
+    to: user.email,
+    subject: `Confirmación de registro: ${event.title}`,
+    html,
+  });
+};
+
+module.exports = {
+  sendEmail,
+  sendVerificationEmail,
+  sendPasswordResetEmail,
+  sendEventConfirmationEmail,
+};
+```
+
+---
+
+## Error Handling
+
+### Global Error Handler
+
+```javascript
+// backend/src/middleware/errorHandler.js
+const errorHandler = (err, req, res, next) => {
+  let error = { ...err };
+  error.message = err.message;
+
+  // Log error
+  console.error(err);
+
+  // Mongoose bad ObjectId
+  if (err.name === "CastError") {
+    const message = "Recurso no encontrado";
+    error = { statusCode: 404, message };
+  }
+
+  // Mongoose duplicate key
+  if (err.code === 11000) {
+    const message = "Ya existe un recurso con esos datos";
+    error = { statusCode: 400, message };
+  }
+
+  // Mongoose validation error
+  if (err.name === "ValidationError") {
+    const message = Object.values(err.errors).map((val) => val.message);
+    error = { statusCode: 400, message };
+  }
+
+  res.status(error.statusCode || 500).json({
+    success: false,
+    error: {
+      code: error.code || "SERVER_ERROR",
+      message: error.message || "Error del servidor",
+    },
+  });
+};
+
+module.exports = errorHandler;
+```
+
+### Custom Error Class
+
+```javascript
+// backend/src/utils/ApiError.js
+class ApiError extends Error {
+  constructor(statusCode, message, code = "ERROR") {
+    super(message);
+    this.statusCode = statusCode;
+    this.code = code;
+  }
+}
+
+module.exports = ApiError;
+```
+
+### Async Handler Wrapper
+
+```javascript
+// backend/src/utils/asyncHandler.js
+const asyncHandler = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next);
+};
+
+module.exports = asyncHandler;
+```
+
+---
+
+## Security Best Practices
+
+### Environment Variables
+
+```bash
+# NEVER commit .env files
+# Always use .env.example as template
+
+# backend/.env (NEVER commit this)
+NODE_ENV=production
+JWT_SECRET=super_long_random_string_min_64_chars
+MONGODB_URI=mongodb+srv://...
+AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+AWS_REGION=us-east-1
+AWS_S3_BUCKET_NAME=entre-amigas-production
+RESEND_API_KEY=re_...
 ```
 
 ### CORS Configuration
@@ -1408,7 +1091,11 @@ app.use(
         defaultSrc: ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:", "https://res.cloudinary.com"],
+        imgSrc: [
+          "'self'",
+          "data:",
+          `https://${process.env.AWS_S3_BUCKET_NAME}.s3.amazonaws.com`,
+        ],
         scriptSrc: ["'self'"],
         connectSrc: ["'self'", process.env.API_URL],
       },
@@ -1606,10 +1293,11 @@ EMAIL_SERVICE=resend
 RESEND_API_KEY=re_123456789
 EMAIL_FROM=noreply@entreamigas.com
 
-# Cloudinary
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=123456789
-CLOUDINARY_API_SECRET=your_secret
+# AWS S3
+AWS_ACCESS_KEY_ID=your_dev_access_key
+AWS_SECRET_ACCESS_KEY=your_dev_secret_key
+AWS_REGION=us-east-1
+AWS_S3_BUCKET_NAME=entre-amigas-dev
 
 # Frontend URL
 FRONTEND_URL=http://localhost:5173
@@ -1644,10 +1332,11 @@ EMAIL_SERVICE=resend
 RESEND_API_KEY=re_prod_key_here
 EMAIL_FROM=noreply@entreamigas.com
 
-# Cloudinary
-CLOUDINARY_CLOUD_NAME=prod_cloud_name
-CLOUDINARY_API_KEY=prod_api_key
-CLOUDINARY_API_SECRET=prod_api_secret
+# AWS S3
+AWS_ACCESS_KEY_ID=your_prod_access_key
+AWS_SECRET_ACCESS_KEY=your_prod_secret_key
+AWS_REGION=us-east-1
+AWS_S3_BUCKET_NAME=entre-amigas-production
 
 # Frontend URL
 FRONTEND_URL=https://entreamigas.com
@@ -1684,423 +1373,190 @@ jobs:
   test-frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: "20"
       - name: Install dependencies
-        working-directory: ./frontend
-        run: npm ci
+        run: cd frontend && npm ci
       - name: Run linter
-        working-directory: ./frontend
-        run: npm run lint
+        run: cd frontend && npm run lint
       - name: Run tests
-        working-directory: ./frontend
-        run: npm run test
+        run: cd frontend && npm run test
 
   test-backend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: "20"
       - name: Install dependencies
-        working-directory: ./backend
-        run: npm ci
+        run: cd backend && npm ci
       - name: Run linter
-        working-directory: ./backend
-        run: npm run lint
+        run: cd backend && npm run lint
       - name: Run tests
-        working-directory: ./backend
-        run: npm run test
+        run: cd backend && npm run test
 
   deploy-frontend:
-    needs: [test-frontend, test-backend]
+    needs: [test-frontend]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
       - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
+        uses: amondnet/vercel-action@v20
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: ./frontend
           vercel-args: "--prod"
 
   deploy-backend:
-    needs: [test-frontend, test-backend]
+    needs: [test-backend]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    environment:
-      name: production
-      url: https://api.entreamigas.com
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
       - name: Deploy to Railway
-        uses: bervProject/railway-deploy@main
-        with:
-          railway_token: ${{ secrets.RAILWAY_TOKEN }}
-          service: backend
+        run: |
+          npm install -g @railway/cli
+          railway up
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 ```
 
 ### Deployment Checklist
 
-```markdown
-## Pre-Deployment
+**Pre-Deployment:**
 
-- [ ] Todos los tests pasan (frontend + backend)
-- [ ] Code review aprobado
-- [ ] Variables de entorno actualizadas en producción
-- [ ] Migraciones de base de datos preparadas (si aplica)
-- [ ] Backup de base de datos tomado
-- [ ] Changelog actualizado con cambios
-- [ ] Documentación actualizada (si aplica)
+- [ ] All tests passing
+- [ ] Environment variables configured
+- [ ] Database backups enabled
+- [ ] Domain DNS configured
+- [ ] SSL certificates active
+- [ ] AWS S3 bucket configured
+- [ ] Email service verified
+- [ ] Rate limiting configured
+- [ ] Error monitoring setup (Sentry)
 
-## Deployment
+**Post-Deployment:**
 
-- [ ] Merge a rama main
-- [ ] CI/CD pipeline ejecutado exitosamente
-- [ ] Frontend deployado a Vercel
-- [ ] Backend deployado a Railway
-- [ ] DNS apuntando correctamente
-
-## Post-Deployment
-
-- [ ] Smoke tests manuales ejecutados:
-  - [ ] Landing page carga correctamente
-  - [ ] Registro de nuevo usuario funciona
-  - [ ] Login funciona
-  - [ ] Ver eventos funciona
-  - [ ] Panel admin accesible
-- [ ] Logs de errores revisados (sin errores críticos)
-- [ ] Performance metrics aceptables (< 3s load time)
-- [ ] Email de confirmación funciona
-- [ ] Notificación a equipo enviada
-```
+- [ ] Smoke tests passed
+- [ ] Health check endpoint responding
+- [ ] Database connections working
+- [ ] Email sending working
+- [ ] File uploads working (AWS S3)
+- [ ] Authentication flow working
+- [ ] Admin panel accessible
+- [ ] Performance monitoring active
 
 ---
 
-## Monitoring & Error Tracking
-
-### Error Handling
-
-```javascript
-// Backend: Global error handler
-const errorHandler = (err, req, res, next) => {
-  console.error("Error:", err);
-
-  // Mongoose validation error
-  if (err.name === "ValidationError") {
-    return res.status(400).json({
-      success: false,
-      error: {
-        code: "VALIDATION_ERROR",
-        message: "Error de validación",
-        details: Object.values(err.errors).map((e) => ({
-          field: e.path,
-          message: e.message,
-        })),
-      },
-    });
-  }
-
-  // Mongoose duplicate key error
-  if (err.code === 11000) {
-    const field = Object.keys(err.keyPattern)[0];
-    return res.status(409).json({
-      success: false,
-      error: {
-        code: "DUPLICATE_ERROR",
-        message: `El ${field} ya existe`,
-      },
-    });
-  }
-
-  // JWT errors
-  if (err.name === "JsonWebTokenError") {
-    return res.status(401).json({
-      success: false,
-      error: {
-        code: "INVALID_TOKEN",
-        message: "Token inválido",
-      },
-    });
-  }
-
-  // Default error
-  res.status(err.statusCode || 500).json({
-    success: false,
-    error: {
-      code: err.code || "SERVER_ERROR",
-      message: err.message || "Error interno del servidor",
-    },
-  });
-};
-
-app.use(errorHandler);
-```
-
-### Logging Strategy
-
-```javascript
-// Winston logger configuration
-const winston = require("winston");
-
-const logger = winston.createLogger({
-  level: process.env.NODE_ENV === "production" ? "info" : "debug",
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.errors({ stack: true }),
-    winston.format.json()
-  ),
-  transports: [
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
-      ),
-    }),
-    new winston.transports.File({
-      filename: "logs/error.log",
-      level: "error",
-    }),
-    new winston.transports.File({
-      filename: "logs/combined.log",
-    }),
-  ],
-});
-
-// Usage
-logger.info("Usuario creado", { userId: user._id, email: user.email });
-logger.error("Error al crear evento", {
-  error: error.message,
-  stack: error.stack,
-});
-logger.warn("Rate limit excedido", { ip: req.ip });
-```
+## Monitoring & Logging
 
 ### Health Check Endpoint
 
 ```javascript
-// Health check
-router.get("/health", (req, res) => {
-  res.json({
-    success: true,
-    status: "healthy",
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    environment: process.env.NODE_ENV,
-  });
-});
-
-// Database health check
-router.get("/health/db", async (req, res) => {
+// backend/src/routes/health.routes.js
+router.get("/health", async (req, res) => {
   try {
+    // Check database connection
     await mongoose.connection.db.admin().ping();
-    res.json({
-      success: true,
-      database: "connected",
+
+    res.status(200).json({
+      status: "healthy",
       timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: process.env.NODE_ENV,
+      database: "connected",
     });
   } catch (error) {
     res.status(503).json({
-      success: false,
-      database: "disconnected",
+      status: "unhealthy",
       error: error.message,
     });
   }
 });
 ```
 
-### Monitoring Metrics (Manual MVP)
+### Logging Strategy
+
+```javascript
+// Use winston for production logging
+const winston = require("winston");
+
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || "info",
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.File({ filename: "error.log", level: "error" }),
+    new winston.transports.File({ filename: "combined.log" }),
+  ],
+});
+
+if (process.env.NODE_ENV !== "production") {
+  logger.add(
+    new winston.transports.Console({
+      format: winston.format.simple(),
+    })
+  );
+}
+
+module.exports = logger;
+```
+
+### Monitoring Metrics
 
 ```yaml
 Key Metrics to Track:
-
-Infrastructure:
-  - Server uptime (Railway dashboard)
-  - API response times (Railway metrics)
-  - Database connections (MongoDB Atlas)
-  - Memory usage (Railway)
-
-Application:
-  - Total usuarios registrados
-  - Nuevos registros por día/semana
-  - Eventos creados
-  - Registros a eventos
-  - Posts publicados en blog
-  - Visitas a landing page (Google Analytics)
-
-Errors:
-  - 4xx errors (client errors)
-  - 5xx errors (server errors)
-  - Failed email sends
-  - Database connection failures
+  - API response times (p50, p95, p99)
+  - Error rates by endpoint
+  - Database query performance
+  - User registrations per day
+  - Event registrations per event
+  - Email delivery success rate
+  - AWS S3 upload success rate
+  - Frontend page load times
+  - Uptime percentage
 ```
 
 ---
 
-## Testing Strategy
+## Backup & Recovery
 
-### Unit Tests (Backend)
-
-```javascript
-// Example: auth.service.test.js
-const authService = require("../services/auth.service");
-const User = require("../models/User");
-
-describe("AuthService", () => {
-  describe("registerUser", () => {
-    it("debería crear un usuario con contraseña hasheada", async () => {
-      const userData = {
-        fullName: "Test User",
-        preferredName: "Test",
-        email: "test@example.com",
-        password: "password123",
-        phone: "1234567890",
-        birthday: new Date("1990-01-01"),
-        city: "Toronto",
-      };
-
-      const user = await authService.registerUser(userData);
-
-      expect(user.email).toBe(userData.email);
-      expect(user.password).not.toBe(userData.password); // Debe estar hasheada
-      expect(user.role).toBe("user");
-    });
-
-    it("debería fallar con email duplicado", async () => {
-      await expect(
-        authService.registerUser({ email: "existing@example.com" })
-      ).rejects.toThrow();
-    });
-  });
-});
-```
-
-### Integration Tests (Backend)
-
-```javascript
-// Example: events.routes.test.js
-const request = require("supertest");
-const app = require("../server");
-
-describe("Events API", () => {
-  let authToken;
-
-  beforeAll(async () => {
-    // Login para obtener token
-    const response = await request(app)
-      .post("/api/v1/auth/login")
-      .send({ email: "test@test.com", password: "password123" });
-
-    authToken = response.body.data.token;
-  });
-
-  describe("GET /api/v1/events", () => {
-    it("debería retornar lista de eventos", async () => {
-      const response = await request(app).get("/api/v1/events").expect(200);
-
-      expect(response.body.success).toBe(true);
-      expect(Array.isArray(response.body.data)).toBe(true);
-    });
-  });
-
-  describe("POST /api/v1/events/:id/register", () => {
-    it("debería registrar usuario a evento", async () => {
-      const response = await request(app)
-        .post("/api/v1/events/123/register")
-        .set("Authorization", `Bearer ${authToken}`)
-        .expect(200);
-
-      expect(response.body.success).toBe(true);
-      expect(response.body.message).toContain("registrado");
-    });
-  });
-});
-```
-
-### Component Tests (Frontend)
-
-```javascript
-// Example: LoginForm.test.jsx
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { LoginForm } from "./LoginForm";
-
-describe("LoginForm", () => {
-  it("debería renderizar campos de email y contraseña", () => {
-    render(<LoginForm />);
-
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/contraseña/i)).toBeInTheDocument();
-  });
-
-  it("debería mostrar errores de validación", async () => {
-    render(<LoginForm />);
-
-    const submitButton = screen.getByRole("button", {
-      name: /iniciar sesión/i,
-    });
-    fireEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(screen.getByText(/email requerido/i)).toBeInTheDocument();
-    });
-  });
-
-  it("debería enviar formulario con datos válidos", async () => {
-    const mockLogin = jest.fn();
-    render(<LoginForm onLogin={mockLogin} />);
-
-    fireEvent.change(screen.getByLabelText(/email/i), {
-      target: { value: "test@test.com" },
-    });
-    fireEvent.change(screen.getByLabelText(/contraseña/i), {
-      target: { value: "password123" },
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: /iniciar sesión/i }));
-
-    await waitFor(() => {
-      expect(mockLogin).toHaveBeenCalledWith({
-        email: "test@test.com",
-        password: "password123",
-      });
-    });
-  });
-});
-```
-
-### Test Coverage Targets
+### Database Backup Strategy
 
 ```yaml
-Backend:
-  Statements: > 80%
-  Branches: > 75%
-  Functions: > 80%
-  Lines: > 80%
+Automated Backups (MongoDB Atlas):
+  Frequency: Daily snapshots
+  Retention: 30 days
+  Location: MongoDB Atlas built-in
 
-Frontend:
-  Statements: > 70%
-  Branches: > 65%
-  Functions: > 70%
-  Lines: > 70%
+Manual Backups:
+  Frequency: Weekly exports
+  Format: JSON dumps
+  Location: AWS S3 backup bucket
+  Command: mongodump --uri="..." --out=/backup
 ```
 
----
-
-## Maintenance & Updates
-
-### Update Schedule
+### AWS S3 Backup
 
 ```yaml
-Security Patches: Inmediato (cuando se descubren vulnerabilidades)
-Dependencies: Mensual (revisar actualizaciones disponibles)
-Framework Updates: Trimestral (React, Express, MongoDB)
-Node.js: Semestral (seguir versiones LTS)
+Versioning: Enabled on production bucket
+Lifecycle Rules:
+  - Move to Glacier after 90 days
+  - Delete after 365 days
+Cross-Region Replication: Optional (consider for production)
+```
+
+### Code Repository Backup
+
+```yaml
+Primary: GitHub
+Backup: None needed (following versioning)
+Branches: main (production), develop (staging)
+Tags: Version releases
 ```
 
 ### Backup Strategy
@@ -2252,6 +1708,7 @@ Requiere Bearer token en header Authorization.
 **Review Frequency:** Trimestral o cuando hay cambios arquitectónicos mayores
 
 **Update Triggers:**
+
 - Adopción de nueva tecnología
 - Cambios en stack técnico
 - Refactoring mayor
@@ -2261,14 +1718,15 @@ Requiere Bearer token en header Authorization.
 
 **Version History:**
 
-| Version | Date | Changes | Author |
-|---------|------|---------|--------|
-| 1.0 | 5 nov 2025 | Arquitectura inicial | Equipo Entre Amigas |
+| Version | Date         | Changes                                       | Author              |
+| ------- | ------------ | --------------------------------------------- | ------------------- |
+| 1.0     | 5 nov 2025   | Arquitectura inicial                          | Equipo Entre Amigas |
+| 1.1     | 6 nov 2025   | Actualización: Cloudinary → AWS S3            | Equipo Entre Amigas |
 
 ---
 
-**Last Updated:** 5 de noviembre, 2025
-**Next Review:** 5 de febrero, 2026
+**Last Updated:** 6 de noviembre, 2025
+**Next Review:** 6 de febrero, 2026
 **Maintained by:** Equipo Entre Amigas
 
 ---

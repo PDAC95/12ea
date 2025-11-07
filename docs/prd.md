@@ -1,8 +1,9 @@
 # Product Requirements Document (PRD)
 
 **Product:** Entre Amigas  
-**Version:** 1.0  
+**Version:** 1.1  
 **Date:** 5 de noviembre, 2025  
+**Last Updated:** 6 de noviembre, 2025  
 **Owner:** Equipo Entre Amigas  
 **Status:** 🟡 Planning
 
@@ -47,114 +48,194 @@ En 6 meses, este producto será exitoso si:
 
 ---
 
-## 3. Core User Stories
+## 3. Core Features (MVP)
 
-### 🎯 Must Have (MVP)
+### Feature 1: Landing Page Pública
 
-**US-001: Registro e Ingreso**
-Como usuaria nueva, quiero registrarme con datos básicos para acceder a la comunidad
+**Descripción:** Página de inicio acogedora y profesional que explica el proyecto
 
-- **AC:** Formulario solicita: nombre completo, nombre preferido, email, teléfono, cumpleaños, ciudad
-- **AC:** Sistema envía email de verificación
-- **AC:** Usuaria puede hacer login con email y contraseña
-- **AC:** Sistema permite recuperación de contraseña
+**User Story:** Como visitante nueva, quiero entender rápidamente qué es Entre Amigas y cómo me puede ayudar
 
-**US-002: Landing Page Informativa**
-Como visitante, quiero entender qué es Entre Amigas antes de registrarme para decidir si unirme
+**Funcionalidad:**
 
-- **AC:** Landing page explica misión y valores del proyecto
-- **AC:** Muestra beneficios de unirse a la comunidad
-- **AC:** Tiene call-to-action claro para registrarse
-- **AC:** Es responsive (funciona en móvil y desktop)
+- Hero section con mensaje claro de valor
+- Secciones: Quiénes Somos, Qué Ofrecemos, Cómo Funciona
+- Testimonios de miembras (opcional en MVP)
+- Call to action: "Únete a la comunidad" → registro
+- Footer con información de contacto
+- Diseño responsive y acogedor
 
-**US-003: Dashboard Principal**
-Como usuaria registrada, quiero ver un dashboard con todas las opciones disponibles para navegar fácilmente
+**Prioridad:** MUST HAVE  
+**Estimación:** 5 puntos (Medium)
 
-- **AC:** Dashboard muestra bienvenida con nombre preferido
-- **AC:** Menú claro con acceso a: Eventos, Directorio Negocios, Directorio Servicios, Blog
-- **AC:** Vista rápida de próximos eventos destacados
-- **AC:** Navegación intuitiva entre secciones
+---
 
-**US-004: Ver y Registrarse en Eventos**
-Como usuaria, quiero ver eventos disponibles y registrarme para participar en actividades de la comunidad
+### Feature 2: Sistema de Autenticación Completo
 
-- **AC:** Lista muestra eventos próximos con fecha, hora y modalidad (virtual/presencial)
-- **AC:** Cada evento muestra detalles completos (descripción, ubicación/link, cupos)
-- **AC:** Botón claro de "Registrarme" en cada evento
-- **AC:** Sistema envía email de confirmación al registrarse
-- **AC:** Usuaria puede ver "Mis Eventos Registrados" en su perfil
-- **AC:** Filtros básicos: virtual/presencial, fecha
+**Descripción:** Registro, login, verificación de email y recuperación de contraseña
 
-**US-005: Directorio de Negocios**
-Como usuaria, quiero encontrar negocios y emprendimientos de otras latinas para apoyar a la comunidad
+**User Story:** Como usuaria nueva, quiero registrarme de forma segura para acceder a la plataforma
 
-- **AC:** Lista muestra negocios con nombre, categoría, descripción breve, contacto
-- **AC:** Filtros por categoría y ciudad
-- **AC:** Búsqueda por palabra clave
-- **AC:** Información de contacto visible (teléfono, email)
-- **AC:** Estructura preparada para múltiples ciudades
+**Funcionalidad:**
 
-**US-006: Directorio de Servicios Esenciales**
-Como usuaria, quiero encontrar servicios importantes (médicos, dentistas, etc.) para acceder a recursos locales
+- Registro con campos: nombre completo, nombre preferido, email, teléfono, cumpleaños, ciudad, contraseña
+- Email de verificación automático
+- Login con email y contraseña
+- Recuperación de contraseña por email
+- JWT tokens con expiración de 7 días
+- Validación en frontend y backend
+- Mensajes de error claros en español
 
-- **AC:** Directorios organizados por categorías (Salud, Dental, Legal, Emergencias, etc.)
-- **AC:** Cada servicio muestra: nombre, especialidad, teléfono, dirección, notas relevantes
-- **AC:** Filtros por categoría y ciudad
-- **AC:** Búsqueda por palabra clave
-- **AC:** Indica servicios en español o con atención a latinos
+**Prioridad:** MUST HAVE - CRÍTICO  
+**Estimación:** 8 puntos (Large)
 
-**US-007: Blog y Consejos**
-Como usuaria, quiero leer artículos sobre wellness, amistad y migración para sentirme acompañada e informada
+---
 
-- **AC:** Lista de artículos con imagen destacada y extracto
-- **AC:** Filtros por categoría (Wellness, Amistad, Migración, etc.)
-- **AC:** Artículo completo con formato rico (títulos, imágenes, párrafos)
-- **AC:** Diseño legible y acogedor
+### Feature 3: Dashboard de Usuaria
 
-**US-008: Panel Admin - Gestión de Eventos**
-Como administradora, quiero crear y gestionar eventos fácilmente para mantener la comunidad activa
+**Descripción:** Panel principal con navegación a todas las secciones
 
-- **AC:** Panel admin protegido por login
-- **AC:** Formulario simple para crear evento (título, descripción, fecha/hora, modalidad, ubicación/link, cupos)
-- **AC:** Ver lista de eventos creados
-- **AC:** Editar o cancelar eventos
-- **AC:** Ver lista de usuarias registradas por evento
+**User Story:** Como usuaria registrada, quiero ver un dashboard organizado para acceder fácilmente a eventos, directorios y blog
 
-**US-009: Panel Admin - Gestión de Directorios**
-Como administradora, quiero agregar negocios y servicios a los directorios para mantener la información actualizada
+**Funcionalidad:**
 
-- **AC:** Formulario simple para agregar negocio (nombre, categoría, descripción, contacto, ciudad)
-- **AC:** Formulario simple para agregar servicio (nombre, categoría, contacto, dirección, notas, ciudad)
-- **AC:** Editar y eliminar entradas
-- **AC:** Interface intuitiva sin conocimiento técnico
+- Mensaje de bienvenida personalizado
+- Menú de navegación: Eventos, Negocios, Servicios, Blog, Perfil
+- Vista rápida de próximos 3 eventos destacados
+- Header con logo y logout
+- Responsive para móvil y desktop
 
-**US-010: Panel Admin - Gestión de Blog**
-Como administradora, quiero publicar artículos fácilmente para compartir contenido con la comunidad
+**Prioridad:** MUST HAVE  
+**Estimación:** 5 puntos (Medium)
 
-- **AC:** Editor de texto rico (negritas, títulos, listas, imágenes)
-- **AC:** Asignar categoría al artículo
-- **AC:** Subir imagen destacada
-- **AC:** Publicar, editar o archivar artículos
-- **AC:** Preview antes de publicar
+---
 
-### 📈 Should Have (Post-MVP)
+### Feature 4: Módulo de Eventos
 
-- Como usuaria, quiero cancelar mi registro a un evento si no puedo asistir
-- Como usuaria, quiero ver perfiles básicos de otras miembras para conocer más de la comunidad
-- Como usuaria, quiero comentar en artículos del blog para participar en conversaciones
-- Como usuaria, quiero recibir notificaciones de nuevos eventos por email
-- Como administradora, quiero ver estadísticas básicas (usuarias activas, eventos populares)
+**Descripción:** Ver eventos, registrarse y recibir confirmación por email
 
-### 💡 Could Have (Futuro)
+**User Story:** Como usuaria, quiero ver eventos disponibles y registrarme para participar en actividades
 
-- Sistema de chat o mensajería entre usuarias
-- Foro de discusión o preguntas
-- Las usuarias pueden crear sus propios eventos
-- Las usuarias pueden agregar sus negocios al directorio
-- App móvil nativa
-- Notificaciones push
-- Sistema de mentorías
-- Grupos por intereses o ciudades
+**Funcionalidad:**
+
+**Vista Pública (Usuarias):**
+
+- Lista/grid de eventos próximos ordenados por fecha
+- Cada evento muestra: imagen, título, fecha/hora, modalidad, ubicación/link, cupos
+- Click en evento abre vista detallada
+- Botón "Registrarme" funcional
+- Email de confirmación automático al registrarse
+- Sección "Mis Eventos Registrados"
+- Filtros: virtual/presencial, por fecha
+- Mensaje "Lleno" si evento alcanzó capacidad
+
+**Panel Admin:**
+
+- Formulario simple para crear evento (todos los campos necesarios)
+- Upload de imagen para evento (AWS S3)
+- Lista de eventos creados (upcoming, completed, cancelled)
+- Editar y cancelar eventos
+- Ver lista de usuarias registradas por evento
+- Exportar asistentes (CSV básico)
+
+**Prioridad:** MUST HAVE - CORE FEATURE  
+**Estimación:** 16 puntos (8 + 8 Large)
+
+---
+
+### Feature 5: Directorio de Negocios
+
+**Descripción:** Buscar y filtrar negocios de mujeres latinas
+
+**User Story:** Como usuaria, quiero encontrar negocios de otras latinas para apoyar a la comunidad
+
+**Funcionalidad:**
+
+**Vista Pública:**
+
+- Lista/grid de negocios
+- Cada negocio: nombre, dueña, categoría, descripción breve, teléfono, email, ciudad
+- Filtros por categoría y ciudad
+- Búsqueda por palabra clave
+- Vista detallada al hacer click
+- Click to call, click to email
+- Paginación (20 por página)
+
+**Panel Admin:**
+
+- Formulario para agregar negocio
+- Categorías predefinidas (dropdown)
+- Lista de negocios con búsqueda
+- Editar y eliminar negocios
+
+**Prioridad:** MUST HAVE  
+**Estimación:** 10 puntos (5 + 5 Medium)
+
+---
+
+### Feature 6: Directorio de Servicios Esenciales
+
+**Descripción:** Directorio de servicios importantes (médicos, dentistas, legales, etc.)
+
+**User Story:** Como usuaria, quiero encontrar servicios esenciales locales para acceder a recursos
+
+**Funcionalidad:**
+
+**Vista Pública:**
+
+- Servicios organizados por categorías predefinidas
+- Cada servicio: nombre, categoría, especialidad, teléfono, dirección, website, notas, ciudad
+- Filtros por categoría y ciudad
+- Búsqueda por palabra clave
+- Vista detallada con notas (ej: "Habla español")
+- Iconos por categoría
+- Paginación (20 por página)
+
+**Panel Admin:**
+
+- Formulario para agregar servicio
+- Categorías predefinidas (dropdown)
+- Lista de servicios con búsqueda
+- Editar y eliminar servicios
+
+**Prioridad:** MUST HAVE  
+**Estimación:** 10 puntos (5 + 5 Medium)
+
+---
+
+### Feature 7: Blog con Artículos
+
+**Descripción:** Blog con contenido sobre wellness, amistad, migración
+
+**User Story:** Como usuaria, quiero leer artículos para sentirme acompañada e informada
+
+**Funcionalidad:**
+
+**Vista Pública:**
+
+- Lista de artículos con imagen destacada, título, extracto, fecha, categoría
+- Categorías: Wellness, Amistad, Amor Propio, Migración, Consejos, Historias
+- Filtro por categoría
+- Vista completa del artículo con formato rico
+- Diseño legible y acogedor
+- Paginación (10 artículos por página)
+- Orden: últimos artículos primero
+
+**Panel Admin:**
+
+- Editor de texto rico (WYSIWYG)
+- Upload de imagen destacada
+- Insertar imágenes en contenido (AWS S3)
+- Campo para extracto
+- Selector de categoría
+- Guardar como borrador o publicar
+- Preview antes de publicar
+- Lista de artículos (drafts, published, archived)
+- Editar y archivar artículos
+- Auto-generación de slug
+
+**Prioridad:** MUST HAVE  
+**Estimación:** 8 puntos (3 + 5 Small + Medium)
 
 ---
 
@@ -198,7 +279,7 @@ Como administradora, quiero publicar artículos fácilmente para compartir conte
 - **Database:** MongoDB Atlas (tier gratuito)
 - **Authentication:** JWT + bcrypt para hash de passwords
 - **Email Service:** Resend (5,000 emails/mes gratis) o Brevo (300 emails/día gratis)
-- **File Storage:** Cloudinary (tier gratuito para imágenes)
+- **File Storage:** AWS S3 (tier gratuito 5GB primer año)
 
 ### Hosting (Opciones Económicas/Gratuitas)
 
@@ -233,120 +314,57 @@ Como administradora, quiero publicar artículos fácilmente para compartir conte
 ### External Dependencies
 
 - **Resend/Brevo:** Envío de emails transaccionales (confirmaciones, bienvenida, recuperación password)
-- **Cloudinary:** Almacenamiento y optimización de imágenes (blog, eventos)
+- **AWS S3:** Almacenamiento y optimización de imágenes (blog, eventos)
 - **MongoDB Atlas:** Base de datos cloud
 - **Google Fonts:** Tipografías (opcional)
 
 ---
 
-## 6. Data Model
+## 6. User Flows
 
-### Core Entities
+### User Flow 1: Registro y Primer Login
 
-```javascript
-User {
-  _id: ObjectId,
-  fullName: String,
-  preferredName: String,
-  email: String (unique, required),
-  password: String (hashed),
-  phone: String,
-  birthday: Date,
-  city: String,
-  role: String (enum: ['user', 'admin']),
-  isVerified: Boolean,
-  verificationToken: String,
-  resetPasswordToken: String,
-  resetPasswordExpires: Date,
-  createdAt: Date,
-  updatedAt: Date
-}
+1. Visitante llega a landing page
+2. Click en "Únete a la comunidad"
+3. Llena formulario de registro
+4. Sistema envía email de verificación
+5. Usuaria verifica email (click en link)
+6. Hace login con credenciales
+7. Ve dashboard por primera vez
+8. Explora eventos/directorios
 
-Event {
-  _id: ObjectId,
-  title: String (required),
-  description: String,
-  date: Date (required),
-  time: String,
-  modality: String (enum: ['virtual', 'presencial']),
-  location: String (si presencial),
-  virtualLink: String (si virtual),
-  maxCapacity: Number (opcional),
-  currentRegistrations: Number,
-  imageUrl: String,
-  status: String (enum: ['upcoming', 'completed', 'cancelled']),
-  createdBy: ObjectId (ref: User),
-  createdAt: Date,
-  updatedAt: Date
-}
+### User Flow 2: Registrarse a un Evento
 
-EventRegistration {
-  _id: ObjectId,
-  userId: ObjectId (ref: User),
-  eventId: ObjectId (ref: Event),
-  registeredAt: Date,
-  status: String (enum: ['registered', 'cancelled'])
-}
+1. Usuaria autenticada va a sección Eventos
+2. Ve lista de eventos próximos
+3. Click en evento de interés
+4. Ve detalles completos
+5. Click en "Registrarme"
+6. Sistema confirma registro
+7. Usuaria recibe email de confirmación
+8. Evento aparece en "Mis Eventos"
 
-Business {
-  _id: ObjectId,
-  businessName: String (required),
-  ownerName: String,
-  category: String (required),
-  description: String,
-  phone: String,
-  email: String,
-  city: String (required),
-  createdBy: ObjectId (ref: User),
-  createdAt: Date,
-  updatedAt: Date
-}
+### User Flow 3: Admin Crea un Evento
 
-Service {
-  _id: ObjectId,
-  serviceName: String (required),
-  category: String (required), // Salud, Dental, Legal, etc.
-  specialty: String,
-  phone: String (required),
-  address: String,
-  website: String,
-  notes: String, // "Habla español", "Acepta X seguro"
-  city: String (required),
-  createdBy: ObjectId (ref: User),
-  createdAt: Date,
-  updatedAt: Date
-}
+1. Admin hace login
+2. Accede a panel de administración
+3. Click en "Crear Evento"
+4. Llena formulario simple
+5. Sube imagen del evento (AWS S3)
+6. Click en "Publicar"
+7. Evento aparece visible para todas las usuarias
+8. Admin puede ver registros en tiempo real
 
-BlogPost {
-  _id: ObjectId,
-  title: String (required),
-  slug: String (unique),
-  content: String (rich text/HTML),
-  excerpt: String,
-  category: String (required), // Wellness, Amistad, Migración, etc.
-  featuredImage: String (URL),
-  author: ObjectId (ref: User),
-  status: String (enum: ['draft', 'published', 'archived']),
-  publishedAt: Date,
-  createdAt: Date,
-  updatedAt: Date
-}
-```
+### User Flow 4: Buscar en Directorio de Negocios
 
-### Key Relationships
-
-- **User ↔ Event:** Many-to-Many via EventRegistration (una usuaria puede registrarse en múltiples eventos)
-- **User → Business/Service/BlogPost/Event:** One-to-Many (admin crea contenido)
-- **Event ↔ EventRegistration:** One-to-Many (un evento tiene múltiples registros)
-
-### Indexes Críticos
-
-- User: `email` (unique), `role`
-- Event: `date`, `status`, `city`
-- Business: `category`, `city`
-- Service: `category`, `city`
-- BlogPost: `slug` (unique), `category`, `status`, `publishedAt`
-- EventRegistration: compound index `[userId, eventId]`
+1. Usuaria va a sección Negocios
+2. Ve lista de todos los negocios
+3. Usa filtros (categoría: "Comida", ciudad: "Toronto")
+4. Resultados se actualizan
+5. Usa búsqueda por palabra clave ("panadería")
+6. Click en negocio de interés
+7. Ve información detallada y contacto
+8. Click to call o envía email
 
 ---
 
@@ -406,88 +424,85 @@ El MVP estará completo cuando:
 
 ### Risks
 
-| Risk                                           | Impact    | Mitigation                                                                                                                                                         |
-| ---------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Admin UI demasiado compleja**                | 🔴 High   | Diseñar panel admin extremadamente simple con tutoriales integrados. Priorizar UX sobre features avanzadas. Hacer pruebas de usabilidad con la administradora.     |
-| **Envío de emails falla o va a spam**          | 🔴 High   | Usar servicio confiable (Resend/Brevo). Configurar SPF/DKIM correctamente. Incluir opción de ver confirmación en web si email falla. Testing exhaustivo.           |
-| **Datos de usuarias no seguros**               | 🔴 High   | Implementar mejores prácticas: HTTPS, passwords hasheados, JWT seguros, validación estricta. Revisar permisos de MongoDB. No guardar datos sensibles innecesarios. |
-| **8 semanas es muy ajustado**                  | 🟡 Medium | Priorizar features core primero. Usar componentes UI pre-hechos (TailwindUI, shadcn). Considerar extender 2 semanas si necesario. Hacer testing continuo.          |
-| **Costos de hosting aumentan con crecimiento** | 🟡 Medium | Empezar con tiers gratuitos. Monitorear uso mensualmente. Tener plan B (cambiar a Railway Pro ~$5/mes si necesario). Optimizar consultas DB.                       |
-| **Baja adopción inicial**                      | 🟡 Medium | Lanzar con grupo semilla de 20-30 usuarias conocidas. Crear eventos presenciales para engagement. Marketing boca a boca.                                           |
+| Risk                                        | Impact    | Mitigation                                                                                                                                                     |
+| ------------------------------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Admin UI demasiado compleja**             | 🔴 High   | Diseñar panel admin extremadamente simple con tutoriales integrados. Priorizar UX sobre features avanzadas. Hacer pruebas de usabilidad con la administradora. |
+| **Envío de emails falla o va a spam**       | 🔴 High   | Usar servicio confiable (Resend/Brevo). Configurar SPF/DKIM correctamente. Incluir opción de ver confirmación en web si email falla. Testing exhaustivo.       |
+| **Baja adopción inicial (< 20 usuarias)**   | 🟡 Medium | Estrategia de lanzamiento con eventos presenciales. Marketing en grupos de Facebook existentes. Invitaciones personales. Testimonios de early adopters.        |
+| **Costo de hosting excede presupuesto**     | 🟡 Medium | Usar tiers gratuitos cuidadosamente. Monitorear uso mensual. Optimizar consultas de DB. Tener plan B con alternativas (ej: Render en lugar de Railway).        |
+| **AWS S3 costos inesperados**               | 🟡 Medium | Configurar límites de bucket. Implementar compresión de imágenes. Monitorear uso mensualmente. Mantener imágenes dentro de tier gratuito (5GB/año).            |
+| **Bugs críticos en producción**             | 🟡 Medium | Testing manual exhaustivo antes de lanzar. Ambiente de staging para probar cambios. Error monitoring (Sentry). Proceso de rollback rápido.                     |
+| **Falta de contenido inicial (blog vacío)** | 🟢 Low    | Preparar 5-10 artículos antes de lanzar. Calendario editorial mensual. Colaboraciones con community members para contenido.                                    |
 
 ---
 
-## 9. Release Plan
+## 9. Success Metrics
 
-### Phase 1: Foundation (Semanas 1-3)
+### Launch Metrics (Primeros 30 días)
 
-**Sprint 1-2:**
+- **Registros:** 30-50 usuarias registradas
+- **Verificación:** 70%+ de usuarias verifican su email
+- **Engagement:** 50%+ de usuarias regresan al menos 1 vez después del registro
+- **Eventos:** 1 evento realizado con 10+ asistentes
+- **Landing Page:** 500+ visitas
 
-- Setup de proyecto (repos, entornos)
-- Configuración MERN stack completo
-- Modelo de datos y schemas MongoDB
-- Sistema de autenticación completo (registro, login, JWT, emails)
-- Landing page básica funcional
+### 3-Month Metrics
 
-**Entregables:**
+- **Usuarias Activas:** 75-100 usuarias
+- **Eventos:** 3 eventos realizados exitosamente
+- **Directorios:** 20+ negocios y 15+ servicios agregados
+- **Blog:** 10+ artículos publicados
+- **Retención:** 40%+ de usuarias activas mensualmente
+- **Ciudades:** Presencia en 2 ciudades
 
-- Repositorio configurado
-- Base de datos en MongoDB Atlas
-- Una persona puede registrarse y hacer login
-- Landing page deployada
+### 6-Month Success Criteria
 
-### Phase 2: Core Features (Semanas 4-6)
+- **100+ usuarias registradas** ✅
+- **3+ ciudades activas** ✅
+- 8-10 eventos realizados
+- Engagement: 30% usuarias leen blog mensualmente
+- Retención: 50% usuarias regresan al menos 2x/mes
 
-**Sprint 3-4:**
+### Tracking Methods
 
-- Dashboard usuaria con navegación
-- Módulo de Eventos completo (admin + usuaria)
-- Sistema de emails para eventos
-- Directorio de Servicios completo
-- Panel admin para eventos y servicios
-
-**Sprint 4-5:**
-
-- Directorio de Negocios completo
-- Blog completo (admin + usuaria)
-- Panel admin para negocios y blog
-- Filtros y búsquedas en directorios
-
-**Entregables:**
-
-- Todas las funcionalidades core funcionando
-- Panel admin usable
-- Emails automatizados activos
-
-### Phase 3: Polish & Launch (Semanas 7-8)
-
-**Sprint 6:**
-
-- Diseño y UX refinamiento
-- Responsive testing exhaustivo
-- Testing de seguridad
-- Optimización de performance
-- Contenido inicial (3-5 artículos, 5-10 servicios)
-- Documentación para admin
-
-**Sprint 7-8:**
-
-- Testing con usuarias reales (beta)
-- Corrección de bugs
-- Ajustes finales de UX basados en feedback
-- Deploy a producción
-- Lanzamiento suave con grupo semilla
-
-**Entregables:**
-
-- Plataforma completamente funcional
-- Contenido inicial publicado
-- Documentación de uso para admin
-- MVP en producción
+- Google Analytics 4 (gratuito)
+- Backend logging de eventos clave
+- Feedback directo de usuarias en eventos
+- Encuestas trimestrales de satisfacción
 
 ---
 
-## 10. Success Tracking
+## 10. Launch Plan
+
+### Pre-Launch (Semana antes del lanzamiento)
+
+- [ ] Testing completo en staging
+- [ ] 5-10 artículos de blog preparados
+- [ ] 2 eventos creados y programados
+- [ ] 10+ negocios y servicios agregados
+- [ ] 5-10 usuarias beta testeando
+- [ ] Marketing materials preparados
+- [ ] Posts programados en redes sociales
+
+### Launch Day
+
+- [ ] Deploy a producción
+- [ ] Smoke tests
+- [ ] Anuncio en grupos de Facebook relevantes
+- [ ] Invitaciones personales a contactos cercanos
+- [ ] Monitoreo activo de errores
+- [ ] Responder preguntas de usuarias
+
+### Post-Launch (Primera semana)
+
+- [ ] Onboarding calls con nuevas usuarias
+- [ ] Recolectar feedback
+- [ ] Fix bugs críticos inmediatamente
+- [ ] Publicar 2-3 artículos nuevos
+- [ ] Reminder del primer evento
+- [ ] Celebrar hitos (ej: 25 usuarias registradas)
+
+### Success Tracking
 
 ### Sprint Milestones
 
@@ -602,26 +617,20 @@ El MVP estará completo cuando:
   /src
     /components
       /common (Button, Input, Card, etc.)
-      /layout (Header, Footer, Dashboard)
-      /events (EventCard, EventList, EventDetail)
-      /business (BusinessCard, BusinessList)
-      /services (ServiceCard, ServiceList)
-      /blog (BlogCard, BlogList, BlogPost)
-      /admin (AdminPanel, CreateEvent, CreateBlog, etc.)
-    /pages
-      /Landing
-      /Auth (Login, Register, ForgotPassword)
-      /Dashboard
-      /Events
-      /Business
-      /Services
-      /Blog
-      /Profile
-      /Admin
-    /hooks (useAuth, useEvents, useForm)
-    /context (AuthContext, UIContext)
-    /utils (api, validation, formatters)
-    /styles
+      /layout (Header, Footer, Sidebar)
+    /features
+      /auth (Login, Register, ForgotPassword)
+      /dashboard
+      /events
+      /business
+      /services
+      /blog
+      /admin
+      /landing
+    /shared
+      /hooks (useAuth, useDebounce, useApi)
+      /utils (api.js, validators.js, formatters.js)
+    /routes (ProtectedRoute, AdminRoute)
 ```
 
 ### Backend Structure
@@ -629,37 +638,28 @@ El MVP estará completo cuando:
 ```
 /server
   /src
-    /models (User, Event, EventRegistration, Business, Service, BlogPost)
+    /models (User, Event, Business, Service, BlogPost, EventRegistration)
     /routes (auth, events, business, services, blog, admin)
-    /controllers (authController, eventController, etc.)
-    /middleware (authMiddleware, errorHandler, validation)
-    /utils (emailService, jwt, passwordHash)
-    /config (database, email, env)
-    server.js
-```
-
-### Environment Variables Needed
-
-```
-# Backend
-NODE_ENV=production
-PORT=5000
-MONGODB_URI=mongodb+srv://...
-JWT_SECRET=strong_random_secret
-JWT_EXPIRE=7d
-EMAIL_SERVICE_API_KEY=resend_or_brevo_key
-EMAIL_FROM=noreply@entreamigas.com
-CLOUDINARY_CLOUD_NAME=...
-CLOUDINARY_API_KEY=...
-CLOUDINARY_API_SECRET=...
-FRONTEND_URL=https://entreamigas.vercel.app
-
-# Frontend
-VITE_API_URL=https://api-entreamigas.railway.app
+    /controllers (auth, events, business, services, blog, admin)
+    /middleware (auth, admin, validate, upload, errorHandler)
+    /services (email, token, upload with AWS S3)
+    /utils (asyncHandler, ApiError)
+    /config (database, email, aws)
 ```
 
 ---
 
-**Fin del PRD v1.0**
+**Version History:**
 
-_Este documento será actualizado conforme el proyecto evolucione. Última actualización: 5 de noviembre, 2025_
+| Version | Date       | Changes                            | Author              |
+| ------- | ---------- | ---------------------------------- | ------------------- |
+| 1.0     | 5 nov 2025 | PRD inicial                        | Equipo Entre Amigas |
+| 1.1     | 6 nov 2025 | Actualización: Cloudinary → AWS S3 | Equipo Entre Amigas |
+
+**Last Updated:** 6 de noviembre, 2025  
+**Next Review:** Cada 3 meses o cambio mayor  
+**Maintained by:** Equipo Entre Amigas
+
+---
+
+**FIN DEL PRD**

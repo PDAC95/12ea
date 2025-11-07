@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
 
 // Aquí se importarán las rutas de cada módulo
 import uploadRoutes from './upload.routes.js';
-// import authRoutes from './auth.routes.js';
+import authRoutes from './auth.routes.js';
 // import userRoutes from './user.routes.js';
 // import eventRoutes from './event.routes.js';
 // import businessRoutes from './business.routes.js';
@@ -32,7 +32,7 @@ import uploadRoutes from './upload.routes.js';
 router.use('/upload', uploadRoutes);
 
 // Rutas de autenticación
-// router.use('/auth', authRoutes);
+router.use('/auth', authRoutes);
 
 // Rutas de usuarios
 // router.use('/users', userRoutes);
