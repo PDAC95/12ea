@@ -22,10 +22,10 @@
 
 ### Resumen de Progreso
 
-- ✅ **Completadas:** 24 tareas (Sprint 0: 7/7 | Sprint 1: 17/47 = 36.2% ✨)
+- ✅ **Completadas:** 25 tareas (Sprint 0: 7/7 | Sprint 1: 18/47 = 38.3% ✨)
 - 🔄 **En Progreso:** 0 tareas
 - ⏸️ **Bloqueadas:** 0 tareas
-- 📋 **Sin Empezar:** 30 tareas Sprint 1
+- 📋 **Sin Empezar:** 29 tareas Sprint 1
 
 ---
 
@@ -769,7 +769,7 @@
 
 ---
 
-- [ ] **[TASK-022]** Crear página ForgotPasswordPage
+- ✅ **[TASK-022]** [2025-11-07 19:25] Crear página ForgotPasswordPage
 
   - **Capa:** 🎨 FRONTEND
   - **Estimado:** S (30 min)
@@ -780,7 +780,19 @@
     - Incluir ForgotPasswordForm
     - Link de regreso a login
   - **Dependencias:** TASK-021
-  - **Status:** 📋 Sin Empezar
+  - **Status:** ✅ COMPLETADA
+  - **Tiempo real:** 8 min
+  - **Notas:**
+    - ForgotPasswordPage completa con layout profesional
+    - Background con gradient (blue-50 to purple-50)
+    - Card blanca centrada con shadow-xl y rounded-2xl
+    - Logo placeholder circular con iniciales "EA"
+    - Título "¿Olvidaste tu Contraseña?" + descripción tranquilizadora
+    - ForgotPasswordForm integrado perfectamente
+    - Footer con link a /login usando React Router Link
+    - Diseño responsive mobile-first
+    - Padding adecuado en mobile (px-4, py-12)
+    - Min-height 100vh para centrado vertical
 
 ---
 
