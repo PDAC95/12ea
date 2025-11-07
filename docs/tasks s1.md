@@ -22,10 +22,10 @@
 
 ### Resumen de Progreso
 
-- ✅ **Completadas:** 25 tareas (Sprint 0: 7/7 | Sprint 1: 18/47 = 38.3% ✨)
+- ✅ **Completadas:** 26 tareas (Sprint 0: 7/7 | Sprint 1: 19/47 = 40.4% ✨)
 - 🔄 **En Progreso:** 0 tareas
 - ⏸️ **Bloqueadas:** 0 tareas
-- 📋 **Sin Empezar:** 29 tareas Sprint 1
+- 📋 **Sin Empezar:** 28 tareas Sprint 1
 
 ---
 
@@ -796,7 +796,7 @@
 
 ---
 
-- [ ] **[TASK-023]** Crear componente ResetPasswordForm
+- ✅ **[TASK-023]** [2025-11-07 19:35] Crear componente ResetPasswordForm
 
   - **Capa:** 🎨 FRONTEND
   - **Estimado:** S (45 min)
@@ -809,7 +809,27 @@
     - Al éxito: mensaje de éxito + redirect a login
     - Mostrar errores
   - **Dependencias:** TASK-015
-  - **Status:** 📋 Sin Empezar
+  - **Status:** ✅ COMPLETADA
+  - **Tiempo real:** 35 min
+  - **Notas:**
+    - ResetPasswordForm completo con React Hook Form + Yup
+    - 2 campos validados: password + confirmPassword
+    - Yup schema con validación fuerte (8 chars, mayúscula, minúscula, número)
+    - Validación de coincidencia de contraseñas
+    - Show/hide password con Eye/EyeOff icons
+    - Loading state con spinner animado Loader2
+    - Integración con authService.resetPassword(token, password, confirmPassword)
+    - Token extraído de URL con useParams()
+    - Estado success con CheckCircle icon verde
+    - Mensaje: "¡Contraseña Restablecida!"
+    - Redirect automático a /login después de 3 segundos
+    - Banner informativo azul con requisitos de contraseña
+    - autoFocus en primer campo
+    - autoComplete="new-password" para navegadores
+    - Link "Volver al Inicio de Sesión" siempre disponible
+    - Manejo de errores del backend (token inválido, expirado, ya usado)
+    - Validación en tiempo real (onBlur)
+    - Diseño responsive con Tailwind CSS
 
 ---
 
