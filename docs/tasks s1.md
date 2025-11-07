@@ -22,10 +22,10 @@
 
 ### Resumen de Progreso
 
-- ✅ **Completadas:** 22 tareas (Sprint 0: 7/7 | Sprint 1: 15/47 = 31.9% ✨)
+- ✅ **Completadas:** 23 tareas (Sprint 0: 7/7 | Sprint 1: 16/47 = 34.0% ✨)
 - 🔄 **En Progreso:** 0 tareas
 - ⏸️ **Bloqueadas:** 0 tareas
-- 📋 **Sin Empezar:** 32 tareas Sprint 1
+- 📋 **Sin Empezar:** 31 tareas Sprint 1
 
 ---
 
@@ -694,7 +694,7 @@
 
 ---
 
-- [ ] **[TASK-020]** Crear página VerifyEmailPage
+- ✅ **[TASK-020]** [2025-11-07 19:00] Crear página VerifyEmailPage
 
   - **Capa:** 🎨 FRONTEND
   - **Estimado:** S (45 min)
@@ -707,7 +707,26 @@
     - Si error: mensaje de error + opción de reenviar email (opcional)
     - Diseño centrado con iconos
   - **Dependencias:** TASK-015
-  - **Status:** 📋 Sin Empezar
+  - **Status:** ✅ COMPLETADA
+  - **Tiempo real:** 25 min
+  - **Notas:**
+    - VerifyEmailPage completa con 3 estados (loading, success, error)
+    - useParams para extraer token de la URL
+    - useEffect con verificación automática al montar
+    - Estado "loading" con Loader2 spinner animado
+    - Estado "success" con CheckCircle icon verde
+    - Mensaje de éxito personalizado del backend
+    - Link a /login con botón destacado
+    - Estado "error" con XCircle icon rojo
+    - Mensaje de error del backend
+    - Link a /login siempre disponible
+    - Link a /register si el token expiró (detección inteligente)
+    - Manejo de token ausente en URL
+    - Footer con link a soporte por email
+    - Diseño responsive con gradient background
+    - Card blanca centrada con shadow-xl
+    - Logo placeholder circular "EA"
+    - Iconos de Lucide React (Loader2, CheckCircle, XCircle)
 
 ---
 
