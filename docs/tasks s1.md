@@ -214,7 +214,7 @@
 
 ---
 
-- [ ] **[TASK-001]** Crear modelo User en Mongoose
+- ✅ **[TASK-001]** [2025-11-07 17:00] Crear modelo User en Mongoose
 
   - **Capa:** 🗄️ DATABASE
   - **Estimado:** S (45 min)
@@ -227,24 +227,41 @@
     - Agregar método comparePassword
     - Agregar timestamps automáticos
   - **Dependencias:** Ninguna
-  - **Status:** 📋 Sin Empezar
+  - **Status:** ✅ COMPLETADA
+  - **Tiempo real:** 40 min
+  - **Notas:**
+    - Modelo User completo con 21 campos del schema
+    - Validaciones completas incluyendo edad mínima 18 años
+    - 7 índices configurados para performance (email unique, role, city, isActive, isVerified, city+isActive compuesto)
+    - 2 hooks pre-save: hash de password con bcrypt (10 rounds) y generación automática de verification token
+    - 1 hook post-save: log en desarrollo
+    - 4 métodos de instancia: comparePassword, generatePasswordResetToken, isVerificationTokenExpired, getPublicProfile
+    - 3 métodos estáticos: findByEmail, findActiveByCity, countVerified
+    - 1 virtual: age (calcula edad desde birthday)
+    - Conversión a ES modules (import/export) para compatibilidad con backend
+    - Testeo exitoso con MongoDB Atlas - todos los índices y métodos funcionando
+    - Commit: 0ce497a
 
 ---
 
-- [ ] **[TASK-002]** Configurar servicio de email con Resend
+- [x] **[TASK-002]** Configurar servicio de email con Resend
 
   - **Capa:** 🔧 BACKEND
   - **Estimado:** S (30 min)
-  - **Archivos:** `backend/src/config/email.js`, `backend/src/services/email.service.js`
+  - **Real:** 35 min
+  - **Archivos:** `backend/src/config/email.js`, `backend/src/services/email.service.js`, `backend/test-email-simple.js`, `backend/src/scripts/test-email.js`
   - **Descripción:**
-    - Importar y configurar Resend SDK
-    - Crear función sendWelcomeEmail con template HTML básico
-    - Crear función sendVerificationEmail con link y token
-    - Crear función sendPasswordResetEmail
-    - Manejar errores de envío
-    - Probar envío con email de prueba
+    - ✅ Importar y configurar Resend SDK
+    - ✅ Crear función sendWelcomeEmail con template HTML profesional
+    - ✅ Crear función sendVerificationEmail con link y token
+    - ✅ Crear función sendPasswordResetEmail
+    - ✅ BONUS: Crear función sendPasswordChangedEmail
+    - ✅ Manejar errores de envío con try/catch
+    - ✅ Probar envío con email de prueba (dev@jappi.ca) - EXITOSO
+    - ✅ Scripts de testing (simple y completo)
+    - ✅ Documentación completa (README-EMAIL.md)
   - **Dependencias:** Ninguna
-  - **Status:** 📋 Sin Empezar
+  - **Status:** ✅ Completada (2025-01-07)
 
 ---
 
@@ -1087,8 +1104,8 @@
 
 **Orden de prioridad para hoy:**
 
-1. [ ] [TASK-001] - P0 - Crear modelo User en Mongoose (45min) 🗄️
-2. [ ] [TASK-002] - P0 - Configurar servicio de email (30min) 🔧
+1. ✅ [TASK-001] - P0 - Crear modelo User en Mongoose (45min) 🗄️ - Completada 2025-11-07
+2. ✅ [TASK-002] - P0 - Configurar servicio de email (30min) 🔧 - Completada anteriormente
 3. [ ] [TASK-003] - P0 - Crear servicio de tokens JWT (30min) 🔧
 4. [ ] [TASK-004] - P0 - Crear middleware de autenticación (30min) 🔧
 5. [ ] [TASK-007] - P1 - Crear validaciones para registro (30min) 🔧
@@ -1104,8 +1121,8 @@
 
 **Backend Setup:**
 
-- [ ] [TASK-001] [US-001] 🗄️ Crear modelo User - S (45min)
-- [ ] [TASK-002] [US-001] 🔧 Configurar servicio de email - S (30min)
+- ✅ [TASK-001] [US-001] 🗄️ Crear modelo User - S (40min) - Completada 2025-11-07
+- ✅ [TASK-002] [US-001] 🔧 Configurar servicio de email - S (30min) - Completada anteriormente
 - [ ] [TASK-003] [US-001] 🔧 Crear servicio de tokens JWT - S (30min)
 - [ ] [TASK-004] [US-001] 🔧 Crear middleware de autenticación - S (30min)
 
