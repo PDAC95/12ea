@@ -22,10 +22,10 @@
 
 ### Resumen de Progreso
 
-- ✅ **Completadas:** 5 tareas (Sprint 0: 5/7 = 71%)
+- ✅ **Completadas:** 6 tareas (Sprint 0: 6/7 = 86%)
 - 🔄 **En Progreso:** 0 tareas
 - ⏸️ **Bloqueadas:** 0 tareas
-- 📋 **Sin Empezar:** 2 tareas Sprint 0 + 47 tareas Sprint 1
+- 📋 **Sin Empezar:** 1 tarea Sprint 0 + 47 tareas Sprint 1
 
 ---
 
@@ -127,11 +127,32 @@
 
 ---
 
-- [ ] **[INFRA-006]** Configuración Backend Node + Express - M (2-3 hrs)
-  - **Descripción:** Inicializar proyecto, instalar dependencias, configurar server.js, conectar MongoDB
-  - **Archivos:** package.json, server.js, .env, config/database.js
-  - **Dependencias:** INFRA-001, INFRA-002
-  - **Status:** 📋 Sin Empezar
+- ✅ **[INFRA-006]** [2025-11-07 14:45] Configuración Backend Node + Express - M (2-3 hrs)
+  - **Completado:** Backend completamente configurado con Express 4 + Mongoose 7 + MongoDB Atlas
+  - **Archivos creados/modificados:**
+    - backend/package.json (Express 4.19.2, Mongoose 7.6.3, JWT, bcrypt, AWS SDK, Resend SDK, multer, helmet, cors, rate-limit, morgan)
+    - backend/server.js (servidor Express con middleware completo)
+    - backend/src/config/database.js (conexión a MongoDB Atlas)
+    - backend/src/routes/index.js (sistema de rutas modular)
+    - backend/src/middleware/errorHandler.js (manejo centralizado de errores)
+    - backend/.gitignore (archivos ignorados)
+  - **Dependencias instaladas:** 460 paquetes (Express, Mongoose, JWT, bcrypt, AWS SDK, Resend, multer, helmet, cors, rate-limit, morgan, nodemon)
+  - **Configuraciones:**
+    - ✅ Express 4.19.2 configurado
+    - ✅ Mongoose 7.6.3 con conexión a MongoDB Atlas
+    - ✅ Middleware de seguridad (helmet)
+    - ✅ CORS configurado para frontend
+    - ✅ Rate limiting (100 req/15min)
+    - ✅ Morgan logger para desarrollo
+    - ✅ Error handler centralizado
+    - ✅ Health check endpoint (/health)
+    - ✅ Sistema de rutas modular
+  - **Endpoints configurados:**
+    - GET /health - Health check del servidor
+    - GET /api/v1 - Info de la API
+  - **Commit:** 4b19d7f - "feat: configuración completa de Backend con Express 4 + Mongoose 7 + MongoDB Atlas"
+  - **Tiempo real:** 1 hr
+  - **Status:** ✅ COMPLETADA
 
 ---
 
