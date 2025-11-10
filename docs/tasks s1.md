@@ -1,9 +1,9 @@
 # TAREAS - Sprint 1
 
-**Producto:** Entre Amigas  
-**Sprint:** 1 - Usuarias pueden registrarse, verificar email, hacer login y ver landing page  
-**Fechas del Sprint:** [Inicio] - [2 semanas después]  
-**Última Actualización:** 5 de noviembre, 2025 - 10:00 AM
+**Producto:** Entre Amigas
+**Sprint:** 1 - Usuarias pueden registrarse, verificar email, hacer login y ver landing page
+**Fechas del Sprint:** [Inicio] - [2 semanas después]
+**Última Actualización:** 10 de noviembre, 2025 - 8:05 PM
 
 ---
 
@@ -22,10 +22,10 @@
 
 ### Resumen de Progreso
 
-- ✅ **Completadas:** 26 tareas (Sprint 0: 7/7 | Sprint 1: 19/47 = 40.4% ✨)
+- ✅ **Completadas:** 29 tareas (Sprint 0: 7/7 | Sprint 1: 22/47 = 46.8% ✨)
 - 🔄 **En Progreso:** 0 tareas
 - ⏸️ **Bloqueadas:** 0 tareas
-- 📋 **Sin Empezar:** 28 tareas Sprint 1
+- 📋 **Sin Empezar:** 25 tareas Sprint 1
 
 ---
 
@@ -833,7 +833,7 @@
 
 ---
 
-- [ ] **[TASK-024]** Crear página ResetPasswordPage
+- ✅ **[TASK-024]** [2025-11-10 19:50] Crear página ResetPasswordPage
 
   - **Capa:** 🎨 FRONTEND
   - **Estimado:** S (30 min)
@@ -844,11 +844,25 @@
     - Título "Nueva Contraseña"
     - Incluir ResetPasswordForm con token
   - **Dependencias:** TASK-023
-  - **Status:** 📋 Sin Empezar
+  - **Status:** ✅ COMPLETADA
+  - **Tiempo real:** 10 min
+  - **Notas:**
+    - ResetPasswordPage completa con layout profesional
+    - Background con gradient (blue-50 to purple-50)
+    - Card blanca centrada con shadow-xl y rounded-2xl
+    - Logo placeholder circular con bg-primary-600
+    - Título "Nueva Contraseña" + descripción
+    - ResetPasswordForm integrado (el form extrae token internamente)
+    - Footer con link a /login usando React Router Link
+    - Diseño responsive mobile-first
+    - Padding adecuado (px-4, py-12)
+    - Min-height 100vh para centrado vertical
+    - Ruta `/reset-password/:token` ya configurada en AppRoutes.jsx
+    - Mejoras aplicadas: eliminada prop redundante `token`, uso de Link en vez de <a href>
 
 ---
 
-- [ ] **[TASK-025]** Crear componente ProtectedRoute
+- ✅ **[TASK-025]** [2025-11-10 20:00] Crear componente ProtectedRoute
 
   - **Capa:** 🎨 FRONTEND
   - **Estimado:** S (30 min)
@@ -860,11 +874,25 @@
     - Si no autenticado: redirect a /login
     - Mostrar loading mientras verifica
   - **Dependencias:** TASK-005
-  - **Status:** 📋 Sin Empezar
+  - **Status:** ✅ COMPLETADA
+  - **Tiempo real:** Ya existía (verificación 5 min)
+  - **Notas:**
+    - ProtectedRoute completo y muy bien implementado
+    - Usa useAuth() para obtener isAuthenticated e isLoading
+    - Loading state con Loader2 spinner animado de Lucide React
+    - Pantalla de loading profesional con texto "Verificando autenticación..."
+    - Redirect a /login con Navigate de React Router
+    - Preserva ruta original en location.state para redirect post-login
+    - Renderiza children si usuario está autenticado
+    - Documentación JSDoc completa con ejemplos de uso
+    - PropTypes no necesario (children es ReactNode)
+    - Diseño responsive con Tailwind CSS
+    - Background gray-50, spinner primary-600
+    - Ya integrado en AppRoutes.jsx para /dashboard
 
 ---
 
-- [ ] **[TASK-026]** Configurar rutas de autenticación en React Router
+- ✅ **[TASK-026]** [2025-11-10 20:05] Configurar rutas de autenticación en React Router
 
   - **Capa:** 🎨 FRONTEND
   - **Estimado:** S (30 min)
@@ -882,7 +910,18 @@
       - /dashboard → DashboardPage (crear placeholder)
     - Ruta 404 → NotFoundPage
   - **Dependencias:** TASK-017, TASK-019, TASK-020, TASK-022, TASK-024, TASK-025
-  - **Status:** 📋 Sin Empezar
+  - **Status:** ✅ COMPLETADA
+  - **Tiempo real:** Ya existía (verificación 10 min)
+  - **Notas:**
+    - AppRoutes.jsx completamente configurado
+    - **Rutas Públicas:** / (LandingPage), /register, /login, /verify-email/:token, /forgot-password, /reset-password/:token
+    - **Rutas Protegidas:** /dashboard (DashboardPage con ProtectedRoute)
+    - **Ruta 404:** * (NotFoundPage)
+    - Todas las páginas existen y funcionales
+    - LandingPage es placeholder profesional hasta US-002
+    - DashboardPage funcional con useAuth y logout
+    - NotFoundPage con diseño amigable
+    - React Router v6 syntax correcto
 
 ---
 
@@ -1328,16 +1367,16 @@
 
 - ✅ [TASK-015] [US-001] 🎨 Crear servicio de autenticación - S (30min) - Completada 2025-11-07
 - ✅ [TASK-016] [US-001] 🎨 Crear componente RegisterForm - M (1.5hrs) - Completada 2025-11-07
-- [ ] [TASK-017] [US-001] 🎨 Crear página RegisterPage - S (30min)
-- [ ] [TASK-018] [US-001] 🎨 Crear componente LoginForm - M (1hr)
-- [ ] [TASK-019] [US-001] 🎨 Crear página LoginPage - S (30min)
-- [ ] [TASK-020] [US-001] 🎨 Crear página VerifyEmailPage - S (45min)
-- [ ] [TASK-021] [US-001] 🎨 Crear componente ForgotPasswordForm - S (45min)
-- [ ] [TASK-022] [US-001] 🎨 Crear página ForgotPasswordPage - S (30min)
-- [ ] [TASK-023] [US-001] 🎨 Crear componente ResetPasswordForm - S (45min)
-- [ ] [TASK-024] [US-001] 🎨 Crear página ResetPasswordPage - S (30min)
-- [ ] [TASK-025] [US-001] 🎨 Crear componente ProtectedRoute - S (30min)
-- [ ] [TASK-026] [US-001] 🎨 Configurar rutas de autenticación - S (30min)
+- ✅ [TASK-017] [US-001] 🎨 Crear página RegisterPage - S (15min) - Completada 2025-11-07
+- ✅ [TASK-018] [US-001] 🎨 Crear componente LoginForm - M (45min) - Completada 2025-11-07
+- ✅ [TASK-019] [US-001] 🎨 Crear página LoginPage - S (10min) - Completada 2025-11-07
+- ✅ [TASK-020] [US-001] 🎨 Crear página VerifyEmailPage - S (25min) - Completada 2025-11-07
+- ✅ [TASK-021] [US-001] 🎨 Crear componente ForgotPasswordForm - S (30min) - Completada 2025-11-07
+- ✅ [TASK-022] [US-001] 🎨 Crear página ForgotPasswordPage - S (8min) - Completada 2025-11-07
+- ✅ [TASK-023] [US-001] 🎨 Crear componente ResetPasswordForm - S (35min) - Completada 2025-11-07
+- ✅ [TASK-024] [US-001] 🎨 Crear página ResetPasswordPage - S (10min) - Completada 2025-11-10
+- ✅ [TASK-025] [US-001] 🎨 Crear componente ProtectedRoute - S (ya existía) - Completada 2025-11-10
+- ✅ [TASK-026] [US-001] 🎨 Configurar rutas de autenticación - S (ya existía) - Completada 2025-11-10
 
 **Landing Components:**
 

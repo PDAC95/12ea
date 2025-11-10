@@ -4,9 +4,11 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
+import passport from 'passport';
 import connectDB from './src/config/database.js';
 import routes from './src/routes/index.js';
 import errorHandler from './src/middleware/errorHandler.js';
+import './src/config/passport.js'; // Configuración de Passport OAuth
 
 // Cargar variables de entorno
 dotenv.config();
@@ -29,6 +31,9 @@ app.use(cors({
 // Body parser
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Passport initialization (OAuth)
+app.use(passport.initialize());
 
 // Logger
 if (process.env.NODE_ENV === 'development') {

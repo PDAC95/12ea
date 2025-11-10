@@ -451,6 +451,126 @@ export const getMe = async (req, res) => {
   }
 };
 
+/**
+ * @route   GET /api/auth/google
+ * @desc    Iniciar flujo de autenticación con Google OAuth 2.0
+ * @access  Public
+ */
+export const googleAuth = (req, res, next) => {
+  // Este controlador solo pasa el control a Passport
+  // Passport redirigirá al usuario a Google para autenticación
+  console.log('🔐 Iniciando flujo de Google OAuth...');
+  next(); // ¡IMPORTANTE! Pasar control al siguiente middleware (Passport)
+};
+
+/**
+ * @route   GET /api/auth/google/callback
+ * @desc    Callback de Google OAuth - Procesar respuesta y generar JWT
+ * @access  Public
+ */
+export const googleCallback = (req, res) => {
+  try {
+    // El usuario viene de req.user (seteado por Passport)
+    const user = req.user;
+
+    if (!user) {
+      console.error('❌ No se recibió usuario de Google OAuth');
+      return res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`);
+    }
+
+    console.log('✅ Google OAuth exitoso para:', user.email);
+
+    // Generar token JWT
+    const token = generateAuthToken(user._id, {
+      email: user.email,
+      role: user.role,
+      isVerified: user.isVerified,
+    });
+
+    // Verificar si el usuario necesita completar datos (phone, birthday, city)
+    const needsProfileCompletion = !user.phone || !user.birthday || !user.city;
+
+    // Redirigir al frontend con el token y estado de perfil
+    const redirectUrl = `${process.env.FRONTEND_URL}/auth/callback?token=${token}&needsProfile=${needsProfileCompletion}`;
+
+    console.log('🔀 Redirigiendo a frontend:', redirectUrl);
+    res.redirect(redirectUrl);
+  } catch (error) {
+    console.error('❌ Error en googleCallback:', error);
+    res.redirect(`${process.env.FRONTEND_URL}/login?error=callback_error`);
+  }
+};
+
+/**
+ * @route   PUT /api/auth/update-profile
+ * @desc    Actualizar datos de perfil del usuario autenticado
+ * @access  Private (requiere token JWT)
+ */
+export const updateProfile = async (req, res) => {
+  try {
+    // El usuario viene de req.user (seteado por el middleware protect)
+    const userId = req.user.id;
+    const { phone, birthday, city } = req.body;
+
+    // Buscar usuario por ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Usuario no encontrado',
+      });
+    }
+
+    // Verificar que la cuenta esté activa
+    if (!user.isActive) {
+      return res.status(403).json({
+        success: false,
+        message: 'La cuenta ha sido desactivada',
+      });
+    }
+
+    // Actualizar campos opcionales si se proporcionaron
+    if (phone !== undefined) user.phone = phone;
+    if (birthday !== undefined) user.birthday = birthday;
+    if (city !== undefined) user.city = city;
+
+    // Guardar cambios
+    await user.save();
+
+    // Retornar perfil actualizado
+    res.status(200).json({
+      success: true,
+      message: 'Perfil actualizado exitosamente',
+      data: {
+        user: user.getPublicProfile(),
+      },
+    });
+  } catch (error) {
+    console.error('❌ Error en updateProfile:', error);
+
+    // Manejo de errores de validación de Mongoose
+    if (error.name === 'ValidationError') {
+      const errors = Object.values(error.errors).map(err => ({
+        field: err.path,
+        message: err.message,
+      }));
+
+      return res.status(400).json({
+        success: false,
+        message: 'Error de validación',
+        errors,
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: 'Error al actualizar perfil',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
+  }
+};
+
 // Export todas las funciones
 export default {
   register,
@@ -459,4 +579,7 @@ export default {
   forgotPassword,
   resetPassword,
   getMe,
+  googleAuth,
+  googleCallback,
+  updateProfile,
 };

@@ -1,4 +1,5 @@
 import express from 'express';
+import passport from 'passport';
 import {
   register,
   login,
@@ -6,12 +7,16 @@ import {
   forgotPassword,
   resetPassword,
   getMe,
+  googleAuth,
+  googleCallback,
+  updateProfile,
 } from '../controllers/auth.controller.js';
 import {
   registerValidation,
   loginValidation,
   forgotPasswordValidation,
   resetPasswordValidation,
+  updateProfileValidation,
   handleValidationErrors,
 } from '../validators/auth.validator.js';
 import { protect } from '../middleware/auth.middleware.js';
@@ -97,6 +102,50 @@ router.get(
   '/me',
   protect,                   // 1. Verificar token JWT y autenticar
   getMe                      // 2. Retornar información del usuario
+);
+
+/**
+ * @route   PUT /api/auth/update-profile
+ * @desc    Actualizar datos de perfil del usuario autenticado
+ * @access  Private (requiere token JWT)
+ * @headers Authorization: Bearer {token}
+ * @body    { phone?, birthday?, city? }
+ */
+router.put(
+  '/update-profile',
+  protect,                   // 1. Verificar token JWT y autenticar
+  updateProfileValidation,   // 2. Validar datos opcionales
+  handleValidationErrors,    // 3. Manejar errores de validación
+  updateProfile              // 4. Actualizar perfil
+);
+
+/**
+ * @route   GET /api/auth/google
+ * @desc    Iniciar flujo de autenticación con Google OAuth 2.0
+ * @access  Public
+ * @redirect Redirige a la página de login de Google
+ */
+router.get(
+  '/google',
+  googleAuth,                            // 1. Log del inicio del flujo
+  passport.authenticate('google', {     // 2. Passport maneja la redirección a Google
+    scope: ['profile', 'email'],
+  })
+);
+
+/**
+ * @route   GET /api/auth/google/callback
+ * @desc    Callback de Google OAuth - Procesar respuesta y generar JWT
+ * @access  Public
+ * @redirect Redirige al frontend con token JWT en query params
+ */
+router.get(
+  '/google/callback',
+  passport.authenticate('google', {     // 1. Passport procesa el callback
+    session: false,                     // No usar sesiones (usamos JWT)
+    failureRedirect: `${process.env.FRONTEND_URL}/login?error=oauth_failed`,
+  }),
+  googleCallback                         // 2. Generar JWT y redirigir
 );
 
 export default router;

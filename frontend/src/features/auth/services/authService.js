@@ -30,12 +30,12 @@ const authService = {
         // El servidor respondió con un error
         const errorData = error.response.data;
         const errorMessage =
-          errorData?.error?.message || 'Error al registrar usuario';
+          errorData?.message || 'Error al registrar usuario';
 
         // Si hay errores de validación específicos, incluirlos
-        if (errorData?.error?.details && Array.isArray(errorData.error.details)) {
-          const validationErrors = errorData.error.details
-            .map((detail) => detail.msg)
+        if (errorData?.errors && Array.isArray(errorData.errors)) {
+          const validationErrors = errorData.errors
+            .map((err) => err.message || err.msg)
             .join(', ');
           throw new Error(validationErrors);
         }
@@ -66,7 +66,7 @@ const authService = {
       if (error.response) {
         const errorData = error.response.data;
         const errorMessage =
-          errorData?.error?.message || 'Error al iniciar sesión';
+          errorData?.message || 'Error al iniciar sesión';
         throw new Error(errorMessage);
       } else if (error.request) {
         throw new Error('No se pudo conectar con el servidor');
@@ -90,7 +90,7 @@ const authService = {
       if (error.response) {
         const errorData = error.response.data;
         const errorMessage =
-          errorData?.error?.message || 'Error al verificar el email';
+          errorData?.message || 'Error al verificar el email';
         throw new Error(errorMessage);
       } else if (error.request) {
         throw new Error('No se pudo conectar con el servidor');
@@ -114,7 +114,7 @@ const authService = {
       if (error.response) {
         const errorData = error.response.data;
         const errorMessage =
-          errorData?.error?.message ||
+          errorData?.message ||
           'Error al solicitar recuperación de contraseña';
         throw new Error(errorMessage);
       } else if (error.request) {
@@ -144,7 +144,7 @@ const authService = {
       if (error.response) {
         const errorData = error.response.data;
         const errorMessage =
-          errorData?.error?.message || 'Error al restablecer la contraseña';
+          errorData?.message || 'Error al restablecer la contraseña';
         throw new Error(errorMessage);
       } else if (error.request) {
         throw new Error('No se pudo conectar con el servidor');
@@ -168,7 +168,7 @@ const authService = {
       if (error.response) {
         const errorData = error.response.data;
         const errorMessage =
-          errorData?.error?.message || 'Error al obtener datos del usuario';
+          errorData?.message || 'Error al obtener datos del usuario';
         throw new Error(errorMessage);
       } else if (error.request) {
         throw new Error('No se pudo conectar con el servidor');
@@ -177,6 +177,46 @@ const authService = {
       }
     }
   },
+
+  /**
+   * Actualizar perfil del usuario autenticado
+   * Se usa para completar datos faltantes después de Google OAuth
+   * @param {Object} profileData - Datos a actualizar
+   * @param {string} [profileData.phone] - Teléfono
+   * @param {string} [profileData.birthday] - Fecha de nacimiento (YYYY-MM-DD)
+   * @param {string} [profileData.city] - Ciudad
+   * @returns {Promise<Object>} Respuesta del servidor con usuario actualizado
+   * @throws {Error} Si hay error en la actualización
+   */
+  updateProfile: async (profileData) => {
+    try {
+      const response = await api.put('/auth/update-profile', profileData);
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        const errorData = error.response.data;
+        const errorMessage =
+          errorData?.message || 'Error al actualizar perfil';
+
+        // Si hay errores de validación específicos, incluirlos
+        if (errorData?.errors && Array.isArray(errorData.errors)) {
+          const validationErrors = errorData.errors
+            .map((err) => err.message || err.msg)
+            .join(', ');
+          throw new Error(validationErrors);
+        }
+
+        throw new Error(errorMessage);
+      } else if (error.request) {
+        throw new Error('No se pudo conectar con el servidor');
+      } else {
+        throw new Error('Error al procesar la solicitud de actualización');
+      }
+    }
+  },
 };
+
+// Exportar métodos individuales para importación con destructuring
+export const { register, login, verifyEmail, forgotPassword, resetPassword, getMe, updateProfile } = authService;
 
 export default authService;

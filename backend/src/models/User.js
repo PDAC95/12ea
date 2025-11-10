@@ -37,18 +37,27 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, 'La contraseña es requerida'],
+      required: function() {
+        // Password es requerido solo si authProvider es 'local'
+        return this.authProvider === 'local';
+      },
       minlength: [8, 'La contraseña debe tener al menos 8 caracteres'],
       select: false, // No incluir password en queries por defecto
     },
     phone: {
       type: String,
-      required: [true, 'El teléfono es requerido'],
+      required: function() {
+        // Phone es requerido solo si authProvider es 'local'
+        return this.authProvider === 'local';
+      },
       trim: true,
     },
     birthday: {
       type: Date,
-      required: [true, 'La fecha de nacimiento es requerida'],
+      required: function() {
+        // Birthday es requerido solo si authProvider es 'local'
+        return this.authProvider === 'local';
+      },
       validate: {
         validator: function (value) {
           // Validar que la fecha de nacimiento sea válida (entre 1920 y hace 18 años)
@@ -62,8 +71,26 @@ const userSchema = new mongoose.Schema(
     },
     city: {
       type: String,
-      required: [true, 'La ciudad es requerida'],
+      required: function() {
+        // City es requerido solo si authProvider es 'local'
+        return this.authProvider === 'local';
+      },
       trim: true,
+    },
+
+    // OAuth y Proveedores de Autenticación
+    authProvider: {
+      type: String,
+      enum: {
+        values: ['local', 'google'],
+        message: '{VALUE} no es un proveedor de autenticación válido',
+      },
+      default: 'local',
+    },
+    googleId: {
+      type: String,
+      default: null,
+      select: false, // No incluir en queries por defecto
     },
 
     // Roles y Permisos

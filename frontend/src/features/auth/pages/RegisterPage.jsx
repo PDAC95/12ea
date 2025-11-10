@@ -1,61 +1,69 @@
 import { Link } from 'react-router-dom';
+import { Sparkles } from 'lucide-react';
 import RegisterForm from '../components/RegisterForm';
+import logo from '../../../assets/images/logo/logo.png';
 
 /**
- * RegisterPage - Página de registro de usuarios
- * Layout completo con título, formulario y links
+ * RegisterPage - Página de registro con diseño moderno y femenino
+ *
+ * Features:
+ * - Diseño moderno con gradientes suaves
+ * - Layout responsive y accesible
+ * - Integración con RegisterForm
+ * - Links a otras páginas
+ *
+ * @returns {JSX.Element} Página de registro
  */
 const RegisterPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-secondary-50 to-warm-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        {/* Card Container */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          {/* Header */}
-          <div className="text-center mb-8">
-            {/* Logo placeholder - puedes reemplazar con tu logo */}
-            <div className="inline-block w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full mb-4 flex items-center justify-center">
-              <span className="text-white text-2xl font-bold">EA</span>
-            </div>
+        {/* Card Principal */}
+        <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-soft-lg p-8 md:p-10">
+          {/* Logo y Badge */}
+          <div className="flex flex-col items-center mb-8">
+            <img
+              src={logo}
+              alt="Entre Amigas"
+              className="w-16 h-16 object-contain mb-4"
+            />
 
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary-50 rounded-full mb-4">
+              <Sparkles className="w-3.5 h-3.5 text-primary-500" />
+              <span className="text-xs font-medium text-primary-700">Gratis para siempre</span>
+            </div>
+          </div>
+
+          {/* Título y Descripción */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl md:text-4xl font-display font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent mb-3">
               Únete a Entre Amigas
             </h1>
-            <p className="text-gray-600">
-              Crea tu cuenta y comienza a conectar con nuestra comunidad
+            <p className="text-gray-600 leading-relaxed">
+              Crea tu cuenta y conecta con tu comunidad
             </p>
           </div>
 
-          {/* Register Form */}
+          {/* RegisterForm */}
           <RegisterForm />
+        </div>
 
-          {/* Divider */}
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">
-                ¿Ya tienes cuenta?
-              </span>
-            </div>
-          </div>
-
-          {/* Link to Login */}
-          <div className="text-center">
+        {/* Link a Login */}
+        <div className="mt-6 text-center">
+          <p className="text-gray-600">
+            ¿Ya tienes cuenta?{' '}
             <Link
               to="/login"
-              className="text-blue-600 hover:text-blue-700 font-medium hover:underline transition"
+              className="font-semibold text-primary-600 hover:text-primary-700 transition-colors"
             >
               Inicia Sesión
             </Link>
-          </div>
+          </p>
         </div>
 
-        {/* Footer text */}
-        <p className="text-center mt-6 text-sm text-gray-600">
-          Al registrarte, estás dando el primer paso para conectar con una comunidad
-          de mujeres que te entienden y te apoyan.
+        {/* Footer Text */}
+        <p className="text-center text-sm text-gray-500 mt-6">
+          Juntas somos más fuertes 💜
         </p>
       </div>
     </div>

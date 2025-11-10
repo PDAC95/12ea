@@ -26,7 +26,10 @@
       "Bash(node test-token-service.js:*)",
       "Bash(node test-auth-middleware.js:*)",
       "Bash(node test-validators.js:*)",
-      "Bash(node test-resend-debug.js:*)"
+      "Bash(node test-resend-debug.js:*)",
+      "Bash(npm run dev:*)",
+      "Bash(timeout:*)",
+      "Bash(timeout 10 npm run dev:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

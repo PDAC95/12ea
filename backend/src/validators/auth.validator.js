@@ -106,7 +106,7 @@ export const registerValidation = [
     .withMessage('La ciudad es requerida')
     .isLength({ min: 2, max: 100 })
     .withMessage('La ciudad debe tener entre 2 y 100 caracteres')
-    .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s,\-\.]+$/)
+    .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s,\-\.\/]+$/)
     .withMessage('La ciudad solo puede contener letras, espacios y caracteres de puntuación básicos'),
 ];
 
@@ -205,13 +205,41 @@ export const updateProfileValidation = [
     .isLength({ min: 10, max: 20 })
     .withMessage('El teléfono debe tener entre 10 y 20 caracteres'),
 
+  // Birthday (opcional)
+  body('birthday')
+    .optional()
+    .isISO8601()
+    .withMessage('La fecha de nacimiento debe tener formato válido (YYYY-MM-DD)')
+    .custom((value) => {
+      const birthDate = new Date(value);
+      const today = new Date();
+      const age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+
+      // Verificar que la fecha no sea futura
+      if (birthDate > today) {
+        throw new Error('La fecha de nacimiento no puede ser futura');
+      }
+
+      // Verificar que tenga al menos 18 años
+      const actualAge = monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())
+        ? age - 1
+        : age;
+
+      if (actualAge < 18) {
+        throw new Error('Debes tener al menos 18 años');
+      }
+
+      return true;
+    }),
+
   // City (opcional)
   body('city')
     .optional()
     .trim()
     .isLength({ min: 2, max: 100 })
     .withMessage('La ciudad debe tener entre 2 y 100 caracteres')
-    .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s,\-\.]+$/)
+    .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s,\-\.\/]+$/)
     .withMessage('La ciudad solo puede contener letras, espacios y caracteres de puntuación básicos'),
 
   // Bio (opcional)
