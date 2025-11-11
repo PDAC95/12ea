@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paleta de Colores - Entre Amigas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #fef5f8 0%, #f9f6fe 100%);
+            padding: 40px 20px;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #f0568c 0%, #a076e7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: #6b7280;
+            margin-bottom: 3rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px -5px rgba(0, 0, 0, 0.1), 0 20px 25px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        h2 {
+            font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #111827;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .color-swatch {
+            text-align: center;
+        }
+
+        .color-box {
+            width: 100%;
+            height: 80px;
+            border-radius: 0.75rem;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s;
+        }
+
+        .color-box:hover {
+            transform: scale(1.05);
+        }
+
+        .color-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #4b5563;
+            margin-bottom: 0.25rem;
+        }
+
+        .color-hex {
+            font-size: 0.625rem;
+            color: #9ca3af;
+            font-family: monospace;
+        }
+
+        .gradient-showcase {
+            height: 200px;
+            border-radius: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .typography-sample {
+            margin-bottom: 1.5rem;
+        }
+
+        .font-display {
+            font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+        }
+
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f0568c 0%, #a076e7 100%);
+            color: white;
+            box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.07);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 10px 40px -5px rgba(240, 86, 140, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #f0568c;
+            border: 2px solid #fcd3e1;
+        }
+
+        .btn-secondary:hover {
+            border-color: #f781a8;
+            box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.07);
+        }
+
+        .color-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+
+        .color-description {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Paleta de Colores - Entre Amigas</h1>
+        <p class="subtitle">Sistema de diseño completo para la comunidad</p>
+
+        <!-- Gradiente Principal -->
+        <div class="section">
+            <h2>✨ Gradiente Principal</h2>
+            <div class="gradient-showcase" style="background: linear-gradient(135deg, #f0568c 0%, #a076e7 100%);">
+                Tu comunidad en Canadá
+            </div>
+        </div>
+
+        <!-- Primary Colors -->
+        <div class="section">
+            <div class="color-name">💗 Primary - Rosa Coral</div>
+            <div class="color-description">Energía, amistad, calidez • CTAs principales, botones, enlaces</div>
+            <div class="color-grid">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #fef5f8;"></div>
+                    <div class="color-label">50</div>
+                    <div class="color-hex">#fef5f8</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #fde9f0;"></div>
+                    <div class="color-label">100</div>
+                    <div class="color-hex">#fde9f0</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #fcd3e1;"></div>
+                    <div class="color-label">200</div>
+                    <div class="color-hex">#fcd3e1</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #fab0ca;"></div>
+                    <div class="color-label">300</div>
+                    <div class="color-hex">#fab0ca</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #f781a8;"></div>
+                    <div class="color-label">400</div>
+                    <div class="color-hex">#f781a8</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #f0568c; border: 3px solid #111827;"></div>
+                    <div class="color-label">500 ⭐</div>
+                    <div class="color-hex">#f0568c</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #de3370;"></div>
+                    <div class="color-label">600</div>
+                    <div class="color-hex">#de3370</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #c32259;"></div>
+                    <div class="color-label">700</div>
+                    <div class="color-hex">#c32259</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #a11e4c;"></div>
+                    <div class="color-label">800</div>
+                    <div class="color-hex">#a11e4c</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #871d43;"></div>
+                    <div class="color-label">900</div>
+                    <div class="color-hex">#871d43</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Secondary Colors -->
+        <div class="section">
+            <div class="color-name">💜 Secondary - Lavanda/Morado</div>
+            <div class="color-description">Creatividad, inspiración, confianza • Gradientes, fondos de secciones</div>
+            <div class="color-grid">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #f9f6fe;"></div>
+                    <div class="color-label">50</div>
+                    <div class="color-hex">#f9f6fe</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #f2edfd;"></div>
+                    <div class="color-label">100</div>
+                    <div class="color-hex">#f2edfd</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #e7ddfb;"></div>
+                    <div class="color-label">200</div>
+                    <div class="color-hex">#e7ddfb</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #d4c2f7;"></div>
+                    <div class="color-label">300</div>
+                    <div class="color-hex">#d4c2f7</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #ba9af0;"></div>
+                    <div class="color-label">400</div>
+                    <div class="color-hex">#ba9af0</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #a076e7; border: 3px solid #111827;"></div>
+                    <div class="color-label">500 ⭐</div>
+                    <div class="color-hex">#a076e7</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #8a55da;"></div>
+                    <div class="color-label">600</div>
+                    <div class="color-hex">#8a55da</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #7642c0;"></div>
+                    <div class="color-label">700</div>
+                    <div class="color-hex">#7642c0</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #63389d;"></div>
+                    <div class="color-label">800</div>
+                    <div class="color-hex">#63389d</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #52307f;"></div>
+                    <div class="color-label">900</div>
+                    <div class="color-hex">#52307f</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accent Colors -->
+        <div class="section">
+            <div class="color-name">🌊 Accent - Turquesa/Teal</div>
+            <div class="color-description">Frescura, claridad, crecimiento • Badges, elementos informativos</div>
+            <div class="color-grid">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #f0fdfa;"></div>
+                    <div class="color-label">50</div>
+                    <div class="color-hex">#f0fdfa</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #ccfbf1;"></div>
+                    <div class="color-label">100</div>
+                    <div class="color-hex">#ccfbf1</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #99f6e4;"></div>
+                    <div class="color-label">200</div>
+                    <div class="color-hex">#99f6e4</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #5eead4;"></div>
+                    <div class="color-label">300</div>
+                    <div class="color-hex">#5eead4</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #2dd4bf;"></div>
+                    <div class="color-label">400</div>
+                    <div class="color-hex">#2dd4bf</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #14b8a6; border: 3px solid #111827;"></div>
+                    <div class="color-label">500 ⭐</div>
+                    <div class="color-hex">#14b8a6</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #0d9488;"></div>
+                    <div class="color-label">600</div>
+                    <div class="color-hex">#0d9488</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #0f766e;"></div>
+                    <div class="color-label">700</div>
+                    <div class="color-hex">#0f766e</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #115e59;"></div>
+                    <div class="color-label">800</div>
+                    <div class="color-hex">#115e59</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #134e4a;"></div>
+                    <div class="color-label">900</div>
+                    <div class="color-hex">#134e4a</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warm Colors -->
+        <div class="section">
+            <div class="color-name">🧡 Warm - Terracota/Melocotón</div>
+            <div class="color-description">Calidez, acogida, comunidad • Acentos cálidos, ilustraciones</div>
+            <div class="color-grid">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #fef9f5;"></div>
+                    <div class="color-label">50</div>
+                    <div class="color-hex">#fef9f5</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #fef1e7;"></div>
+                    <div class="color-label">100</div>
+                    <div class="color-hex">#fef1e7</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #fde1cb;"></div>
+                    <div class="color-label">200</div>
+                    <div class="color-hex">#fde1cb</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #fbc9a3;"></div>
+                    <div class="color-label">300</div>
+                    <div class="color-hex">#fbc9a3</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #f8a870;"></div>
+                    <div class="color-label">400</div>
+                    <div class="color-hex">#f8a870</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #f58b4c; border: 3px solid #111827;"></div>
+                    <div class="color-label">500 ⭐</div>
+                    <div class="color-hex">#f58b4c</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #e66f32;"></div>
+                    <div class="color-label">600</div>
+                    <div class="color-hex">#e66f32</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #c05628;"></div>
+                    <div class="color-label">700</div>
+                    <div class="color-hex">#c05628</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #984625;"></div>
+                    <div class="color-label">800</div>
+                    <div class="color-hex">#984625</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #7a3b22;"></div>
+                    <div class="color-label">900</div>
+                    <div class="color-hex">#7a3b22</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Typography -->
+        <div class="section">
+            <h2>🔤 Tipografía</h2>
+
+            <div class="typography-sample">
+                <div class="color-label" style="margin-bottom: 1rem;">Plus Jakarta Sans (Display)</div>
+                <h1 class="font-display" style="font-size: 3rem; font-weight: 800; margin-bottom: 0.5rem;">Tu comunidad en Canadá</h1>
+                <h2 class="font-display" style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem;">Más que una red social</h2>
+                <h3 class="font-display" style="font-size: 1.5rem; font-weight: 600;">Conecta, aprende y crece</h3>
+            </div>
+
+            <div class="typography-sample">
+                <div class="color-label" style="margin-bottom: 1rem;">Inter (Body)</div>
+                <p style="font-size: 1.25rem; margin-bottom: 0.5rem;">Texto grande para leads e introducciones importantes.</p>
+                <p style="font-size: 1rem; margin-bottom: 0.5rem;">Texto regular para párrafos y contenido general del cuerpo.</p>
+                <p style="font-size: 0.875rem; color: #6b7280;">Texto pequeño para captions, labels y metadata.</p>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="section">
+            <h2>🔘 Botones</h2>
+            <div class="buttons-grid">
+                <button class="btn btn-primary">Botón Primario</button>
+                <button class="btn btn-secondary">Botón Secundario</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

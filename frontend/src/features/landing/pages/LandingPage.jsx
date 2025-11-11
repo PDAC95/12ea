@@ -171,6 +171,8 @@ const LandingPage = () => {
               <img
                 src={photo2}
                 alt="Amigas conversando y riendo"
+                loading="lazy"
+                decoding="async"
                 className="relative rounded-3xl shadow-2xl w-full h-[500px] object-cover"
               />
             </div>
@@ -259,6 +261,8 @@ const LandingPage = () => {
                 <img
                   src={photo1}
                   alt="Amigas en café disfrutando"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary-900/90 via-primary-900/50 to-transparent"></div>
@@ -281,6 +285,8 @@ const LandingPage = () => {
                 <img
                   src="https://images.unsplash.com/photo-1522543558187-768b6df7c25c?q=80&w=2070&auto=format&fit=crop"
                   alt="Grupo de mujeres apoyándose"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-secondary-900/90 via-secondary-900/50 to-transparent"></div>
@@ -303,6 +309,8 @@ const LandingPage = () => {
                 <img
                   src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2070&auto=format&fit=crop"
                   alt="Mujeres compartiendo historias"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-accent-900/90 via-accent-900/50 to-transparent"></div>
@@ -411,6 +419,8 @@ const LandingPage = () => {
           <img
             src="https://images.unsplash.com/photo-1543269865-cbf427effbad?q=80&w=2070&auto=format&fit=crop"
             alt="Grupo de amigas felices"
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-primary-600/95 to-secondary-600/95"></div>
@@ -466,6 +476,8 @@ const LandingPage = () => {
                 <img
                   src={logo}
                   alt="Entre Amigas"
+                  loading="lazy"
+                  decoding="async"
                   className="w-12 h-12 object-contain"
                 />
                 <span className="text-2xl font-display font-bold text-white">Entre Amigas</span>
