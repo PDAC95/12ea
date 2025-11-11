@@ -195,7 +195,7 @@ export const sendWelcomeEmail = async (to, name) => {
  * @returns {Promise<Object>} Resultado del envío
  */
 export const sendVerificationEmail = async (to, name, verificationToken) => {
-  const verificationUrl = `${emailConfig.frontendUrl}/verify-email?token=${verificationToken}`;
+  const verificationUrl = `${emailConfig.frontendUrl}/verify-email/${verificationToken}`;
   const subject = 'Verifica tu cuenta - Entre Amigas 🔐';
 
   const html = `
@@ -345,8 +345,12 @@ export const sendVerificationEmail = async (to, name, verificationToken) => {
  * @returns {Promise<Object>} Resultado del envío
  */
 export const sendPasswordResetEmail = async (to, name, resetToken) => {
-  const resetUrl = `${emailConfig.frontendUrl}/reset-password?token=${resetToken}`;
+  const resetUrl = `${emailConfig.frontendUrl}/reset-password/${resetToken}`;
   const subject = 'Recuperación de contraseña - Entre Amigas 🔑';
+
+  // Log para debugging (eliminar en producción)
+  console.log('🔗 URL de reset generada:', resetUrl);
+  console.log('🔑 Token:', resetToken);
 
   const html = `
     <!DOCTYPE html>
@@ -354,150 +358,356 @@ export const sendPasswordResetEmail = async (to, name, resetToken) => {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Recuperación de Contraseña - Entre Amigas</title>
       <style>
-        body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          background-color: #f4f4f4;
+        * {
           margin: 0;
           padding: 0;
+          box-sizing: border-box;
         }
-        .container {
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+          background: linear-gradient(135deg, #fdf2f8 0%, #fae8ff 50%, #f3e8ff 100%);
+          margin: 0;
+          padding: 40px 20px;
+          line-height: 1.6;
+        }
+        .email-wrapper {
           max-width: 600px;
-          margin: 40px auto;
+          margin: 0 auto;
           background-color: #ffffff;
-          border-radius: 10px;
+          border-radius: 24px;
           overflow: hidden;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 20px 60px rgba(139, 92, 246, 0.15), 0 8px 24px rgba(236, 72, 153, 0.1);
         }
         .header {
-          background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-          padding: 40px 20px;
+          position: relative;
+          background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+          padding: 60px 40px;
           text-align: center;
           color: #ffffff;
+          overflow: hidden;
+        }
+        .header::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+          animation: pulse 15s ease-in-out infinite;
+        }
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); opacity: 0.5; }
+          50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        .header-icon {
+          font-size: 72px;
+          margin-bottom: 20px;
+          display: block;
+          position: relative;
+          z-index: 1;
+          filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
         }
         .header h1 {
           margin: 0;
-          font-size: 28px;
+          font-size: 32px;
+          font-weight: 700;
+          letter-spacing: -0.5px;
+          position: relative;
+          z-index: 1;
+          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        .badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 16px;
+          background: rgba(255, 255, 255, 0.2);
+          backdrop-filter: blur(10px);
+          border-radius: 100px;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          margin-bottom: 16px;
+          font-size: 14px;
           font-weight: 600;
+          position: relative;
+          z-index: 1;
         }
         .content {
-          padding: 40px 30px;
-          color: #333333;
-          line-height: 1.6;
+          padding: 48px 40px;
+          color: #1a202c;
+        }
+        .logo-text {
+          font-size: 28px;
+          font-weight: 700;
+          background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          margin-bottom: 32px;
+          display: inline-block;
         }
         .content h2 {
-          color: #f5576c;
-          font-size: 22px;
-          margin-top: 0;
+          color: #2d3748;
+          font-size: 26px;
+          margin-bottom: 20px;
+          font-weight: 700;
         }
         .content p {
-          margin: 16px 0;
+          margin: 20px 0;
           font-size: 16px;
+          color: #4a5568;
+          line-height: 1.8;
+        }
+        .content strong {
+          color: #2d3748;
+          font-weight: 600;
+        }
+        .cta-container {
+          text-align: center;
+          margin: 40px 0;
         }
         .cta-button {
           display: inline-block;
-          padding: 14px 32px;
-          background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-          color: #ffffff;
+          padding: 18px 48px;
+          background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+          color: #ffffff !important;
           text-decoration: none;
-          border-radius: 6px;
-          font-weight: 600;
-          margin: 20px 0;
+          border-radius: 16px;
+          font-weight: 700;
+          font-size: 17px;
+          box-shadow: 0 8px 24px rgba(236, 72, 153, 0.35), 0 4px 12px rgba(139, 92, 246, 0.25);
+          transition: all 0.3s ease;
+          letter-spacing: 0.3px;
+        }
+        .cta-button:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 12px 32px rgba(236, 72, 153, 0.45), 0 6px 16px rgba(139, 92, 246, 0.35);
         }
         .alert-box {
-          background-color: #ffe8e8;
-          border-left: 4px solid #f5576c;
-          padding: 15px;
-          margin: 20px 0;
-          border-radius: 4px;
+          background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+          border-left: 5px solid #f59e0b;
+          padding: 24px;
+          margin: 32px 0;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
+        }
+        .alert-box strong {
+          color: #92400e;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+          font-size: 16px;
+          font-weight: 700;
         }
         .alert-box p {
-          margin: 5px 0;
-          font-size: 14px;
-          color: #721c24;
+          margin: 0;
+          font-size: 15px;
+          color: #78350f;
+          line-height: 1.7;
         }
-        .security-box {
-          background-color: #e7f3ff;
-          border-left: 4px solid #2196F3;
-          padding: 15px;
+        .info-box {
+          background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+          border-left: 5px solid #3b82f6;
+          padding: 24px;
+          margin: 32px 0;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        }
+        .info-box strong {
+          color: #1e40af;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+          font-size: 16px;
+          font-weight: 700;
+        }
+        .info-box p {
+          margin: 0;
+          font-size: 15px;
+          color: #1e3a8a;
+          line-height: 1.7;
+        }
+        .secondary-cta {
+          text-align: center;
+          margin: 24px 0;
+        }
+        .secondary-button {
+          display: inline-block;
+          padding: 14px 32px;
+          background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+          color: #4a5568 !important;
+          text-decoration: none;
+          border-radius: 12px;
+          font-weight: 600;
+          font-size: 15px;
+          border: 2px solid #e2e8f0;
+          transition: all 0.3s ease;
+        }
+        .secondary-button:hover {
+          background: #ffffff;
+          border-color: #cbd5e0;
+          transform: translateY(-1px);
+        }
+        .help-text {
+          text-align: center;
+          font-size: 14px;
+          color: #718096;
           margin: 20px 0;
-          border-radius: 4px;
+          font-style: italic;
         }
-        .security-box p {
-          margin: 5px 0;
-          font-size: 14px;
-          color: #0d47a1;
-        }
-        .token-box {
-          background-color: #f9f9f9;
-          padding: 15px;
-          border-radius: 6px;
-          font-family: monospace;
-          font-size: 14px;
-          word-break: break-all;
-          margin: 15px 0;
-          border: 1px dashed #cccccc;
+        .divider {
+          height: 2px;
+          background: linear-gradient(90deg, transparent, #e2e8f0 20%, #e2e8f0 80%, transparent);
+          margin: 40px 0;
         }
         .footer {
-          background-color: #f4f4f4;
-          padding: 20px;
+          background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+          padding: 40px;
           text-align: center;
-          color: #888888;
+          color: #cbd5e0;
+        }
+        .footer-logo {
+          font-size: 24px;
+          font-weight: 700;
+          color: #ffffff;
+          margin-bottom: 8px;
+        }
+        .footer-tagline {
+          color: #a0aec0;
           font-size: 14px;
+          margin-bottom: 24px;
+        }
+        .footer p {
+          margin: 8px 0;
+          font-size: 14px;
+          color: #a0aec0;
+        }
+        .footer a {
+          color: #ec4899;
+          text-decoration: none;
+          font-weight: 600;
+          transition: color 0.2s;
+        }
+        .footer a:hover {
+          color: #f472b6;
+        }
+        .footer-links {
+          margin-top: 20px;
+          padding-top: 20px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .heart {
+          display: inline-block;
+          color: #ec4899;
+          animation: heartbeat 1.5s ease-in-out infinite;
+        }
+        @keyframes heartbeat {
+          0%, 100% { transform: scale(1); }
+          25% { transform: scale(1.1); }
+          50% { transform: scale(1); }
         }
       </style>
     </head>
     <body>
-      <div class="container">
+      <div class="email-wrapper">
+        <!-- Header Premium -->
         <div class="header">
-          <h1>🔑 Recuperación de Contraseña</h1>
+          <div class="badge">
+            ✨ Entre Amigas
+          </div>
+          <span class="header-icon">🔐</span>
+          <h1>Recuperación de Contraseña</h1>
         </div>
+
+        <!-- Content -->
         <div class="content">
+          <div class="logo-text">Entre Amigas</div>
+
           <h2>¡Hola ${name}!</h2>
+
           <p>
-            Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en
-            <strong>Entre Amigas</strong>.
+            Recibimos una solicitud para restablecer la contraseña de tu cuenta en
+            <strong>Entre Amigas</strong>. No te preocupes, estamos aquí para ayudarte <span class="heart">💜</span>
           </p>
 
           <p>
-            Si fuiste tú quien solicitó esto, haz clic en el siguiente botón para crear
-            una nueva contraseña:
+            Haz clic en el botón de abajo para crear tu nueva contraseña de forma segura:
           </p>
 
-          <p style="text-align: center;">
+          <!-- CTA Button Premium -->
+          <div class="cta-container">
             <a href="${resetUrl}" class="cta-button">
-              🔐 Restablecer Contraseña
+              🔑 Restablecer mi Contraseña
             </a>
-          </p>
+          </div>
 
+          <!-- Alert Box Premium -->
           <div class="alert-box">
-            <p><strong>⚠️ Importante:</strong></p>
-            <p>Este enlace es válido por <strong>1 hora</strong>. Después de ese tiempo, deberás solicitar un nuevo enlace de recuperación.</p>
-          </div>
-
-          <p><strong>¿No puedes hacer clic en el botón?</strong></p>
-          <p>Copia y pega el siguiente enlace en tu navegador:</p>
-          <div class="token-box">
-            ${resetUrl}
-          </div>
-
-          <div class="security-box">
-            <p><strong>🛡️ Seguridad:</strong></p>
+            <strong>⏰ Tiempo límite</strong>
             <p>
-              Si <strong>NO</strong> solicitaste este cambio, ignora este email y tu contraseña
-              permanecerá sin cambios. Te recomendamos cambiar tu contraseña desde tu cuenta
-              por seguridad.
+              Este enlace es válido por <strong>1 hora</strong> por razones de seguridad.
+              Si expira, puedes solicitar uno nuevo fácilmente desde la página de login.
             </p>
           </div>
 
-          <p>
-            Saludos,<br>
-            <strong>El equipo de Entre Amigas</strong>
+          <!-- Divider -->
+          <div class="divider"></div>
+
+          <!-- Secondary CTA -->
+          <p class="help-text">¿El botón no funciona?</p>
+          <div class="secondary-cta">
+            <a href="${resetUrl}" class="secondary-button">
+              📋 Copiar enlace alternativo
+            </a>
+          </div>
+
+          <!-- Security Info Premium -->
+          <div class="info-box">
+            <strong>🛡️ Nota de Seguridad</strong>
+            <p>
+              Si <strong>NO</strong> solicitaste este cambio, puedes ignorar este email de forma segura.
+              Tu contraseña actual permanecerá sin cambios. Si sospechas actividad inusual en tu cuenta,
+              contáctanos inmediatamente.
+            </p>
+          </div>
+
+          <!-- Divider -->
+          <div class="divider"></div>
+
+          <p style="margin-top: 32px; text-align: center; font-size: 15px;">
+            Con cariño,<br>
+            <strong style="font-size: 17px;">El equipo de Entre Amigas <span class="heart">💜</span></strong>
           </p>
         </div>
+
+        <!-- Footer Premium -->
         <div class="footer">
-          <p>
+          <div class="footer-logo">Entre Amigas</div>
+          <p class="footer-tagline">Comunidad de mujeres hispanas en Canadá</p>
+
+          <p style="margin: 20px 0;">
+            Conecta con mujeres que comparten tu experiencia migratoria.<br>
+            Encuentra apoyo, amistad y oportunidades.
+          </p>
+
+          <p style="margin-top: 24px; font-size: 13px;">
             © ${new Date().getFullYear()} Entre Amigas. Todos los derechos reservados.
+          </p>
+
+          <div class="footer-links">
+            <a href="${emailConfig.frontendUrl}/privacy">Privacidad</a>
+            <span style="color: #4a5568; margin: 0 8px;">·</span>
+            <a href="${emailConfig.frontendUrl}/terms">Términos</a>
+            <span style="color: #4a5568; margin: 0 8px;">·</span>
+            <a href="${emailConfig.frontendUrl}/contact">Contacto</a>
+          </div>
+
+          <p style="margin-top: 20px; font-size: 13px; color: #718096;">
+            Hecho con <span class="heart">💜</span> en Canadá
           </p>
         </div>
       </div>
