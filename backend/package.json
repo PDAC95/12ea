@@ -13,7 +13,11 @@
     "test:tokens": "node test-token-service.js",
     "test:auth": "node test-auth-middleware.js",
     "test:validators": "node test-validators.js",
-    "test:controller": "node test-auth-controller.js"
+    "test:controller": "node test-auth-controller.js",
+    "test:business": "node test-business-model.js",
+    "test:service": "node test-service-model.js",
+    "seed:business": "node src/scripts/seedBusiness.js",
+    "seed:services": "node src/scripts/seedServices.js"
   },
   "keywords": [
     "express",

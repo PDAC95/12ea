@@ -1,0 +1,557 @@
+import Business from '../models/Business.js';
+import User from '../models/User.js';
+
+/**
+ * Business Controller - Entre Amigas
+ * Controlador para gestión de negocios de mujeres migrantes
+ */
+
+/**
+ * @route   GET /api/v1/businesses
+ * @desc    Obtener lista de negocios con filtros y paginación
+ * @access  Public
+ * @query   search, category, city, page, limit, featured, verified
+ */
+export const getAll = async (req, res) => {
+  try {
+    const {
+      search,
+      category,
+      city,
+      page = 1,
+      limit = 20,
+      featured,
+      verified,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+    } = req.query;
+
+    // Build query
+    const query = { isActive: true };
+
+    // Filtro por categoría
+    if (category) {
+      query.category = category;
+    }
+
+    // Filtro por ciudad
+    if (city) {
+      query.city = { $regex: new RegExp(city, 'i') }; // Case-insensitive
+    }
+
+    // Filtro por destacados
+    if (featured === 'true') {
+      query.isFeatured = true;
+    }
+
+    // Filtro por verificados
+    if (verified === 'true') {
+      query.isVerified = true;
+    }
+
+    // Búsqueda de texto completo (si se proporciona)
+    if (search) {
+      query.$text = { $search: search };
+    }
+
+    // Paginación
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    // Sorting
+    const sortOptions = {};
+    if (search) {
+      // Si hay búsqueda de texto, ordenar por relevancia
+      sortOptions.score = { $meta: 'textScore' };
+    } else {
+      sortOptions[sortBy] = sortOrder === 'desc' ? -1 : 1;
+    }
+
+    // Execute query
+    const projection = search ? { score: { $meta: 'textScore' } } : {};
+
+    const businesses = await Business.find(query, projection)
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(limitNum)
+      .populate('owner', 'preferredName email profileImage city')
+      .lean();
+
+    // Total count para paginación
+    const totalItems = await Business.countDocuments(query);
+    const totalPages = Math.ceil(totalItems / limitNum);
+
+    // Response con paginación
+    res.status(200).json({
+      success: true,
+      data: {
+        items: businesses,
+        pagination: {
+          currentPage: pageNum,
+          totalPages,
+          totalItems,
+          itemsPerPage: limitNum,
+          hasNext: pageNum < totalPages,
+          hasPrev: pageNum > 1,
+        },
+      },
+    });
+  } catch (error) {
+    console.error('Error en getAll businesses:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener la lista de negocios',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
+  }
+};
+
+/**
+ * @route   GET /api/v1/businesses/:id
+ * @desc    Obtener detalle de un negocio por ID
+ * @access  Public
+ */
+export const getById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const business = await Business.findById(id)
+      .populate('owner', 'preferredName email profileImage city bio')
+      .lean();
+
+    if (!business) {
+      return res.status(404).json({
+        success: false,
+        message: 'Negocio no encontrado',
+      });
+    }
+
+    // Si el negocio no está activo, solo lo pueden ver admins o el owner
+    if (!business.isActive) {
+      // Verificar si el usuario está autenticado y es owner o admin
+      if (!req.user || (req.user.id !== business.owner._id.toString() && req.user.role !== 'admin')) {
+        return res.status(404).json({
+          success: false,
+          message: 'Negocio no encontrado',
+        });
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      data: business,
+    });
+  } catch (error) {
+    console.error('Error en getById business:', error);
+
+    // Error de ObjectId inválido
+    if (error.kind === 'ObjectId') {
+      return res.status(400).json({
+        success: false,
+        message: 'ID de negocio inválido',
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener el negocio',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
+  }
+};
+
+/**
+ * @route   POST /api/v1/businesses/:id/view
+ * @desc    Incrementar contador de vistas de un negocio
+ * @access  Public
+ */
+export const incrementView = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const business = await Business.findById(id);
+
+    if (!business) {
+      return res.status(404).json({
+        success: false,
+        message: 'Negocio no encontrado',
+      });
+    }
+
+    await business.incrementViews();
+
+    res.status(200).json({
+      success: true,
+      message: 'Vista registrada',
+      data: {
+        views: business.views,
+      },
+    });
+  } catch (error) {
+    console.error('Error en incrementView:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al registrar vista',
+    });
+  }
+};
+
+/**
+ * @route   POST /api/v1/businesses/:id/contact-click
+ * @desc    Incrementar contador de clics en información de contacto
+ * @access  Public
+ */
+export const incrementContactClick = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const business = await Business.findById(id);
+
+    if (!business) {
+      return res.status(404).json({
+        success: false,
+        message: 'Negocio no encontrado',
+      });
+    }
+
+    await business.incrementContactClicks();
+
+    res.status(200).json({
+      success: true,
+      message: 'Clic de contacto registrado',
+      data: {
+        contactClicks: business.contactClicks,
+      },
+    });
+  } catch (error) {
+    console.error('Error en incrementContactClick:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al registrar clic de contacto',
+    });
+  }
+};
+
+/**
+ * @route   GET /api/v1/businesses/featured
+ * @desc    Obtener negocios destacados
+ * @access  Public
+ * @query   limit (default: 6)
+ */
+export const getFeatured = async (req, res) => {
+  try {
+    const { limit = 6 } = req.query;
+
+    const featured = await Business.findFeatured(parseInt(limit));
+
+    res.status(200).json({
+      success: true,
+      data: featured,
+    });
+  } catch (error) {
+    console.error('Error en getFeatured:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener negocios destacados',
+    });
+  }
+};
+
+/**
+ * @route   GET /api/v1/businesses/stats
+ * @desc    Obtener estadísticas generales de negocios
+ * @access  Public
+ */
+export const getStats = async (req, res) => {
+  try {
+    const stats = await Business.getStats();
+
+    res.status(200).json({
+      success: true,
+      data: stats,
+    });
+  } catch (error) {
+    console.error('Error en getStats:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener estadísticas',
+    });
+  }
+};
+
+/**
+ * @route   POST /api/v1/businesses
+ * @desc    Crear nuevo negocio
+ * @access  Private (requiere autenticación)
+ */
+export const create = async (req, res) => {
+  try {
+    const {
+      name,
+      category,
+      description,
+      phone,
+      email,
+      whatsapp,
+      city,
+      address,
+      website,
+      instagram,
+      facebook,
+      logo,
+      images,
+    } = req.body;
+
+    // El owner es el usuario autenticado
+    const owner = req.user.id;
+
+    // Crear negocio
+    const business = await Business.create({
+      name,
+      category,
+      description,
+      phone,
+      email,
+      whatsapp,
+      city,
+      address,
+      website,
+      instagram,
+      facebook,
+      logo,
+      images,
+      owner,
+    });
+
+    // Populate owner para respuesta
+    await business.populate('owner', 'preferredName email');
+
+    res.status(201).json({
+      success: true,
+      message: 'Negocio creado exitosamente',
+      data: business,
+    });
+  } catch (error) {
+    console.error('Error en create business:', error);
+
+    // Errores de validación de Mongoose
+    if (error.name === 'ValidationError') {
+      const errors = Object.values(error.errors).map((err) => ({
+        field: err.path,
+        message: err.message,
+      }));
+
+      return res.status(400).json({
+        success: false,
+        message: 'Error de validación',
+        errors,
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: 'Error al crear el negocio',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
+  }
+};
+
+/**
+ * @route   PUT /api/v1/businesses/:id
+ * @desc    Actualizar negocio existente
+ * @access  Private (requiere ser owner o admin)
+ */
+export const update = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    // Buscar negocio
+    const business = await Business.findById(id);
+
+    if (!business) {
+      return res.status(404).json({
+        success: false,
+        message: 'Negocio no encontrado',
+      });
+    }
+
+    // Verificar que el usuario sea owner o admin
+    if (business.owner.toString() !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'No tienes permiso para editar este negocio',
+      });
+    }
+
+    // Campos que no se pueden actualizar directamente
+    delete updates.owner;
+    delete updates.views;
+    delete updates.contactClicks;
+    delete updates.isVerified;
+    delete updates.isFeatured;
+    delete updates.verifiedAt;
+
+    // Si es admin, permitir cambiar isVerified y isFeatured
+    if (req.user.role === 'admin') {
+      if (req.body.isVerified !== undefined) {
+        updates.isVerified = req.body.isVerified;
+        if (req.body.isVerified === true) {
+          updates.verifiedAt = new Date();
+        }
+      }
+      if (req.body.isFeatured !== undefined) {
+        updates.isFeatured = req.body.isFeatured;
+      }
+    }
+
+    // Guardar quién modificó el negocio
+    updates.lastModifiedBy = req.user.id;
+
+    // Actualizar
+    const updatedBusiness = await Business.findByIdAndUpdate(id, updates, {
+      new: true,
+      runValidators: true,
+    }).populate('owner', 'preferredName email');
+
+    res.status(200).json({
+      success: true,
+      message: 'Negocio actualizado exitosamente',
+      data: updatedBusiness,
+    });
+  } catch (error) {
+    console.error('Error en update business:', error);
+
+    // Errores de validación
+    if (error.name === 'ValidationError') {
+      const errors = Object.values(error.errors).map((err) => ({
+        field: err.path,
+        message: err.message,
+      }));
+
+      return res.status(400).json({
+        success: false,
+        message: 'Error de validación',
+        errors,
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: 'Error al actualizar el negocio',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
+  }
+};
+
+/**
+ * @route   DELETE /api/v1/businesses/:id
+ * @desc    Eliminar negocio (soft delete - marca como inactivo)
+ * @access  Private (requiere ser owner o admin)
+ */
+export const remove = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const business = await Business.findById(id);
+
+    if (!business) {
+      return res.status(404).json({
+        success: false,
+        message: 'Negocio no encontrado',
+      });
+    }
+
+    // Verificar que el usuario sea owner o admin
+    if (business.owner.toString() !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'No tienes permiso para eliminar este negocio',
+      });
+    }
+
+    // Soft delete (marcar como inactivo)
+    business.isActive = false;
+    await business.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Negocio eliminado exitosamente',
+    });
+  } catch (error) {
+    console.error('Error en remove business:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al eliminar el negocio',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
+  }
+};
+
+/**
+ * @route   GET /api/v1/businesses/my-businesses
+ * @desc    Obtener negocios del usuario autenticado
+ * @access  Private
+ */
+export const getMyBusinesses = async (req, res) => {
+  try {
+    const businesses = await Business.findByOwner(req.user.id);
+
+    res.status(200).json({
+      success: true,
+      data: businesses,
+    });
+  } catch (error) {
+    console.error('Error en getMyBusinesses:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener tus negocios',
+    });
+  }
+};
+
+/**
+ * @route   GET /api/v1/businesses/categories
+ * @desc    Obtener lista de categorías disponibles
+ * @access  Public
+ */
+export const getCategories = async (req, res) => {
+  try {
+    // Categorías definidas en el modelo
+    const categories = [
+      'Gastronomía',
+      'Belleza y Bienestar',
+      'Moda y Accesorios',
+      'Servicios Profesionales',
+      'Educación y Talleres',
+      'Arte y Manualidades',
+      'Salud',
+      'Tecnología',
+      'Eventos y Entretenimiento',
+      'Otros',
+    ];
+
+    // Opcional: obtener conteo por categoría
+    const categoriesWithCount = await Promise.all(
+      categories.map(async (category) => {
+        const count = await Business.countDocuments({
+          category,
+          isActive: true,
+        });
+        return { name: category, count };
+      })
+    );
+
+    res.status(200).json({
+      success: true,
+      data: categoriesWithCount,
+    });
+  } catch (error) {
+    console.error('Error en getCategories:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener categorías',
+    });
+  }
+};

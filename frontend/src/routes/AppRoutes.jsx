@@ -17,6 +17,8 @@ import CompleteProfilePage from '../features/auth/pages/CompleteProfilePage';
 
 // Protected Pages
 import DashboardPage from '../features/dashboard/pages/DashboardPage';
+import BusinessDirectoryPage from '../features/business/pages/BusinessDirectoryPage';
+import ServiceDirectoryPage from '../features/services/pages/ServiceDirectoryPage';
 
 // Common Pages
 import NotFoundPage from '../shared/components/common/NotFoundPage';
@@ -78,10 +80,29 @@ const AppRoutes = () => {
         }
       />
 
+      {/* Business Directory - Sprint 2 US-005 */}
+      <Route
+        path="/dashboard/businesses"
+        element={
+          <ProtectedRoute>
+            <BusinessDirectoryPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Service Directory - Sprint 2 US-006 */}
+      <Route
+        path="/dashboard/services"
+        element={
+          <ProtectedRoute>
+            <ServiceDirectoryPage />
+          </ProtectedRoute>
+        }
+      />
+
       {/* TODO: Agregar más rutas protegidas en futuros sprints:
           - /events → EventsPage
           - /events/:id → EventDetailPage
-          - /businesses → BusinessDirectoryPage
           - /businesses/:id → BusinessDetailPage
           - /blog → BlogPage
           - /blog/:slug → BlogPostPage

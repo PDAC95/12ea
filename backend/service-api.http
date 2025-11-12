@@ -1,0 +1,263 @@
+### Service API - Testing Collection
+### Entre Amigas Backend
+### Servidor local: http://localhost:8000
+
+@baseUrl = http://localhost:8000/api/v1
+@token = Bearer YOUR_JWT_TOKEN_HERE
+
+### ============================================
+### PUBLIC ENDPOINTS (no requieren autenticación)
+### ============================================
+
+### 1. Health Check del servidor
+GET {{baseUrl}}/../health HTTP/1.1
+
+### 2. Info de API
+GET {{baseUrl}}/ HTTP/1.1
+
+### 3. Obtener tipos de servicio disponibles
+GET {{baseUrl}}/services/service-types HTTP/1.1
+
+### 4. Obtener estadísticas de servicios
+GET {{baseUrl}}/services/stats HTTP/1.1
+
+### 5. Obtener servicios destacados (default 6)
+GET {{baseUrl}}/services/featured HTTP/1.1
+
+### 6. Obtener servicios destacados (custom limit)
+GET {{baseUrl}}/services/featured?limit=3 HTTP/1.1
+
+### 7. Obtener todos los servicios (sin filtros)
+GET {{baseUrl}}/services HTTP/1.1
+
+### 8. Obtener servicios con paginación
+GET {{baseUrl}}/services?page=1&limit=10 HTTP/1.1
+
+### 9. Buscar servicios por texto (búsqueda full-text)
+GET {{baseUrl}}/services?search=doctor HTTP/1.1
+
+### 10. Filtrar por tipo de servicio
+GET {{baseUrl}}/services?serviceType=Salud HTTP/1.1
+
+### 11. Filtrar por ciudad
+GET {{baseUrl}}/services?city=Toronto HTTP/1.1
+
+### 12. Filtros combinados: tipo + ciudad
+GET {{baseUrl}}/services?serviceType=Salud&city=Toronto HTTP/1.1
+
+### 13. Filtros combinados: búsqueda + ciudad + paginación
+GET {{baseUrl}}/services?search=médico&city=Toronto&page=1&limit=5 HTTP/1.1
+
+### 14. Solo servicios verificados
+GET {{baseUrl}}/services?verified=true HTTP/1.1
+
+### 15. Solo servicios destacados
+GET {{baseUrl}}/services?featured=true HTTP/1.1
+
+### 16. Ordenar por fecha (más recientes primero)
+GET {{baseUrl}}/services?sortBy=createdAt&sortOrder=desc HTTP/1.1
+
+### 17. Ordenar por nombre (A-Z)
+GET {{baseUrl}}/services?sortBy=name&sortOrder=asc HTTP/1.1
+
+### 18. Ordenar por vistas (más vistas primero)
+GET {{baseUrl}}/services?sortBy=views&sortOrder=desc HTTP/1.1
+
+### 19. Obtener servicio por ID (reemplazar con ID real)
+GET {{baseUrl}}/services/6914bb683634be7bc10985db HTTP/1.1
+
+### 20. Incrementar contador de vistas (analytics)
+POST {{baseUrl}}/services/6914bb683634be7bc10985db/view HTTP/1.1
+
+### 21. Incrementar contador de clics en contacto (analytics)
+POST {{baseUrl}}/services/6914bb683634be7bc10985db/contact-click HTTP/1.1
+
+### ============================================
+### PRIVATE ENDPOINTS (requieren autenticación)
+### ============================================
+
+### 22. Obtener mis servicios
+GET {{baseUrl}}/services/my/list HTTP/1.1
+Authorization: {{token}}
+
+### 23. Crear servicio (mínimo requerido)
+POST {{baseUrl}}/services HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "Dra. María González - Medicina Familiar",
+  "serviceType": "Salud",
+  "description": "Médica familiar con 10 años de experiencia atendiendo a la comunidad latina. Consultas en español, medicina preventiva y tratamiento de enfermedades crónicas.",
+  "city": "Toronto"
+}
+
+### 24. Crear servicio (completo con todos los campos)
+POST {{baseUrl}}/services HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "Dra. Ana Martínez - Medicina Familiar",
+  "serviceType": "Salud",
+  "description": "Médica familiar con 15 años de experiencia atendiendo a familias latinas. Consultas en español, atención preventiva, manejo de enfermedades crónicas, medicina familiar integral. Especialista en salud de la mujer y pediatría.",
+  "credentials": "MD, CCFP, 15+ años de experiencia",
+  "phone": "+1 (416) 555-0200",
+  "email": "dra.martinez@health.com",
+  "whatsapp": "+14165550200",
+  "city": "Toronto",
+  "address": "123 Medical Center, Suite 200, Toronto, ON M5H 2N2",
+  "website": "https://dra-martinez.com",
+  "instagram": "@dra.martinez",
+  "facebook": "https://facebook.com/dra.martinez.md",
+  "linkedin": "https://linkedin.com/in/ana-martinez-md",
+  "logo": "https://entre-amigas-dev.s3.us-east-1.amazonaws.com/logos/dra-martinez.png",
+  "images": [
+    "https://entre-amigas-dev.s3.us-east-1.amazonaws.com/images/clinic1.jpg",
+    "https://entre-amigas-dev.s3.us-east-1.amazonaws.com/images/clinic2.jpg"
+  ]
+}
+
+### 25. Actualizar servicio (solo algunos campos)
+PUT {{baseUrl}}/services/6914bb683634be7bc10985db HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "description": "Nueva descripción actualizada del servicio profesional con más de 20 caracteres",
+  "phone": "+1 (416) 555-9999",
+  "credentials": "MD, CCFP, FCFP, 20+ años de experiencia"
+}
+
+### 26. Actualizar servicio (completo)
+PUT {{baseUrl}}/services/6914bb683634be7bc10985db HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "Dra. Ana Martínez - Medicina Familiar y Preventiva",
+  "serviceType": "Salud",
+  "description": "Médica familiar actualizada con nueva información sobre servicios integrales de salud",
+  "credentials": "MD, CCFP, FCFP, 20+ años de experiencia",
+  "phone": "+1 (416) 555-0201",
+  "email": "nuevo@dra-martinez.com",
+  "city": "Toronto",
+  "address": "456 New Medical Plaza, Toronto",
+  "website": "https://new-martinez.com"
+}
+
+### 27. Eliminar servicio (soft delete - solo owner o admin)
+DELETE {{baseUrl}}/services/6914bb683634be7bc10985db HTTP/1.1
+Authorization: {{token}}
+
+### ============================================
+### ADMIN ENDPOINTS (solo admin)
+### ============================================
+
+### 28. Verificar servicio (solo admin)
+PUT {{baseUrl}}/services/6914bb683634be7bc10985db HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "isVerified": true
+}
+
+### 29. Destacar servicio (solo admin)
+PUT {{baseUrl}}/services/6914bb683634be7bc10985db HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "isFeatured": true
+}
+
+### 30. Desactivar servicio (solo admin)
+PUT {{baseUrl}}/services/6914bb683634be7bc10985db HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "isActive": false
+}
+
+### ============================================
+### ERROR TESTING (casos de error esperados)
+### ============================================
+
+### E1. Crear servicio sin autenticación (401)
+POST {{baseUrl}}/services HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Test Service",
+  "serviceType": "Legal",
+  "description": "Test description with more than 20 characters",
+  "city": "Toronto"
+}
+
+### E2. Crear servicio con datos inválidos (400)
+POST {{baseUrl}}/services HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "AB",
+  "serviceType": "TipoInválido",
+  "description": "Corto",
+  "city": ""
+}
+
+### E3. Obtener servicio con ID inválido (400)
+GET {{baseUrl}}/services/invalid-id-format HTTP/1.1
+
+### E4. Obtener servicio inexistente (404)
+GET {{baseUrl}}/services/000000000000000000000000 HTTP/1.1
+
+### E5. Actualizar servicio sin permiso (403)
+PUT {{baseUrl}}/services/6914bb683634be7bc10985db HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer TOKEN_DE_OTRO_USUARIO
+
+{
+  "name": "Trying to hack"
+}
+
+### E6. Crear servicio con email inválido (400)
+POST {{baseUrl}}/services HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "Test Service",
+  "serviceType": "Legal",
+  "description": "Descripción válida de más de 20 caracteres para pasar validación",
+  "city": "Toronto",
+  "email": "email-invalido"
+}
+
+### E7. Crear servicio con website inválido (400)
+POST {{baseUrl}}/services HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "Test Service",
+  "serviceType": "Consultoría",
+  "description": "Descripción válida de más de 20 caracteres",
+  "city": "Toronto",
+  "website": "not-a-valid-url"
+}
+
+### E8. Crear servicio con LinkedIn inválido (400)
+POST {{baseUrl}}/services HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "Test Service",
+  "serviceType": "Tecnología",
+  "description": "Descripción válida de más de 20 caracteres para validación",
+  "city": "Vancouver",
+  "linkedin": "invalid-linkedin-url"
+}

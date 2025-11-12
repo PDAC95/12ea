@@ -29,7 +29,18 @@
       "Bash(node test-resend-debug.js:*)",
       "Bash(npm run dev:*)",
       "Bash(timeout:*)",
-      "Bash(timeout 10 npm run dev:*)"
+      "Bash(timeout 10 npm run dev:*)",
+      "Bash(cmd //c \"taskkill /PID 173396 /F\")",
+      "Bash(cmd //c \"taskkill /PID 11096 /F\")",
+      "Bash(git log:*)",
+      "Bash(dir /b)",
+      "Bash(npm run build:*)",
+      "Bash(npm run test:business:*)",
+      "Bash(npm run seed:business:*)",
+      "Bash(npm run test:service:*)",
+      "Bash(curl:*)",
+      "Bash(python:*)",
+      "Bash(npm run seed:services:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
