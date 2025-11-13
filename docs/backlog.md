@@ -85,19 +85,20 @@
 
 **Acceptance Criteria:**
 
-- [ ] Formulario de registro solicita: nombre completo, nombre preferido, email, teléfono, cumpleaños, ciudad, contraseña
-- [ ] Sistema valida datos en frontend (React Hook Form + Yup)
-- [ ] Sistema valida datos en backend (express-validator)
-- [ ] Password se hashea con bcrypt antes de guardar en DB
-- [ ] Sistema envía email de verificación al registrarse (Resend)
-- [ ] Email incluye link de verificación válido por 24 horas
-- [ ] Usuaria puede hacer login con email y contraseña
-- [ ] Login retorna JWT token válido por 7 días
-- [ ] Sistema permite solicitar recuperación de contraseña por email
-- [ ] Link de recuperación expira en 1 hora
-- [ ] Formulario de cambio de contraseña funcional
-- [ ] Mensajes de error claros en español
-- [ ] Protected routes funcionando (redirige a login si no autenticado)
+- [x] Formulario de registro solicita: nombre completo, nombre preferido, email, teléfono, cumpleaños, ciudad, contraseña
+- [x] Sistema valida datos en frontend (React Hook Form + Yup)
+- [x] Sistema valida datos en backend (express-validator)
+- [x] Password se hashea con bcrypt antes de guardar en DB
+- [x] Sistema envía email de verificación al registrarse (Resend)
+- [x] Email incluye link de verificación válido por 24 horas
+- [x] Usuaria puede hacer login con email y contraseña
+- [x] Login retorna JWT token válido por 7 días
+- [x] Sistema permite solicitar recuperación de contraseña por email
+- [x] Link de recuperación expira en 1 hora
+- [x] Formulario de cambio de contraseña funcional
+- [x] Mensajes de error claros en español
+- [x] Protected routes funcionando (redirige a login si no autenticado)
+- [x] Google OAuth 2.0 integrado con Passport.js
 
 **Technical Notes:**
 
@@ -110,10 +111,11 @@
   - Validación dual (frontend + backend)
   - Protected routes en React Router
 
-**Estimation:** **L (Large)**  
-**Priority:** MUST HAVE - CRITICAL  
-**Status:** 📋 Backlog  
-**Sprint Sugerido:** Sprint 1
+**Estimation:** **L (Large)** = 8 pts
+**Priority:** MUST HAVE - CRITICAL
+**Status:** ✅ COMPLETADO (Sprint 1)
+**Sprint Completado:** Sprint 1
+**Fecha de Completion:** Noviembre 2025
 
 ---
 
@@ -125,16 +127,16 @@
 
 **Acceptance Criteria:**
 
-- [ ] Hero section con título claro y call to action
-- [ ] Sección "Quiénes Somos" explicando el propósito
-- [ ] Sección "Qué Ofrecemos" con iconos y descripciones breves
-- [ ] Sección "Cómo Funciona" en 3 pasos simples
-- [ ] Botón prominente "Únete a la Comunidad" que lleva a registro
-- [ ] Footer con información de contacto y redes sociales
-- [ ] Diseño acogedor y profesional
-- [ ] Responsive (mobile y desktop)
-- [ ] Paleta de colores cálida y femenina
-- [ ] Imágenes representativas de comunidad (stock photos o propias)
+- [x] Hero section con título claro y call to action
+- [x] Sección "Quiénes Somos" explicando el propósito
+- [x] Sección "Qué Ofrecemos" con iconos y descripciones breves
+- [x] Sección "Cómo Funciona" en 3 pasos simples
+- [x] Botón prominente "Únete a la Comunidad" que lleva a registro
+- [x] Footer con información de contacto y redes sociales
+- [x] Diseño acogedor y profesional
+- [x] Responsive (mobile y desktop)
+- [x] Paleta de colores cálida y femenina (Design System implementado)
+- [x] Imágenes representativas de comunidad (stock photos o propias)
 
 **Technical Notes:**
 
@@ -145,10 +147,11 @@
   - Optimización de imágenes
   - SEO básico (meta tags)
 
-**Estimation:** **M (Medium)**  
-**Priority:** MUST HAVE  
-**Status:** 📋 Backlog  
-**Sprint Sugerido:** Sprint 1
+**Estimation:** **M (Medium)** = 5 pts
+**Priority:** MUST HAVE
+**Status:** ✅ COMPLETADO (Sprint 1)
+**Sprint Completado:** Sprint 1
+**Fecha de Completion:** Noviembre 2025
 
 ---
 
@@ -160,14 +163,14 @@
 
 **Acceptance Criteria:**
 
-- [ ] Dashboard muestra mensaje de bienvenida con nombre preferido
-- [ ] Menú principal visible con 5 secciones: Eventos, Negocios, Servicios, Blog, Perfil
-- [ ] Vista rápida de próximos 3 eventos destacados
-- [ ] Navegación clara con iconos y labels
-- [ ] Header con logo y opción de logout
-- [ ] Diseño limpio y organizado
-- [ ] Responsive para móvil y desktop
-- [ ] Protected route (requiere autenticación)
+- [x] Dashboard muestra mensaje de bienvenida con nombre preferido
+- [x] Menú principal visible con 5 secciones: Eventos, Negocios, Servicios, Blog, Perfil
+- [x] Vista rápida de próximos 3 eventos destacados
+- [x] Navegación clara con iconos y labels
+- [x] Header con logo y opción de logout
+- [x] Diseño limpio y organizado
+- [x] Responsive para móvil y desktop
+- [x] Protected route (requiere autenticación)
 
 **Technical Notes:**
 
@@ -178,10 +181,11 @@
   - Protected routes
   - Fetch de datos de eventos para preview
 
-**Estimation:** **M (Medium)**  
-**Priority:** MUST HAVE  
-**Status:** 📋 Backlog  
-**Sprint Sugerido:** Sprint 1
+**Estimation:** **M (Medium)** = 5 pts
+**Priority:** MUST HAVE
+**Status:** ✅ COMPLETADO (Sprint 2)
+**Sprint Completado:** Sprint 2
+**Fecha de Completion:** 13 de Noviembre, 2025
 
 ---
 
@@ -230,16 +234,16 @@
 
 **Acceptance Criteria:**
 
-- [ ] Vista de lista/grid de negocios
-- [ ] Cada negocio muestra: nombre, categoría, descripción breve, teléfono, email, ciudad
-- [ ] Filtros por categoría (dropdown)
-- [ ] Filtro por ciudad
-- [ ] Barra de búsqueda por palabra clave (nombre o descripción)
-- [ ] Click en negocio abre vista detallada
-- [ ] Información de contacto fácilmente visible (click to call, click to email)
-- [ ] Diseño tipo directorio limpio
-- [ ] Paginación si hay muchos resultados (20 por página)
-- [ ] Mensaje amigable si no hay resultados
+- [x] Vista de lista/grid de negocios
+- [x] Cada negocio muestra: nombre, categoría, descripción breve, teléfono, email, ciudad
+- [x] Filtros por categoría (dropdown)
+- [x] Filtro por ciudad
+- [x] Barra de búsqueda por palabra clave (nombre o descripción)
+- [x] Click en negocio abre vista detallada
+- [x] Información de contacto fácilmente visible (click to call, click to email)
+- [x] Diseño tipo directorio limpio
+- [x] Paginación si hay muchos resultados (20 por página)
+- [x] Mensaje amigable si no hay resultados
 
 **Technical Notes:**
 
@@ -250,10 +254,11 @@
   - Múltiples filtros combinados
   - Estructura preparada para múltiples ciudades
 
-**Estimation:** **M (Medium)**  
-**Priority:** MUST HAVE  
-**Status:** 📋 Backlog  
-**Sprint Sugerido:** Sprint 2
+**Estimation:** **M (Medium)** = 5 pts
+**Priority:** MUST HAVE
+**Status:** ✅ COMPLETADO (Sprint 2)
+**Sprint Completado:** Sprint 2
+**Fecha de Completion:** 13 de Noviembre, 2025
 
 ---
 
@@ -265,16 +270,16 @@
 
 **Acceptance Criteria:**
 
-- [ ] Servicios organizados por categorías: Salud, Dental, Salud Mental, Legal, Educación, Emergencias, Gobierno
-- [ ] Cada servicio muestra: nombre, categoría, especialidad, teléfono, dirección, notas, ciudad
-- [ ] Notas visibles (ej: "Habla español", "Acepta seguro X")
-- [ ] Filtros por categoría
-- [ ] Filtro por ciudad
-- [ ] Búsqueda por palabra clave
-- [ ] Click en servicio abre vista detallada
-- [ ] Link a website si está disponible
-- [ ] Iconos visuales por categoría para fácil identificación
-- [ ] Paginación (20 por página)
+- [x] Servicios organizados por categorías: Salud, Dental, Salud Mental, Legal, Educación, Emergencias, Gobierno
+- [x] Cada servicio muestra: nombre, categoría, especialidad, teléfono, dirección, notas, ciudad
+- [x] Notas visibles (ej: "Habla español", "Acepta seguro X")
+- [x] Filtros por categoría
+- [x] Filtro por ciudad
+- [x] Búsqueda por palabra clave
+- [x] Click en servicio abre vista detallada
+- [x] Link a website si está disponible
+- [x] Iconos visuales por categoría para fácil identificación
+- [x] Paginación (20 por página)
 
 **Technical Notes:**
 
@@ -285,10 +290,11 @@
   - Categorías predefinidas (enum)
   - Búsqueda por múltiples campos
 
-**Estimation:** **M (Medium)**  
-**Priority:** MUST HAVE  
-**Status:** 📋 Backlog  
-**Sprint Sugerido:** Sprint 2
+**Estimation:** **M (Medium)** = 5 pts
+**Priority:** MUST HAVE
+**Status:** ✅ COMPLETADO (Sprint 2)
+**Sprint Completado:** Sprint 2
+**Fecha de Completion:** 13 de Noviembre, 2025
 
 ---
 
@@ -1071,9 +1077,62 @@ US-002 (Landing) → Independiente (puede ir en paralelo)
 
 ---
 
-**Última actualización:** 6 de noviembre, 2025  
-**Próxima revisión:** Sprint 1 - Día 7  
+**Última actualización:** 13 de noviembre, 2025
+**Próxima revisión:** Sprint 3 - Día 1
 **Maintained by:** Equipo Entre Amigas
+
+---
+
+## Sprint Progress Tracking
+
+### ✅ Sprint 1 - Completado (13/13 SP)
+
+**Duración:** 2 semanas
+**Fecha Completion:** Noviembre 2025
+**Velocity:** 13 SP / 2 semanas = 6.5 SP/semana
+
+**User Stories Completadas:**
+- ✅ US-001: Sistema de Autenticación Completo (8 SP)
+- ✅ US-002: Landing Page Pública (5 SP)
+
+**Logros:**
+- Sistema de autenticación con JWT completo
+- Email verification y password recovery
+- Landing page responsive con diseño acogedor
+- Google OAuth 2.0 integrado
+- Protected routes funcionando
+
+### ✅ Sprint 2 - Completado (15/15 SP)
+
+**Duración:** 2 semanas
+**Fecha Completion:** 13 de Noviembre, 2025
+**Velocity:** 15 SP / 2 semanas = 7.5 SP/semana
+
+**User Stories Completadas:**
+- ✅ US-003: Dashboard Principal de Usuaria (5 SP)
+- ✅ US-005: Directorio de Negocios (5 SP)
+- ✅ US-006: Directorio de Servicios Esenciales (5 SP)
+
+**Logros:**
+- Dashboard con navegación completa
+- Directorios de Negocios y Servicios con búsqueda y filtros
+- Componentes compartidos reutilizables
+- 10 endpoints REST API implementados
+- Seed data para testing
+
+### 📊 Velocity Promedio
+
+**Total SP Completados:** 28 SP
+**Total Sprints:** 2
+**Velocity Promedio:** 14 SP/sprint (7 SP/semana)
+
+### 🎯 Próximo Sprint
+
+**Sprint 3 - Planeado:**
+- US-004: Ver y Registrarse en Eventos (8 SP)
+- US-007: Blog con Artículos (3 SP)
+- US-009: Panel Admin - Directorios (5 SP)
+- **Total:** 16 SP
 
 ---
 

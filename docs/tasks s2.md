@@ -897,22 +897,22 @@ Refactorizar BusinessCard para que sea reutilizable.
 
 ### Task 6.5: Frontend - ServiceList Component
 
-**Estimated:** 2 horas  
-**Priority:** HIGH  
-**Assignee:** Frontend  
-**Status:** 🔲 To Do
+**Estimated:** 2 horas
+**Priority:** HIGH
+**Assignee:** Frontend
+**Status:** ✅ Done
 
-**Descripción:**  
+**Descripción:**
 Vista del directorio de servicios (reutilizando componentes).
 
 **Acceptance Criteria:**
 
-- [ ] Misma estructura que BusinessList
-- [ ] Usa DirectoryCard genérico
-- [ ] Fetch de /api/services
-- [ ] Filtros por serviceType
-- [ ] Búsqueda funcional
-- [ ] Loading states
+- [x] Misma estructura que BusinessList
+- [x] Usa DirectoryCard genérico
+- [x] Fetch de /api/services
+- [x] Filtros por serviceType
+- [x] Búsqueda funcional
+- [x] Loading states
 
 **Technical Details:**
 
@@ -985,22 +985,22 @@ Si hay credentials, mostrarlas destacadas
 
 ### Task 6.7: Testing & Polish Final
 
-**Estimated:** 1 hora  
-**Priority:** MEDIUM  
-**Assignee:** Frontend  
-**Status:** 🔲 To Do
+**Estimated:** 1 hora
+**Priority:** MEDIUM
+**Assignee:** Frontend
+**Status:** ✅ Done
 
-**Descripción:**  
+**Descripción:**
 Testing completo del directorio de servicios.
 
 **Acceptance Criteria:**
 
-- [ ] Búsqueda funciona
-- [ ] Filtros funcionan
-- [ ] Vista detallada funciona
-- [ ] Consistencia visual con Negocios
-- [ ] Responsive
-- [ ] No hay errores
+- [x] Búsqueda funciona
+- [x] Filtros funcionan
+- [x] Vista detallada funciona
+- [x] Consistencia visual con Negocios
+- [x] Responsive
+- [x] No hay errores
 
 **Implementation Steps:**
 
@@ -1027,9 +1027,9 @@ Testing completo del directorio de servicios.
 
 ### By Status
 
-- 🔲 To Do: 9 tasks
+- 🔲 To Do: 0 tasks
 - 🟡 In Progress: 0 tasks
-- ✅ Done: 12 tasks (US-003: 6/6, US-005: 3/8, US-006: 3/7)
+- ✅ Done: 21 tasks (US-003: 6/6 ✅, US-005: 8/8 ✅, US-006: 7/7 ✅)
 
 ### Estimated Time
 
@@ -1138,7 +1138,43 @@ Para marcar una task como ✅ Done:
 
 ---
 
-**Created:** [Fecha]  
-**Last Updated:** [Fecha]
+**Created:** Noviembre 2025
+**Last Updated:** 13 de Noviembre, 2025
+**Status:** ✅ COMPLETADO (21/21 tasks - 100%)
+
+---
+
+## Sprint 2 Completion Summary
+
+**Total Tasks:** 21
+**Completed:** 21 (100%)
+**Total Story Points:** 15
+**Completion Date:** 13 de Noviembre, 2025
+
+### Breakdown by User Story
+
+- **US-003 (Dashboard):** 6/6 tasks ✅
+- **US-005 (Negocios):** 8/8 tasks ✅
+- **US-006 (Servicios):** 7/7 tasks ✅
+
+### Key Deliverables
+
+**Backend:**
+- 2 modelos (Business, Service)
+- 10 endpoints REST API
+- 2 scripts de seed data
+- Validaciones con express-validator
+
+**Frontend:**
+- 3 páginas principales (Dashboard, Business Directory, Service Directory)
+- 15+ componentes (8 compartidos, 7 específicos)
+- Custom hooks (useDebounce, useDirectory)
+- Estado de auth y protected routes
+
+**Testing:**
+- Testing manual completo
+- Búsqueda, filtros y paginación verificados
+- Responsive en móvil y desktop
+- Performance aceptable
 
 **END OF SPRINT 2 TASKS**

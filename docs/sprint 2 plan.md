@@ -1,11 +1,12 @@
 # Sprint 2 Plan - Entre Amigas
 
-**Sprint Duration:** 2 semanas (Semanas 3-4)  
-**Sprint Goal:** Usuarias pueden navegar y usar features principales  
-**Team Capacity:** ~20-25 horas/semana (1 desarrollador)  
-**Total Points:** 15 puntos  
-**Start Date:** [TBD]  
-**End Date:** [TBD]
+**Sprint Duration:** 2 semanas (Semanas 3-4)
+**Sprint Goal:** Usuarias pueden navegar y usar features principales
+**Team Capacity:** ~20-25 horas/semana (1 desarrollador)
+**Total Points:** 15 puntos
+**Start Date:** Noviembre 2025
+**End Date:** Noviembre 2025
+**Status:** ✅ COMPLETADO (15/15 SP - 100%)
 
 ---
 
@@ -38,14 +39,14 @@
 
 #### Acceptance Criteria
 
-- [ ] Dashboard muestra mensaje de bienvenida con nombre preferido
-- [ ] Menú principal visible con 5 secciones: Eventos, Negocios, Servicios, Blog, Perfil
-- [ ] Vista rápida de próximos 3 eventos destacados (mock data por ahora)
-- [ ] Navegación clara con iconos y labels
-- [ ] Header con logo y opción de logout
-- [ ] Diseño limpio y organizado (tendencia: cards con glassmorphism/neomorphism)
-- [ ] Responsive para móvil y desktop
-- [ ] Protected route (requiere autenticación)
+- [x] Dashboard muestra mensaje de bienvenida con nombre preferido
+- [x] Menú principal visible con 5 secciones: Eventos, Negocios, Servicios, Blog, Perfil
+- [x] Vista rápida de próximos 3 eventos destacados (mock data por ahora)
+- [x] Navegación clara con iconos y labels
+- [x] Header con logo y opción de logout
+- [x] Diseño limpio y organizado (tendencia: cards con glassmorphism/neomorphism)
+- [x] Responsive para móvil y desktop
+- [x] Protected route (requiere autenticación)
 
 #### Technical Tasks
 
@@ -114,17 +115,17 @@
 
 #### Acceptance Criteria
 
-- [ ] Vista de grid de negocios (3 columnas desktop, 1 columna móvil)
-- [ ] Cada negocio muestra: logo/imagen, nombre, categoría, descripción breve, ciudad
-- [ ] Barra de búsqueda por palabra clave (nombre o descripción)
-- [ ] Filtros por categoría (dropdown)
-- [ ] Filtro por ciudad (dropdown)
-- [ ] Click en negocio abre vista detallada en modal o página
-- [ ] Información de contacto visible: teléfono (click-to-call), email (click-to-email)
-- [ ] Diseño tipo grid de Pinterest/Airbnb (tendencia actual)
-- [ ] Paginación si hay muchos resultados (20 por página)
-- [ ] Mensaje amigable si no hay resultados
-- [ ] Loading state mientras carga data
+- [x] Vista de grid de negocios (3 columnas desktop, 1 columna móvil)
+- [x] Cada negocio muestra: logo/imagen, nombre, categoría, descripción breve, ciudad
+- [x] Barra de búsqueda por palabra clave (nombre o descripción)
+- [x] Filtros por categoría (dropdown)
+- [x] Filtro por ciudad (dropdown)
+- [x] Click en negocio abre vista detallada en modal o página
+- [x] Información de contacto visible: teléfono (click-to-call), email (click-to-email)
+- [x] Diseño tipo grid de Pinterest/Airbnb (tendencia actual)
+- [x] Paginación si hay muchos resultados (20 por página)
+- [x] Mensaje amigable si no hay resultados
+- [x] Loading state mientras carga data
 
 #### Technical Tasks
 
@@ -210,16 +211,16 @@
 
 #### Acceptance Criteria
 
-- [ ] Vista similar a Directorio de Negocios (reutilizar componentes)
-- [ ] Cada servicio muestra: logo, nombre, tipo de servicio, descripción, contacto, ciudad
-- [ ] Filtros por tipo de servicio (Salud, Legal, Educación, Financiero, Inmigración)
-- [ ] Filtro por ciudad
-- [ ] Barra de búsqueda por palabra clave
-- [ ] Click en servicio abre vista detallada
-- [ ] Información de contacto destacada
-- [ ] Diseño consistente con US-005
-- [ ] Paginación (20 por página)
-- [ ] Mensaje amigable si no hay resultados
+- [x] Vista similar a Directorio de Negocios (reutilizar componentes)
+- [x] Cada servicio muestra: logo, nombre, tipo de servicio, descripción, contacto, ciudad
+- [x] Filtros por tipo de servicio (Salud, Legal, Educación, Financiero, Inmigración)
+- [x] Filtro por ciudad
+- [x] Barra de búsqueda por palabra clave
+- [x] Click en servicio abre vista detallada
+- [x] Información de contacto destacada
+- [x] Diseño consistente con US-005
+- [x] Paginación (20 por página)
+- [x] Mensaje amigable si no hay resultados
 
 #### Technical Tasks
 
@@ -307,16 +308,16 @@
 
 Una User Story se considera "Done" cuando:
 
-- [ ] Todo el código cumple acceptance criteria
-- [ ] Código funcional sin errores en consola
-- [ ] Testing manual completo (happy path + edge cases)
-- [ ] Responsive verificado (móvil y desktop)
-- [ ] Protected routes funcionando correctamente
-- [ ] Loading states y error states implementados
-- [ ] Mensajes de error claros en español
-- [ ] Sin bugs críticos
-- [ ] Código commiteado con mensajes descriptivos
-- [ ] Listo para demo
+- [x] Todo el código cumple acceptance criteria
+- [x] Código funcional sin errores en consola
+- [x] Testing manual completo (happy path + edge cases)
+- [x] Responsive verificado (móvil y desktop)
+- [x] Protected routes funcionando correctamente
+- [x] Loading states y error states implementados
+- [x] Mensajes de error claros en español
+- [x] Sin bugs críticos
+- [x] Código commiteado con mensajes descriptivos
+- [x] Listo para demo
 
 ---
 
@@ -543,9 +544,61 @@ _Espacio para notas durante el sprint..._
 
 ---
 
-**Sprint Created:** [Fecha]  
-**Last Updated:** [Fecha]  
-**Sprint Status:** 🟡 Not Started
+**Sprint Created:** Noviembre 2025
+**Last Updated:** 13 de Noviembre, 2025
+**Sprint Status:** ✅ COMPLETADO (15/15 SP - 100%)
+
+---
+
+## Sprint Closure Summary
+
+**Fecha de Cierre:** 13 de Noviembre, 2025
+**Duración Real:** 2 semanas según lo planeado
+**Story Points Completados:** 15/15 (100%)
+
+### User Stories Completadas
+
+1. **US-003: Dashboard Principal** - 5 SP ✅
+   - Dashboard completo con navegación
+   - Componentes reutilizables implementados
+   - Protected routes funcionando
+   - Responsive en móvil y desktop
+
+2. **US-005: Directorio de Negocios** - 5 SP ✅
+   - CRUD completo en backend
+   - Búsqueda, filtros y paginación
+   - 10 negocios seed data
+   - Vista detallada con modal
+   - DirectoryCard genérico creado
+
+3. **US-006: Directorio de Servicios** - 5 SP ✅
+   - CRUD completo en backend
+   - Reutilización de componentes de US-005
+   - 10 servicios seed data
+   - Filtros por tipo de servicio
+   - Consistencia visual con Negocios
+
+### Logros Destacados
+
+- **Componentes Compartidos:** DirectoryCard, SearchBar, FilterDropdown, Pagination, DirectoryDetailModal
+- **APIs REST:** 10 endpoints implementados para Businesses y Services
+- **Testing:** Cobertura manual completa
+- **Velocity:** 15 SP/2 semanas = 7.5 SP/semana
+- **Calidad:** Cero bugs críticos, código limpio y documentado
+
+### Retrospective - Key Learnings
+
+**Qué funcionó bien:**
+- Reutilización de componentes entre US-005 y US-006 aceleró el desarrollo
+- Arquitectura feature-based facilitó la organización
+- Seed scripts permitieron testing rápido
+
+**Áreas de mejora:**
+- Considerar agregar tests automatizados en Sprint 3
+- Optimizar queries MongoDB con índices adicionales
+
+**Próximo Sprint:**
+- Sprint 3: Eventos y Panel Admin (US-004, US-008)
 
 ---
 
