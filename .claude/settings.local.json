@@ -40,7 +40,18 @@
       "Bash(npm run test:service:*)",
       "Bash(curl:*)",
       "Bash(python:*)",
-      "Bash(npm run seed:services:*)"
+      "Bash(npm run seed:services:*)",
+      "Bash(dir:*)",
+      "Bash(npm run seed:registrations:*)",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6eyJpZCI6IjY5MTI1M2VkMTBlMzM3NmJhOGU4ODM2NiIsImVtYWlsIjoiZGV2QGphcHBpLmNhIiwicm9sZSI6ImFkbWluIn0sInR5cGUiOiJhdXRoIiwiaWF0IjoxNzYzMDUwMzUyLCJleHAiOjE3NjM2NTUxNTJ9.tzYxS7q4cGTqtBVBWs4WcDzlIxjufCa2u1Wn7NBd8GQ\")",
+      "Bash(cmd //c \"taskkill /F /IM node.exe /T\")",
+      "Bash(npm run seed:events:*)",
+      "Bash(npm run seed:blog:*)",
+      "Bash(nul)",
+      "Bash(npm run seed:users:*)",
+      "Bash(npm run seed:admin:*)",
+      "Bash(cmd //c \"taskkill /PID 122564 /F\")",
+      "Bash(cmd //c \"taskkill /PID 26248 /F\")"
     ]
   },
   "enableAllProjectMcpServers": true,

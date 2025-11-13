@@ -872,6 +872,444 @@ export const sendPasswordChangedEmail = async (to, name) => {
   return sendEmail({ to, subject, html });
 };
 
+/**
+ * Enviar email de confirmación de registro a evento
+ * @param {string} to - Email del usuario
+ * @param {string} userName - Nombre del usuario
+ * @param {Object} event - Datos del evento
+ * @param {Object} registration - Datos del registro
+ * @returns {Promise<Object>} Resultado del envío
+ */
+export const sendEventConfirmationEmail = async (to, userName, event, registration) => {
+  const subject = `✅ Confirmación de registro: ${event.title}`;
+
+  // Formatear fecha y hora
+  const eventDate = new Date(event.date);
+  const formattedDate = eventDate.toLocaleDateString('es-ES', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
+  // Determinar icono por modalidad
+  const modeIcon = {
+    virtual: '💻',
+    presencial: '📍',
+    híbrido: '🔄'
+  }[event.mode] || '📅';
+
+  // Determinar color por modalidad
+  const modeColor = {
+    virtual: '#3b82f6',
+    presencial: '#10b981',
+    híbrido: '#8b5cf6'
+  }[event.mode] || '#667eea';
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Confirmación de Evento - Entre Amigas</title>
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+          background: linear-gradient(135deg, #fdf2f8 0%, #fae8ff 50%, #f3e8ff 100%);
+          margin: 0;
+          padding: 40px 20px;
+          line-height: 1.6;
+        }
+        .email-wrapper {
+          max-width: 600px;
+          margin: 0 auto;
+          background-color: #ffffff;
+          border-radius: 24px;
+          overflow: hidden;
+          box-shadow: 0 20px 60px rgba(139, 92, 246, 0.15), 0 8px 24px rgba(236, 72, 153, 0.1);
+        }
+        .header {
+          position: relative;
+          background: linear-gradient(135deg, ${modeColor} 0%, #ec4899 100%);
+          padding: 60px 40px;
+          text-align: center;
+          color: #ffffff;
+          overflow: hidden;
+        }
+        .header::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+          animation: pulse 15s ease-in-out infinite;
+        }
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); opacity: 0.5; }
+          50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        .header-icon {
+          font-size: 72px;
+          margin-bottom: 20px;
+          display: block;
+          position: relative;
+          z-index: 1;
+          filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+        }
+        .header h1 {
+          margin: 0;
+          font-size: 32px;
+          font-weight: 700;
+          letter-spacing: -0.5px;
+          position: relative;
+          z-index: 1;
+          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        .badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 16px;
+          background: rgba(255, 255, 255, 0.2);
+          backdrop-filter: blur(10px);
+          border-radius: 100px;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          margin-bottom: 16px;
+          font-size: 14px;
+          font-weight: 600;
+          position: relative;
+          z-index: 1;
+        }
+        .content {
+          padding: 48px 40px;
+          color: #1a202c;
+        }
+        .logo-text {
+          font-size: 28px;
+          font-weight: 700;
+          background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          margin-bottom: 32px;
+          display: inline-block;
+        }
+        .content h2 {
+          color: #2d3748;
+          font-size: 26px;
+          margin-bottom: 20px;
+          font-weight: 700;
+        }
+        .content p {
+          margin: 20px 0;
+          font-size: 16px;
+          color: #4a5568;
+          line-height: 1.8;
+        }
+        .event-card {
+          background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+          border-left: 5px solid ${modeColor};
+          padding: 32px;
+          margin: 32px 0;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        .event-title {
+          font-size: 22px;
+          font-weight: 700;
+          color: #1a202c;
+          margin-bottom: 24px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .event-details {
+          display: grid;
+          gap: 16px;
+        }
+        .detail-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+        }
+        .detail-icon {
+          font-size: 20px;
+          min-width: 28px;
+          text-align: center;
+        }
+        .detail-content {
+          flex: 1;
+        }
+        .detail-label {
+          font-size: 13px;
+          color: #718096;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-weight: 600;
+          margin-bottom: 4px;
+        }
+        .detail-value {
+          font-size: 16px;
+          color: #2d3748;
+          font-weight: 500;
+        }
+        .cta-container {
+          text-align: center;
+          margin: 40px 0;
+        }
+        .cta-button {
+          display: inline-block;
+          padding: 18px 48px;
+          background: linear-gradient(135deg, ${modeColor} 0%, #ec4899 100%);
+          color: #ffffff !important;
+          text-decoration: none;
+          border-radius: 16px;
+          font-weight: 700;
+          font-size: 17px;
+          box-shadow: 0 8px 24px rgba(236, 72, 153, 0.35), 0 4px 12px rgba(139, 92, 246, 0.25);
+          transition: all 0.3s ease;
+          letter-spacing: 0.3px;
+        }
+        .cta-button:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 12px 32px rgba(236, 72, 153, 0.45), 0 6px 16px rgba(139, 92, 246, 0.35);
+        }
+        .info-box {
+          background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+          border-left: 5px solid #3b82f6;
+          padding: 24px;
+          margin: 32px 0;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        }
+        .info-box strong {
+          color: #1e40af;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+          font-size: 16px;
+          font-weight: 700;
+        }
+        .info-box p {
+          margin: 8px 0;
+          font-size: 15px;
+          color: #1e3a8a;
+          line-height: 1.7;
+        }
+        .divider {
+          height: 2px;
+          background: linear-gradient(90deg, transparent, #e2e8f0 20%, #e2e8f0 80%, transparent);
+          margin: 40px 0;
+        }
+        .footer {
+          background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+          padding: 40px;
+          text-align: center;
+          color: #cbd5e0;
+        }
+        .footer-logo {
+          font-size: 24px;
+          font-weight: 700;
+          color: #ffffff;
+          margin-bottom: 8px;
+        }
+        .footer-tagline {
+          color: #a0aec0;
+          font-size: 14px;
+          margin-bottom: 24px;
+        }
+        .footer p {
+          margin: 8px 0;
+          font-size: 14px;
+          color: #a0aec0;
+        }
+        .footer a {
+          color: #ec4899;
+          text-decoration: none;
+          font-weight: 600;
+          transition: color 0.2s;
+        }
+        .footer a:hover {
+          color: #f472b6;
+        }
+        .footer-links {
+          margin-top: 20px;
+          padding-top: 20px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .heart {
+          display: inline-block;
+          color: #ec4899;
+          animation: heartbeat 1.5s ease-in-out infinite;
+        }
+        @keyframes heartbeat {
+          0%, 100% { transform: scale(1); }
+          25% { transform: scale(1.1); }
+          50% { transform: scale(1); }
+        }
+        .mode-badge {
+          display: inline-block;
+          padding: 6px 14px;
+          background: ${modeColor};
+          color: white;
+          border-radius: 100px;
+          font-size: 13px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="email-wrapper">
+        <!-- Header Premium -->
+        <div class="header">
+          <div class="badge">
+            ✨ Entre Amigas
+          </div>
+          <span class="header-icon">🎉</span>
+          <h1>¡Registro Confirmado!</h1>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+          <div class="logo-text">Entre Amigas</div>
+
+          <h2>¡Hola ${userName}!</h2>
+
+          <p>
+            ¡Excelentes noticias! Tu registro al evento ha sido confirmado exitosamente.
+            Nos emociona mucho que formes parte de esta experiencia <span class="heart">💜</span>
+          </p>
+
+          <!-- Event Card -->
+          <div class="event-card">
+            <div class="event-title">
+              ${modeIcon} ${event.title}
+            </div>
+
+            <div class="event-details">
+              <div class="detail-row">
+                <span class="detail-icon">📅</span>
+                <div class="detail-content">
+                  <div class="detail-label">Fecha</div>
+                  <div class="detail-value">${formattedDate}</div>
+                </div>
+              </div>
+
+              <div class="detail-row">
+                <span class="detail-icon">🕒</span>
+                <div class="detail-content">
+                  <div class="detail-label">Hora</div>
+                  <div class="detail-value">${event.time}</div>
+                </div>
+              </div>
+
+              <div class="detail-row">
+                <span class="detail-icon">${modeIcon}</span>
+                <div class="detail-content">
+                  <div class="detail-label">Modalidad</div>
+                  <div class="detail-value">
+                    <span class="mode-badge">${event.mode}</span>
+                  </div>
+                </div>
+              </div>
+
+              ${event.location ? `
+              <div class="detail-row">
+                <span class="detail-icon">📍</span>
+                <div class="detail-content">
+                  <div class="detail-label">Ubicación</div>
+                  <div class="detail-value">${event.location}</div>
+                </div>
+              </div>
+              ` : ''}
+
+              ${event.link ? `
+              <div class="detail-row">
+                <span class="detail-icon">🔗</span>
+                <div class="detail-content">
+                  <div class="detail-label">Enlace de acceso</div>
+                  <div class="detail-value">
+                    <a href="${event.link}" style="color: ${modeColor}; text-decoration: underline;">${event.link}</a>
+                  </div>
+                </div>
+              </div>
+              ` : ''}
+            </div>
+          </div>
+
+          <!-- CTA Button Premium -->
+          <div class="cta-container">
+            <a href="${emailConfig.frontendUrl}/events/${event._id}" class="cta-button">
+              📝 Ver Detalles del Evento
+            </a>
+          </div>
+
+          <!-- Info Box Premium -->
+          <div class="info-box">
+            <strong>💡 Recordatorios Importantes</strong>
+            <p>
+              • Recibirás un recordatorio 24 horas antes del evento<br>
+              • Puedes cancelar tu registro desde tu perfil si cambias de planes<br>
+              • Si tienes preguntas, contáctanos en cualquier momento
+            </p>
+          </div>
+
+          <!-- Divider -->
+          <div class="divider"></div>
+
+          <p style="margin-top: 32px; text-align: center; font-size: 15px;">
+            ¡Nos vemos pronto!<br>
+            <strong style="font-size: 17px;">El equipo de Entre Amigas <span class="heart">💜</span></strong>
+          </p>
+        </div>
+
+        <!-- Footer Premium -->
+        <div class="footer">
+          <div class="footer-logo">Entre Amigas</div>
+          <p class="footer-tagline">Comunidad de mujeres hispanas en Canadá</p>
+
+          <p style="margin: 20px 0;">
+            Conecta con mujeres que comparten tu experiencia migratoria.<br>
+            Encuentra apoyo, amistad y oportunidades.
+          </p>
+
+          <p style="margin-top: 24px; font-size: 13px;">
+            © ${new Date().getFullYear()} Entre Amigas. Todos los derechos reservados.
+          </p>
+
+          <div class="footer-links">
+            <a href="${emailConfig.frontendUrl}/privacy">Privacidad</a>
+            <span style="color: #4a5568; margin: 0 8px;">·</span>
+            <a href="${emailConfig.frontendUrl}/terms">Términos</a>
+            <span style="color: #4a5568; margin: 0 8px;">·</span>
+            <a href="${emailConfig.frontendUrl}/events">Ver Eventos</a>
+            <span style="color: #4a5568; margin: 0 8px;">·</span>
+            <a href="${emailConfig.frontendUrl}/contact">Contacto</a>
+          </div>
+
+          <p style="margin-top: 20px; font-size: 13px; color: #718096;">
+            Hecho con <span class="heart">💜</span> en Canadá
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return sendEmail({ to, subject, html });
+};
+
 // Export default con todas las funciones
 export default {
   sendEmail,
@@ -879,4 +1317,5 @@ export default {
   sendVerificationEmail,
   sendPasswordResetEmail,
   sendPasswordChangedEmail,
+  sendEventConfirmationEmail,
 };

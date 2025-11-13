@@ -7,42 +7,49 @@ import EventCard from './EventCard';
  *
  * Features:
  * - Muestra los próximos 3 eventos
- * - Mock data (temporalmente)
+ * - Mock data (temporalmente - Sprint 2)
  * - Grid responsive (3 cols desktop, 2 tablet, 1 móvil)
  * - Link "Ver todos los eventos"
  * - Section header con icono
  *
  * Sprint 2 - Task 3.4 ✅
+ * Sprint 3 - Actualizado con capacidad y registros
  *
  * @returns {JSX.Element} Preview de eventos
  */
 const EventsPreview = () => {
-  // Mock data de eventos (temporal - se reemplazará con API en futuro sprint)
+  // Mock data de eventos (temporal - se reemplazará con API en Sprint 3)
   const mockEvents = [
     {
-      id: 1,
+      _id: '1',
       title: 'Taller de Finanzas Personales para Emprendedoras',
       date: '2025-11-20',
       time: '18:00',
       mode: 'virtual',
       image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&auto=format&fit=crop&q=60',
+      capacity: 30,
+      registeredCount: 18,
     },
     {
-      id: 2,
+      _id: '2',
       title: 'Networking: Conecta con Empresarias Latinas en Toronto',
       date: '2025-11-25',
       time: '19:30',
       mode: 'presencial',
       location: 'Downtown Toronto',
       image: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&auto=format&fit=crop&q=60',
+      capacity: 50,
+      registeredCount: 3,
     },
     {
-      id: 3,
+      _id: '3',
       title: 'Webinar: Inmigración y Oportunidades Laborales en Canadá',
       date: '2025-12-02',
       time: '17:00',
       mode: 'virtual',
       image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&auto=format&fit=crop&q=60',
+      capacity: 100,
+      registeredCount: 65,
     },
   ];
 
@@ -75,7 +82,7 @@ const EventsPreview = () => {
       {/* Events Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {mockEvents.map((event) => (
-          <EventCard key={event.id} event={event} />
+          <EventCard key={event._id} event={event} />
         ))}
       </div>
 

@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
   Calendar,
+  Heart,
   Building2,
   Briefcase,
   BookOpen,
@@ -40,7 +41,12 @@ const MobileNav = ({ isOpen, onClose }) => {
       path: '/dashboard/events',
       icon: Calendar,
       description: 'Actividades comunitarias',
-      badge: 'Próximamente',
+    },
+    {
+      name: 'Mis Eventos',
+      path: '/dashboard/my-events',
+      icon: Heart,
+      description: 'Eventos registrados',
     },
     {
       name: 'Negocios',
@@ -59,7 +65,6 @@ const MobileNav = ({ isOpen, onClose }) => {
       path: '/dashboard/blog',
       icon: BookOpen,
       description: 'Artículos y recursos',
-      badge: 'Próximamente',
     },
     {
       name: 'Mi Perfil',

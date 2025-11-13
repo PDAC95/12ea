@@ -348,10 +348,27 @@ export const requireOwnership = (paramName = 'userId') => {
   };
 };
 
+/**
+ * Middleware específico para requerir rol de Admin
+ * Wrapper de authorize('admin') para mayor claridad
+ *
+ * @middleware
+ * @param {Object} req - Request de Express
+ * @param {Object} res - Response de Express
+ * @param {Function} next - Función next de Express
+ *
+ * @example
+ * router.post('/events', protect, requireAdmin, createEvent);
+ */
+export const requireAdmin = (req, res, next) => {
+  return authorize('admin')(req, res, next);
+};
+
 // Export default con todos los middlewares
 export default {
   protect,
   authorize,
+  requireAdmin,
   optionalAuth,
   requireVerified,
   requireOwnership,

@@ -1,7 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 
-// Protected Route Component
+// Protected Route Components
 import ProtectedRoute from './ProtectedRoute';
+import AdminRoute from './AdminRoute';
 
 // Public Pages - Landing
 import LandingPage from '../features/landing/pages/LandingPage';
@@ -19,6 +20,14 @@ import CompleteProfilePage from '../features/auth/pages/CompleteProfilePage';
 import DashboardPage from '../features/dashboard/pages/DashboardPage';
 import BusinessDirectoryPage from '../features/business/pages/BusinessDirectoryPage';
 import ServiceDirectoryPage from '../features/services/pages/ServiceDirectoryPage';
+import EventsPage from '../features/events/pages/EventsPage';
+import MyEventsPage from '../features/events/pages/MyEventsPage';
+import BlogPage from '../features/blog/pages/BlogPage';
+import BlogPostPage from '../features/blog/pages/BlogPostPage';
+
+// Admin Pages
+import AdminDashboardPage from '../features/admin/pages/AdminDashboardPage';
+import AdminBusinessesPage from '../features/admin/pages/AdminBusinessesPage';
 
 // Common Pages
 import NotFoundPage from '../shared/components/common/NotFoundPage';
@@ -36,6 +45,10 @@ import NotFoundPage from '../shared/components/common/NotFoundPage';
  *
  * Rutas Protegidas (requieren autenticación):
  * - /dashboard → DashboardPage
+ * - /dashboard/businesses → BusinessDirectoryPage
+ * - /dashboard/services → ServiceDirectoryPage
+ * - /dashboard/events → EventsPage
+ * - /dashboard/my-events → MyEventsPage
  *
  * Ruta de Error:
  * - * → NotFoundPage (404)
@@ -100,14 +113,79 @@ const AppRoutes = () => {
         }
       />
 
+      {/* Events - Sprint 3 US-004 */}
+      <Route
+        path="/dashboard/events"
+        element={
+          <ProtectedRoute>
+            <EventsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* My Events - Sprint 3 US-004 */}
+      <Route
+        path="/dashboard/my-events"
+        element={
+          <ProtectedRoute>
+            <MyEventsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Blog - Sprint 3 US-007 */}
+      <Route
+        path="/dashboard/blog"
+        element={
+          <ProtectedRoute>
+            <BlogPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Blog Post Detail - Sprint 3 US-007 Task 7.4 */}
+      <Route
+        path="/dashboard/blog/:slug"
+        element={
+          <ProtectedRoute>
+            <BlogPostPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ============================================
+          RUTAS ADMIN - Solo para usuarios con role='admin'
+          ============================================ */}
+
+      {/* Admin Dashboard - Sprint 3 US-009 Task 9.4 */}
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <AdminDashboardPage />
+          </AdminRoute>
+        }
+      />
+
+      {/* Admin Businesses - Sprint 3 US-009 Task 9.7 */}
+      <Route
+        path="/admin/businesses"
+        element={
+          <AdminRoute>
+            <AdminBusinessesPage />
+          </AdminRoute>
+        }
+      />
+
+      {/* TODO: Agregar más rutas admin en futuras tasks:
+          - /admin/services → AdminServicesPage
+          - /admin/users → AdminUsersPage
+      */}
+
       {/* TODO: Agregar más rutas protegidas en futuros sprints:
-          - /events → EventsPage
           - /events/:id → EventDetailPage
           - /businesses/:id → BusinessDetailPage
-          - /blog → BlogPage
-          - /blog/:slug → BlogPostPage
           - /profile → ProfilePage
-          - /admin → AdminPage (solo admin)
       */}
 
       {/* ============================================

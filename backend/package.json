@@ -17,7 +17,11 @@
     "test:business": "node test-business-model.js",
     "test:service": "node test-service-model.js",
     "seed:business": "node src/scripts/seedBusiness.js",
-    "seed:services": "node src/scripts/seedServices.js"
+    "seed:services": "node src/scripts/seedServices.js",
+    "seed:events": "node src/scripts/seedEvents.js",
+    "seed:registrations": "node src/scripts/seedEventRegistrations.js",
+    "seed:blog": "node src/scripts/seedBlogPosts.js",
+    "admin:set": "node src/scripts/setAdminUser.js"
   },
   "keywords": [
     "express",
