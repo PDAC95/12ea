@@ -3,6 +3,7 @@ import {
   uploadTestImage,
   uploadUserProfile,
   uploadMultipleImages,
+  uploadImage,
   deleteFile,
   getSignedUrl,
 } from '../controllers/upload.controller.js';
@@ -11,6 +12,7 @@ import {
   uploadMultipleImages as uploadMultipleMiddleware,
   handleMulterError,
 } from '../middleware/upload.middleware.js';
+import { protect } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
@@ -20,6 +22,17 @@ const router = express.Router();
  * @access  Public (en producción debería ser Private)
  */
 router.post('/test', uploadSingleImage('image'), handleMulterError, uploadTestImage);
+
+/**
+ * @route   POST /api/v1/upload/image
+ * @desc    Subir imagen con organización por carpetas
+ * @access  Private (requiere autenticación - user o admin)
+ * @query   folder - events, blog, profiles, temp (default: temp)
+ * @query   subfolder - Opcional (ej: userId, eventId)
+ * @validations - jpg, jpeg, png, webp (max 5MB)
+ * Task 8.2
+ */
+router.post('/image', protect, uploadSingleImage('image'), handleMulterError, uploadImage);
 
 /**
  * @route   POST /api/v1/upload/user/profile

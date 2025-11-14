@@ -51,6 +51,9 @@ const limiter = rateLimit({
 
 app.use('/api/', limiter);
 
+// Servir archivos estáticos (uploads - modo desarrollo)
+app.use('/uploads', express.static('uploads'));
+
 // Ruta de health check
 app.get('/health', (req, res) => {
   res.status(200).json({

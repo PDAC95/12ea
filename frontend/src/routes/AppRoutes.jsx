@@ -26,8 +26,11 @@ import BlogPage from '../features/blog/pages/BlogPage';
 import BlogPostPage from '../features/blog/pages/BlogPostPage';
 
 // Admin Pages
+import AdminLoginPage from '../features/admin/pages/AdminLoginPage';
 import AdminDashboardPage from '../features/admin/pages/AdminDashboardPage';
 import AdminBusinessesPage from '../features/admin/pages/AdminBusinessesPage';
+import AdminEventsPage from '../features/admin/pages/AdminEventsPage';
+import AdminBlogPage from '../features/admin/pages/AdminBlogPage';
 
 // Common Pages
 import NotFoundPage from '../shared/components/common/NotFoundPage';
@@ -38,7 +41,8 @@ import NotFoundPage from '../shared/components/common/NotFoundPage';
  * Rutas Públicas:
  * - / → LandingPage (placeholder)
  * - /register → RegisterPage
- * - /login → LoginPage
+ * - /login → LoginPage (solo para users)
+ * - /admin/login → AdminLoginPage (solo para admins)
  * - /verify-email/:token → VerifyEmailPage
  * - /forgot-password → ForgotPasswordPage
  * - /reset-password/:token → ResetPasswordPage
@@ -78,6 +82,9 @@ const AppRoutes = () => {
       <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
       <Route path="/auth/callback" element={<GoogleCallbackPage />} />
       <Route path="/complete-profile" element={<CompleteProfilePage />} />
+
+      {/* Admin Login - Sprint 3.5 FE-1 - PÚBLICA pero separada */}
+      <Route path="/admin/login" element={<AdminLoginPage />} />
 
       {/* ============================================
           RUTAS PROTEGIDAS - Requieren autenticación
@@ -173,6 +180,26 @@ const AppRoutes = () => {
         element={
           <AdminRoute>
             <AdminBusinessesPage />
+          </AdminRoute>
+        }
+      />
+
+      {/* Admin Events - Sprint 4 Task 8.4 Testing */}
+      <Route
+        path="/admin/events"
+        element={
+          <AdminRoute>
+            <AdminEventsPage />
+          </AdminRoute>
+        }
+      />
+
+      {/* Admin Blog - Sprint 4 Task 10.7 */}
+      <Route
+        path="/admin/blog"
+        element={
+          <AdminRoute>
+            <AdminBlogPage />
           </AdminRoute>
         }
       />

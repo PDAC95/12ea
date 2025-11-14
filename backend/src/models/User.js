@@ -101,6 +101,7 @@ const userSchema = new mongoose.Schema(
         message: '{VALUE} no es un rol válido',
       },
       default: 'user',
+      required: [true, 'El rol es requerido'],
     },
 
     // Verificación y Seguridad

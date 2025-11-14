@@ -11,6 +11,10 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
+    "@tiptap/extension-image": "^3.10.7",
+    "@tiptap/extension-link": "^3.10.7",
+    "@tiptap/react": "^3.10.7",
+    "@tiptap/starter-kit": "^3.10.7",
     "axios": "^1.7.7",
     "dompurify": "^3.3.0",
     "lucide-react": "^0.447.0",

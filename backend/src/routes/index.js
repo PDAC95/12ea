@@ -17,6 +17,8 @@ router.get('/', (req, res) => {
       users: '/api/v1/users (próximamente)',
       events: '/api/v1/events ✅',
       blog: '/api/v1/blog ✅',
+      adminEvents: '/api/v1/admin/events ✅ (Admin only)',
+      adminBlog: '/api/v1/admin/blog ✅ (Admin only)',
     },
   });
 });
@@ -28,6 +30,8 @@ import businessRoutes from './business.routes.js';
 import serviceRoutes from './service.routes.js';
 import eventRoutes from './event.routes.js';
 import blogRoutes from './blog.routes.js';
+import adminEventsRoutes from './admin.events.routes.js';
+import adminBlogRoutes from './admin.blog.routes.js';
 // import userRoutes from './user.routes.js';
 
 // Rutas de upload (AWS S3)
@@ -47,6 +51,12 @@ router.use('/events', eventRoutes);
 
 // Rutas de blog
 router.use('/blog', blogRoutes);
+
+// Rutas de administración - Eventos
+router.use('/admin/events', adminEventsRoutes);
+
+// Rutas de administración - Blog
+router.use('/admin/blog', adminBlogRoutes);
 
 // Rutas de usuarios
 // router.use('/users', userRoutes);

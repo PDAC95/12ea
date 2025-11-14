@@ -1,4 +1,8 @@
 import { S3Client } from '@aws-sdk/client-s3';
+import dotenv from 'dotenv';
+
+// Cargar variables de entorno
+dotenv.config();
 
 // Configurar cliente de S3
 const s3Client = new S3Client({

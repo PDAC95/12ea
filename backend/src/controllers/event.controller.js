@@ -2,6 +2,7 @@ import Event from '../models/Event.js';
 import EventRegistration from '../models/EventRegistration.js';
 import User from '../models/User.js';
 import { sendEventConfirmationEmail } from '../services/email.service.js';
+import { Parser } from 'json2csv';
 
 /**
  * Event Controller - Entre Amigas
@@ -128,6 +129,113 @@ export const getAllEvents = async (req, res, next) => {
     });
   } catch (error) {
     console.error('Error in getAllEvents:', error);
+    next(error);
+  }
+};
+
+// =====================================
+// ADMIN ENDPOINTS
+// =====================================
+
+/**
+ * @desc    Get all events including cancelled (Admin only)
+ * @route   GET /api/admin/events
+ * @access  Private/Admin
+ * @params  ?status=upcoming|past|cancelled|all
+ *          ?page=1
+ *          ?limit=20
+ *          ?search=keyword
+ */
+export const getAllEventsAdmin = async (req, res, next) => {
+  try {
+    const {
+      status = 'all',
+      page = 1,
+      limit = 20,
+      search,
+    } = req.query;
+
+    // Build query - Admin puede ver todos los eventos
+    const query = {};
+
+    // Filter by status
+    const now = new Date();
+    if (status === 'upcoming') {
+      query.date = { $gte: now };
+      query.isActive = true;
+    } else if (status === 'past') {
+      query.date = { $lt: now };
+      query.isActive = true;
+    } else if (status === 'cancelled') {
+      query.isActive = false;
+    }
+    // Si status === 'all', no agregar filtros (mostrar todos)
+
+    // Search in title and description
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    // Pagination
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const limitNum = Math.min(parseInt(limit), 100); // Admin puede ver hasta 100
+
+    // Execute query
+    const events = await Event.find(query)
+      .populate('organizer', 'preferredName email profileImage')
+      .select('-__v')
+      .limit(limitNum)
+      .skip(skip)
+      .sort({ date: -1 }); // Ordenar por fecha descendente (más recientes primero)
+
+    // Count total documents
+    const total = await Event.countDocuments(query);
+
+    // Add registration count to each event
+    const eventsWithCount = await Promise.all(
+      events.map(async (event) => {
+        const registeredCount = await EventRegistration.countDocuments({
+          event: event._id,
+          status: 'confirmed',
+        });
+
+        return {
+          _id: event._id,
+          title: event.title,
+          description: event.description,
+          date: event.date,
+          time: event.time,
+          mode: event.mode,
+          location: event.location,
+          link: event.link,
+          capacity: event.capacity,
+          category: event.category,
+          image: event.image,
+          isFeatured: event.isFeatured,
+          status: event.status,
+          isActive: event.isActive,
+          organizer: event.organizer,
+          registeredCount, // Contador de registrados
+          availableSpots: event.capacity - registeredCount,
+          createdAt: event.createdAt,
+          updatedAt: event.updatedAt,
+        };
+      })
+    );
+
+    res.status(200).json({
+      success: true,
+      count: events.length,
+      total,
+      page: parseInt(page),
+      pages: Math.ceil(total / limitNum),
+      data: eventsWithCount,
+    });
+  } catch (error) {
+    console.error('Error in getAllEventsAdmin:', error);
     next(error);
   }
 };
@@ -533,15 +641,24 @@ export const updateEvent = async (req, res, next) => {
 };
 
 /**
- * @desc    Delete event (Admin only)
- * @route   DELETE /api/v1/events/:id
+ * @desc    Delete/Cancel event (Admin only) - SOFT DELETE
+ * @route   DELETE /api/admin/events/:id
  * @access  Private/Admin
+ * @note    Realiza soft delete marcando isActive=false en lugar de eliminar
  */
 export const deleteEvent = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const event = await Event.findByIdAndDelete(id);
+    // Soft delete: marcar como inactivo en lugar de eliminar
+    const event = await Event.findByIdAndUpdate(
+      id,
+      {
+        isActive: false,
+        status: 'cancelled' // También marcar como cancelado
+      },
+      { new: true }
+    );
 
     if (!event) {
       return res.status(404).json({
@@ -550,13 +667,16 @@ export const deleteEvent = async (req, res, next) => {
       });
     }
 
-    // TODO: Delete all associated registrations
-    await EventRegistration.deleteMany({ event: id });
+    // Cancelar todas las registraciones asociadas
+    await EventRegistration.updateMany(
+      { event: id },
+      { status: 'cancelled' }
+    );
 
     res.status(200).json({
       success: true,
-      message: 'Evento eliminado exitosamente',
-      data: null,
+      message: 'Evento cancelado exitosamente',
+      data: event,
     });
   } catch (error) {
     console.error('Error in deleteEvent:', error);
@@ -616,6 +736,67 @@ export const getEventRegistrations = async (req, res, next) => {
     });
   } catch (error) {
     console.error('Error in getEventRegistrations:', error);
+    next(error);
+  }
+};
+
+/**
+ * @desc    Export event registrations as CSV
+ * @route   GET /api/v1/admin/events/:id/export-csv
+ * @access  Private/Admin
+ */
+export const exportEventRegistrationsCSV = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // 1. Verificar que el evento existe
+    const event = await Event.findById(id);
+
+    if (!event) {
+      return res.status(404).json({
+        success: false,
+        message: 'Evento no encontrado',
+      });
+    }
+
+    // 2. Obtener todas las registraciones del evento
+    const registrations = await EventRegistration.find({ event: id })
+      .populate('user', 'preferredName fullName email phone')
+      .sort({ registeredAt: -1 });
+
+    // 3. Preparar datos para CSV
+    const csvData = registrations.map(reg => ({
+      Nombre: reg.user?.preferredName || reg.user?.fullName || 'Sin nombre',
+      Email: reg.user?.email || 'Sin email',
+      Teléfono: reg.user?.phone || 'Sin teléfono',
+      Estado: reg.status === 'confirmed' ? 'Confirmado' : reg.status === 'cancelled' ? 'Cancelado' : 'Pendiente',
+      'Fecha de Registro': new Date(reg.registeredAt).toLocaleString('es-MX', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+    }));
+
+    // 4. Generar CSV
+    const parser = new Parser({
+      fields: ['Nombre', 'Email', 'Teléfono', 'Estado', 'Fecha de Registro'],
+      withBOM: true, // Para compatibilidad con Excel
+    });
+
+    const csv = csvData.length > 0 ? parser.parse(csvData) : parser.parse([]);
+
+    // 5. Configurar headers para descarga
+    const filename = `evento-${id}-asistentes.csv`;
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+    // 6. Enviar CSV
+    res.status(200).send(csv);
+
+  } catch (error) {
+    console.error('Error in exportEventRegistrationsCSV:', error);
     next(error);
   }
 };

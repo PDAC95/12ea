@@ -51,7 +51,16 @@
       "Bash(npm run seed:users:*)",
       "Bash(npm run seed:admin:*)",
       "Bash(cmd //c \"taskkill /PID 122564 /F\")",
-      "Bash(cmd //c \"taskkill /PID 26248 /F\")"
+      "Bash(cmd //c \"taskkill /PID 26248 /F\")",
+      "Bash(npm run admin:create:*)",
+      "Bash(cmd //c \"taskkill /F /PID 94316\")",
+      "Bash(cmd //c \"taskkill /PID 964 /F\")",
+      "Bash(cmd //c \"taskkill /F /PID 63724\")",
+      "Bash(cmd //c \"taskkill /F /PID 54660\")",
+      "Bash(cmd //c \"taskkill /F /PID 1916\")",
+      "Bash(cmd //c \"taskkill /F /PID 132124\")",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTI1M2VkMTBlMzM3NmJhOGU4ODM2NiIsInR5cCI6ImF1dGgiLCJlbWFpbCI6ImRldkBqYXBwaS5jYSIsInJvbGUiOiJhZG1pbiIsImlzVmVyaWZpZWQiOnRydWUsImlhdCI6MTc2MzE1MzgwNiwiZXhwIjoxNzYzNzU4NjA2fQ.x7h2PIljzbCJqZDIpHx8piuNlJ4b9mEDtcMAP-1FA7w\")",
+      "Bash(git reset:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

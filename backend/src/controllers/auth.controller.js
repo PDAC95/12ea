@@ -109,7 +109,7 @@ export const register = async (req, res) => {
 
 /**
  * @route   POST /api/auth/login
- * @desc    Iniciar sesión y obtener token JWT
+ * @desc    Iniciar sesión para USUARIAS REGULARES (role: 'user')
  * @access  Public
  */
 export const login = async (req, res) => {
@@ -126,7 +126,16 @@ export const login = async (req, res) => {
       });
     }
 
-    // 2. Verificar que la cuenta esté activa
+    // 2. ⚠️ RECHAZAR si es admin (debe usar /auth/admin/login)
+    if (user.role === 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Por favor utiliza el panel de administración para acceder',
+        code: 'ADMIN_ACCESS_DENIED',
+      });
+    }
+
+    // 3. Verificar que la cuenta esté activa
     if (!user.isActive) {
       return res.status(403).json({
         success: false,
@@ -134,7 +143,7 @@ export const login = async (req, res) => {
       });
     }
 
-    // 3. Comparar contraseñas
+    // 4. Comparar contraseñas
     const isPasswordValid = await user.comparePassword(password);
 
     if (!isPasswordValid) {
@@ -144,8 +153,86 @@ export const login = async (req, res) => {
       });
     }
 
-    // 4. Advertencia si la cuenta no está verificada (pero permitir login)
+    // 5. Advertencia si la cuenta no está verificada (pero permitir login)
     const isVerified = user.isVerified;
+
+    // 6. Actualizar lastLogin
+    user.lastLogin = new Date();
+    await user.save();
+
+    // 7. Generar token JWT
+    const token = generateAuthToken(user._id, {
+      email: user.email,
+      role: user.role,
+      isVerified: user.isVerified,
+    });
+
+    // 8. Retornar respuesta exitosa
+    res.status(200).json({
+      success: true,
+      message: 'Login exitoso',
+      data: {
+        token,
+        user: user.getPublicProfile(),
+      },
+      warning: !isVerified ? 'Tu cuenta no está verificada. Revisa tu email.' : undefined,
+    });
+  } catch (error) {
+    console.error('❌ Error en login:', error);
+
+    res.status(500).json({
+      success: false,
+      message: 'Error al iniciar sesión',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
+  }
+};
+
+/**
+ * @route   POST /api/auth/admin/login
+ * @desc    Iniciar sesión para ADMINISTRADORAS (role: 'admin')
+ * @access  Public
+ */
+export const loginAdmin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // 1. Buscar usuario por email (incluir password)
+    const user = await User.findByEmail(email);
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Credenciales inválidas',
+      });
+    }
+
+    // 2. ⚠️ SOLO permitir admins (rechazar users regulares)
+    if (user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Acceso denegado. Esta cuenta no tiene permisos de administrador.',
+        code: 'ACCESS_DENIED',
+      });
+    }
+
+    // 3. Verificar que la cuenta esté activa
+    if (!user.isActive) {
+      return res.status(403).json({
+        success: false,
+        message: 'La cuenta ha sido desactivada. Contacta al super-administrador.',
+      });
+    }
+
+    // 4. Comparar contraseñas
+    const isPasswordValid = await user.comparePassword(password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        message: 'Credenciales inválidas',
+      });
+    }
 
     // 5. Actualizar lastLogin
     user.lastLogin = new Date();
@@ -159,17 +246,17 @@ export const login = async (req, res) => {
     });
 
     // 7. Retornar respuesta exitosa
+    console.log(`🔐 Admin login exitoso: ${user.email}`);
     res.status(200).json({
       success: true,
-      message: 'Login exitoso',
+      message: 'Login admin exitoso',
       data: {
         token,
         user: user.getPublicProfile(),
       },
-      warning: !isVerified ? 'Tu cuenta no está verificada. Revisa tu email.' : undefined,
     });
   } catch (error) {
-    console.error('❌ Error en login:', error);
+    console.error('❌ Error en loginAdmin:', error);
 
     res.status(500).json({
       success: false,
@@ -575,6 +662,7 @@ export const updateProfile = async (req, res) => {
 export default {
   register,
   login,
+  loginAdmin,
   verifyEmail,
   forgotPassword,
   resetPassword,

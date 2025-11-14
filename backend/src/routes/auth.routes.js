@@ -3,6 +3,7 @@ import passport from 'passport';
 import {
   register,
   login,
+  loginAdmin,
   verifyEmail,
   forgotPassword,
   resetPassword,
@@ -20,6 +21,12 @@ import {
   handleValidationErrors,
 } from '../validators/auth.validator.js';
 import { protect } from '../middleware/auth.middleware.js';
+import {
+  adminLoginLimiter,
+  userLoginLimiter,
+  registerLimiter,
+  passwordResetLimiter,
+} from '../middleware/rateLimiter.js';
 
 /**
  * Auth Routes - Entre Amigas
@@ -36,22 +43,38 @@ const router = express.Router();
  */
 router.post(
   '/register',
-  registerValidation,       // 1. Validar datos de entrada
-  handleValidationErrors,   // 2. Manejar errores de validación
-  register                  // 3. Ejecutar controlador
+  registerLimiter,          // 1. Rate limiting (3 registros/hora)
+  registerValidation,       // 2. Validar datos de entrada
+  handleValidationErrors,   // 3. Manejar errores de validación
+  register                  // 4. Ejecutar controlador
 );
 
 /**
  * @route   POST /api/auth/login
- * @desc    Iniciar sesión
+ * @desc    Iniciar sesión para USUARIAS REGULARES (role: 'user')
  * @access  Public
  * @body    { email, password }
  */
 router.post(
   '/login',
-  loginValidation,          // 1. Validar credenciales
-  handleValidationErrors,   // 2. Manejar errores
-  login                     // 3. Ejecutar login
+  userLoginLimiter,         // 1. Rate limiting (10 intentos/15min)
+  loginValidation,          // 2. Validar credenciales
+  handleValidationErrors,   // 3. Manejar errores
+  login                     // 4. Ejecutar login
+);
+
+/**
+ * @route   POST /api/auth/admin/login
+ * @desc    Iniciar sesión para ADMINISTRADORAS (role: 'admin')
+ * @access  Public
+ * @body    { email, password }
+ */
+router.post(
+  '/admin/login',
+  adminLoginLimiter,        // 1. Rate limiting (5 intentos/15min - MÁS ESTRICTO)
+  loginValidation,          // 2. Validar credenciales
+  handleValidationErrors,   // 3. Manejar errores
+  loginAdmin                // 4. Ejecutar login admin
 );
 
 /**
@@ -73,9 +96,10 @@ router.get(
  */
 router.post(
   '/forgot-password',
-  forgotPasswordValidation,  // 1. Validar email
-  handleValidationErrors,    // 2. Manejar errores
-  forgotPassword             // 3. Enviar email de reset
+  passwordResetLimiter,      // 1. Rate limiting (3 solicitudes/hora)
+  forgotPasswordValidation,  // 2. Validar email
+  handleValidationErrors,    // 3. Manejar errores
+  forgotPassword             // 4. Enviar email de reset
 );
 
 /**

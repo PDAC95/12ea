@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import {
   LayoutDashboard,
   Store,
+  Calendar,
   Briefcase,
   Users,
+  FileText,
   Menu,
   X,
   LogOut,
@@ -53,10 +55,22 @@ const AdminLayout = ({ children }) => {
       description: 'Gestión de negocios',
     },
     {
+      name: 'Eventos',
+      path: '/admin/events',
+      icon: Calendar,
+      description: 'Gestión de eventos',
+    },
+    {
       name: 'Servicios',
       path: '/admin/services',
       icon: Briefcase,
       description: 'Gestión de servicios',
+    },
+    {
+      name: 'Blog',
+      path: '/admin/blog',
+      icon: FileText,
+      description: 'Gestión del blog',
     },
     {
       name: 'Usuarios',

@@ -53,23 +53,52 @@ const LoginForm = () => {
 
   /**
    * Maneja el envío del formulario
+   * POST a /api/v1/auth/login (solo para users, NO admins)
    */
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     setSubmitError('');
 
     try {
-      // Llamar al servicio de autenticación
+      // Llamar al servicio de autenticación (POST /auth/login)
       const response = await authService.login(data.email, data.password);
       const { token, user } = response.data;
 
       // Guardar token y usuario en contexto (localStorage + state)
       login(token, user);
 
-      // Redirigir al dashboard
+      // Redirigir al dashboard de usuaria
       navigate('/dashboard');
     } catch (error) {
-      setSubmitError(error.message);
+      // Manejar diferentes tipos de errores del backend
+      if (error.response) {
+        const status = error.response.status;
+        const message = error.response.data?.message || error.response.data?.error?.message;
+
+        // Error 403 - Usuario es admin (debe usar /admin/login)
+        if (status === 403) {
+          setSubmitError(
+            'Parece que tienes una cuenta de administradora. Por favor usa el panel de administración.'
+          );
+        }
+        // Error 429 - Rate limit (demasiados intentos)
+        else if (status === 429) {
+          setSubmitError(
+            message || 'Demasiados intentos de login. Por favor intenta en 15 minutos.'
+          );
+        }
+        // Error 401 - Credenciales inválidas
+        else if (status === 401) {
+          setSubmitError('Credenciales inválidas. Verifica tu email y contraseña.');
+        }
+        // Otros errores del servidor
+        else {
+          setSubmitError(message || error.message || 'Error al iniciar sesión');
+        }
+      } else {
+        // Error de red o sin respuesta del servidor
+        setSubmitError(error.message || 'No se pudo conectar con el servidor');
+      }
     } finally {
       setIsSubmitting(false);
     }

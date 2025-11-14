@@ -156,3 +156,45 @@ export const getSignedUrl = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Subir imagen genérica con carpetas organizadas
+ * POST /api/v1/upload/image?folder=events|blog|profiles
+ * Body: form-data con campo "image"
+ * Requiere autenticación (user o admin)
+ * Task 8.2
+ */
+export const uploadImage = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'No se proporcionó ninguna imagen',
+      });
+    }
+
+    // Obtener carpeta del query param (default: temp)
+    const { folder = 'temp', subfolder } = req.query;
+
+    // Validar carpetas permitidas
+    const allowedFolders = ['events', 'blog', 'profiles', 'temp'];
+    if (!allowedFolders.includes(folder)) {
+      return res.status(400).json({
+        success: false,
+        message: `Carpeta no permitida. Use: ${allowedFolders.join(', ')}`,
+      });
+    }
+
+    // Subir a S3
+    const result = await uploadToS3(req.file, folder, subfolder);
+
+    res.status(200).json({
+      success: true,
+      message: 'Imagen subida exitosamente',
+      data: result,
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};

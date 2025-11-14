@@ -3,6 +3,11 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { s3Config } from '../config/aws.js';
 import crypto from 'crypto';
 import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * Genera un nombre único para el archivo
@@ -18,7 +23,65 @@ const generateUniqueFileName = (originalName) => {
 };
 
 /**
- * Sube un archivo a S3
+ * Guarda archivo localmente (modo desarrollo - fallback cuando S3 no está disponible)
+ * @param {Object} file - Archivo de multer
+ * @param {String} folder - Carpeta
+ * @param {String} subfolder - Subcarpeta opcional
+ * @returns {Promise<Object>}
+ */
+const saveFileLocally = async (file, folder, subfolder = '') => {
+  try {
+    const uniqueFileName = generateUniqueFileName(file.originalname);
+    const uploadsDir = path.join(__dirname, '../../uploads', folder);
+
+    // Crear directorio si no existe
+    if (subfolder) {
+      const subfolderDir = path.join(uploadsDir, subfolder);
+      if (!fs.existsSync(subfolderDir)) {
+        fs.mkdirSync(subfolderDir, { recursive: true });
+      }
+    } else {
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+    }
+
+    // Construir path del archivo
+    const filePath = subfolder
+      ? path.join(uploadsDir, subfolder, uniqueFileName)
+      : path.join(uploadsDir, uniqueFileName);
+
+    // Guardar archivo
+    fs.writeFileSync(filePath, file.buffer);
+
+    // Construir URL relativa
+    const key = subfolder
+      ? `${folder}/${subfolder}/${uniqueFileName}`
+      : `${folder}/${uniqueFileName}`;
+
+    const fileUrl = `http://localhost:${process.env.PORT || 8000}/uploads/${key}`;
+
+    console.log(`📁 Archivo guardado localmente (modo dev): ${key}`);
+
+    return {
+      success: true,
+      key,
+      url: fileUrl,
+      bucket: 'local-dev',
+      fileName: uniqueFileName,
+      originalName: file.originalname,
+      mimeType: file.mimetype,
+      size: file.size,
+      mode: 'local-dev',
+    };
+  } catch (error) {
+    console.error('Error al guardar archivo localmente:', error);
+    throw new Error(`Error al guardar archivo: ${error.message}`);
+  }
+};
+
+/**
+ * Sube un archivo a S3 (con fallback local en desarrollo)
  * @param {Object} file - Archivo de multer (req.file)
  * @param {String} folder - Carpeta en S3 (users, events, etc.)
  * @param {String} subfolder - Subcarpeta opcional (userId, eventId, etc.)
@@ -30,6 +93,12 @@ export const uploadToS3 = async (file, folder, subfolder = '') => {
       throw new Error('No se proporcionó ningún archivo');
     }
 
+    // Verificar si AWS S3 está configurado
+    if (!s3Config.bucket || s3Config.bucket === '' || s3Config.bucket === 'undefined') {
+      console.log('⚠️  AWS S3 no configurado. Usando almacenamiento local (modo desarrollo)');
+      return await saveFileLocally(file, folder, subfolder);
+    }
+
     // Generar nombre único
     const uniqueFileName = generateUniqueFileName(file.originalname);
 
@@ -39,34 +108,43 @@ export const uploadToS3 = async (file, folder, subfolder = '') => {
       : `${folder}/${uniqueFileName}`;
 
     // Parámetros para subir a S3
+    // Nota: No usamos ACL. El acceso público se controla mediante Bucket Policy
     const params = {
       Bucket: s3Config.bucket,
       Key: key,
       Body: file.buffer,
       ContentType: file.mimetype,
-      // ACL: 'private', // Por defecto es privado, usaremos signed URLs
     };
 
-    // Subir archivo a S3
-    const command = new PutObjectCommand(params);
-    await s3Config.client.send(command);
+    try {
+      // Subir archivo a S3
+      const command = new PutObjectCommand(params);
+      await s3Config.client.send(command);
 
-    // Construir URL del archivo
-    const fileUrl = `https://${s3Config.bucket}.s3.${s3Config.region}.amazonaws.com/${key}`;
+      // Construir URL del archivo
+      const fileUrl = `https://${s3Config.bucket}.s3.${s3Config.region}.amazonaws.com/${key}`;
 
-    return {
-      success: true,
-      key,
-      url: fileUrl,
-      bucket: s3Config.bucket,
-      fileName: uniqueFileName,
-      originalName: file.originalname,
-      mimeType: file.mimetype,
-      size: file.size,
-    };
+      console.log(`☁️  Archivo subido a S3: ${key}`);
+
+      return {
+        success: true,
+        key,
+        url: fileUrl,
+        bucket: s3Config.bucket,
+        fileName: uniqueFileName,
+        originalName: file.originalname,
+        mimeType: file.mimetype,
+        size: file.size,
+        mode: 's3',
+      };
+    } catch (s3Error) {
+      // Si falla S3, usar almacenamiento local como fallback
+      console.log(`⚠️  Error en S3. Usando almacenamiento local como fallback: ${s3Error.message}`);
+      return await saveFileLocally(file, folder, subfolder);
+    }
 
   } catch (error) {
-    console.error('Error al subir archivo a S3:', error);
+    console.error('Error al subir archivo:', error);
     throw new Error(`Error al subir archivo: ${error.message}`);
   }
 };

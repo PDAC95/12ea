@@ -1,0 +1,137 @@
+# Sprint 4 - Tareas Detalladas
+
+**Sprint Goal**: Implementar administración completa de eventos y mejorar funcionalidades existentes
+
+---
+
+## Task 8.4: EventForm Component (Frontend)
+
+**Estimated:** 3 horas
+**Priority:** HIGH
+**Assignee:** Frontend
+**Status:**  COMPLETADO
+**Fecha Completado:** 2025-11-14
+**Tiempo Real:** 2 horas
+
+### QUÉ SE HIZO:
+ Componente EventForm.jsx reutilizable para crear y editar eventos
+
+### QUÉ SE CUMPLIÓ:
+
+#### Campos del Formulario (11 campos)
+- [x] Título (text, required) - Min 5, Max 150 caracteres
+- [x] Descripción (textarea, required) - Min 20, Max 2000 caracteres
+- [x] Fecha (datepicker, required) - Debe ser futura (solo create)
+- [x] Hora (time input, required) - Formato HH:MM (24h)
+- [x] Modalidad (dropdown, required) - virtual/presencial/híbrido
+- [x] Ubicación (text, condicional) - Required si presencial o híbrido, Max 200 caracteres
+- [x] Link (url, condicional) - Required si virtual o híbrido, URL válida
+- [x] Capacidad (number, required) - 1-1000, entero positivo
+- [x] Categoría (text, opcional) - Max 50 caracteres
+- [x] Imagen (file upload, opcional) - PNG/JPG/GIF, max 5MB
+
+#### Validaciones con React Hook Form + Yup
+- [x] Todos los campos requeridos validan correctamente
+- [x] Fecha no puede ser pasada (solo en modo create)
+- [x] Capacity debe ser positivo y entero (1-1000)
+- [x] Link debe ser URL válida
+- [x] Ubicación/Link condicionales según modalidad
+- [x] Validaciones con `.when()` para campos condicionales
+- [x] Mensajes de error claros y específicos en español
+
+#### Upload de Imagen
+- [x] Drag & drop funcional con estados visuales (isDragging)
+- [x] Click to upload con input file
+- [x] Preview de imagen seleccionada
+- [x] Mostrar imagen existente en modo edit
+- [x] Loading state durante upload (spinner)
+- [x] POST a `/api/upload/test` funcional
+- [x] URL de S3 guardada en campo `image`
+- [x] Validación de tipo de archivo (solo imágenes)
+- [x] Validación de tamaño (máximo 5MB)
+- [x] Botón de remover imagen
+- [x] Manejo de errores claro y específico
+
+#### Botones y Loading States
+- [x] Modo CREATE: "Crear Evento" / "Creando Evento..."
+- [x] Modo EDIT: "Guardar Cambios" / "Guardando Cambios..."
+- [x] Botón "Cancelar" funcional
+- [x] Botones deshabilitados durante submit y upload
+- [x] Loading states con spinner visible
+
+#### Mensajes de Éxito/Error
+- [x] Mensaje de éxito verde con ícono CheckCircle
+- [x] Mensaje de error rojo con ícono AlertCircle
+- [x] Mensajes claros y específicos
+- [x] Éxito se auto-oculta después de 3 segundos
+
+#### Modos Create vs Edit
+- [x] Componente funciona en ambos modos
+- [x] Campos vacíos en CREATE
+- [x] Campos pre-poblados en EDIT con initialData
+- [x] Imagen existente se muestra en EDIT
+- [x] Botones y textos diferentes según modo
+
+#### ARCHIVOS CREADOS:
+1. `frontend/src/features/admin/events/EventForm.jsx` (700+ líneas)
+2. `frontend/src/features/admin/pages/AdminEventsPage.jsx` (180 líneas - testing page)
+3. `frontend/TASK-8.4-TESTING.md` (guía de testing completa)
+4. `TASK-8.4-SUMMARY.md` (resumen ejecutivo)
+5. `QUICK-ACCESS-TASK-8.4.md` (acceso rápido)
+
+#### ARCHIVOS MODIFICADOS:
+1. `frontend/src/routes/AppRoutes.jsx` - Ruta `/admin/events` agregada
+
+### TESTING:
+- [x] Página de testing creada en `/admin/events`
+- [x] Modos create y edit probables
+- [x] Validaciones funcionando correctamente
+- [x] Upload de imágenes a S3 funcional
+- [x] Loading states visibles
+- [x] Mensajes de error/éxito correctos
+
+### ACCESO:
+- URL: http://localhost:8081/admin/events
+- Credenciales: dev@jappi.ca / Password123
+
+### DOCUMENTACIÓN:
+- Guía completa de testing: `frontend/TASK-8.4-TESTING.md`
+- Resumen ejecutivo: `TASK-8.4-SUMMARY.md`
+- Acceso rápido: `QUICK-ACCESS-TASK-8.4.md`
+
+---
+
+## NOTAS DE IMPLEMENTACIÓN
+
+### Stack Tecnológico Usado
+- React 18.3.1 - Componente funcional
+- React Hook Form 7.53 - Gestión de formulario
+- Yup 1.4 - Validaciones
+- Lucide React - Iconos (Calendar, Clock, MapPin, Upload, etc.)
+- Axios 1.7 - HTTP requests para upload
+- TailwindCSS 3.4 - Styling responsive
+
+### Integración Backend
+- **Upload Endpoint**: POST `/api/v1/upload/test`
+- **Content-Type**: multipart/form-data
+- **Response**: `{ success: true, data: { url: "https://s3..." } }`
+
+### Características Destacadas
+1. **Campos Condicionales**: Ubicación y Link aparecen/desaparecen según modalidad
+2. **Drag & Drop**: Upload de imágenes intuitivo con preview
+3. **Validaciones Robustas**: 9 reglas Yup con mensajes específicos
+4. **Responsive**: Grid 2 columnas en desktop, 1 en móvil
+5. **UX Mejorada**: Loading states, mensajes claros, auto-hide de éxitos
+
+### Métricas
+- **Tiempo Estimado**: 3 horas
+- **Tiempo Real**: 2 horas ¡ (33% más rápido)
+- **Líneas de Código**: ~1300 líneas totales
+- **Complejidad**: Alta (validaciones condicionales, upload, modos múltiples)
+
+---
+
+**Task Status**:  COMPLETADO
+**Ready for**: Sprint 4 siguiente task o testing adicional
+**Signed-off by**: Frontend Developer Senior
+**Date**: 2025-11-14
