@@ -300,12 +300,146 @@ const getVerificationEmailHTML = (name, verificationUrl) => {
   `;
 };
 
+// Template de Welcome Email - CON DISEÑO DE LANDING
+const getWelcomeEmailHTML = (name, dashboardUrl) => {
+  return `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+      <style>
+        ${getVerificationEmailHTML('', '').match(/<style>([\s\S]*?)<\/style>/)[1]}
+        .features {
+          background: linear-gradient(135deg, #f0f9ff 0%, #fef3f8 100%);
+          border-left: 5px solid #14b8a6;
+          padding: 28px;
+          margin: 32px 0;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(20, 184, 166, 0.1);
+        }
+        .features strong {
+          color: #0f766e;
+          display: block;
+          margin-bottom: 16px;
+          font-size: 17px;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .features ul {
+          margin: 0;
+          padding-left: 20px;
+          list-style: none;
+        }
+        .features li {
+          margin: 12px 0;
+          font-size: 15px;
+          color: #134e4a;
+          line-height: 1.7;
+          padding-left: 8px;
+        }
+        .features li::before {
+          content: '✨ ';
+          margin-right: 8px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="email-wrapper">
+        <!-- Header con Logo -->
+        <div class="header">
+          <div class="logo">
+            <img src="https://entre-amigas-dev.s3.us-east-1.amazonaws.com/temp/logo.png" alt="Entre Amigas Logo" />
+          </div>
+          <h1>¡Bienvenida!</h1>
+          <p>Tu cuenta está activa y lista para conectar</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+          <h2 class="greeting">¡Hola ${name}!</h2>
+
+          <p>
+            ¡Bienvenida a <strong>Entre Amigas</strong>! <span class="heart">💜</span>
+          </p>
+
+          <p>
+            Estamos muy emocionadas de que formes parte de nuestra comunidad de mujeres hispanas en Canadá.
+            Este es un espacio creado para apoyarnos, conectarnos y crecer juntas.
+          </p>
+
+          <!-- Features Box -->
+          <div class="features">
+            <strong>En Entre Amigas podrás:</strong>
+            <ul>
+              <li>Conectar con otras mujeres que comparten tu experiencia migratoria</li>
+              <li>Participar en eventos y actividades comunitarias</li>
+              <li>Descubrir negocios y servicios de otras mujeres migrantes</li>
+              <li>Leer historias inspiradoras en nuestro blog</li>
+              <li>Acceder a recursos y apoyo para tu proceso migratorio</li>
+            </ul>
+          </div>
+
+          <!-- CTA Button -->
+          <div class="cta-container">
+            <a href="${dashboardUrl}" class="cta-button">
+              🚀 Explorar la Comunidad
+            </a>
+          </div>
+
+          <!-- Divider -->
+          <div class="divider"></div>
+
+          <p style="font-size: 14px; color: #718096;">
+            Si tienes alguna pregunta o necesitas ayuda, no dudes en contactarnos.
+            ¡Estamos aquí para apoyarte!
+          </p>
+
+          <p style="margin-top: 32px; text-align: center; font-size: 15px;">
+            Con cariño,<br>
+            <strong style="font-size: 17px;">El equipo de Entre Amigas <span class="heart">💜</span></strong>
+          </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+          <div class="footer-logo">Entre Amigas</div>
+          <p class="footer-tagline">Comunidad de mujeres hispanas en Canadá</p>
+
+          <p style="margin: 20px 0;">
+            Conecta con mujeres que comparten tu experiencia migratoria.<br>
+            Encuentra apoyo, amistad y oportunidades.
+          </p>
+
+          <p style="margin-top: 24px; font-size: 13px;">
+            © ${new Date().getFullYear()} Entre Amigas. Todos los derechos reservados.
+          </p>
+
+          <div class="footer-links">
+            <a href="https://entreamigas.ca/privacy">Privacidad</a>
+            <span style="color: #4a5568; margin: 0 8px;">·</span>
+            <a href="https://entreamigas.ca/terms">Términos</a>
+            <span style="color: #4a5568; margin: 0 8px;">·</span>
+            <a href="https://entreamigas.ca/contact">Contacto</a>
+          </div>
+
+          <p style="margin-top: 20px; font-size: 13px; color: #718096;">
+            Hecho con <span class="heart">💜</span> en Canadá
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+};
+
 // Función principal
 const generatePreview = (type = 'verification') => {
   let html = '';
   let filename = '';
 
   const verificationUrl = `${testData.frontendUrl}/verify-email/${testData.token}`;
+  const dashboardUrl = `${testData.frontendUrl}/dashboard`;
 
   switch (type) {
     case 'verification':
@@ -313,9 +447,14 @@ const generatePreview = (type = 'verification') => {
       filename = 'email-preview-verification.html';
       break;
 
+    case 'welcome':
+      html = getWelcomeEmailHTML(testData.name, dashboardUrl);
+      filename = 'email-preview-welcome.html';
+      break;
+
     default:
       console.error(`❌ Tipo de email no reconocido: "${type}"`);
-      console.log('Tipos disponibles: verification');
+      console.log('Tipos disponibles: verification, welcome');
       process.exit(1);
   }
 
