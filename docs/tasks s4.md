@@ -942,10 +942,10 @@ Configurar GitHub Actions para CI/CD del backend.
 
 ### Task CI-2: GitHub Actions Workflow (Frontend)
 
-**Estimated:** 1.5 horas  
-**Priority:** HIGH  
-**Assignee:** Frontend  
-**Status:** 🔲 To Do  
+**Estimated:** 1.5 horas
+**Priority:** HIGH
+**Assignee:** Frontend
+**Status:** ✅ COMPLETADO
 **Dependencies:** Código en GitHub
 
 #### QUÉ HACER:
@@ -954,18 +954,18 @@ Configurar GitHub Actions para CI/CD del frontend.
 
 #### QUÉ DEBE CUMPLIR:
 
-- [ ] Crear archivo `.github/workflows/frontend-ci-cd.yml`
-- [ ] Triggers:
+- [x] Crear archivo `.github/workflows/frontend-ci-cd.yml`
+- [x] Triggers:
   - Push a branch `main`
   - Pull requests a `main`
-- [ ] Jobs:
+- [x] Jobs:
   - **lint**: Ejecutar ESLint
   - **build**: Build de producción con Vite
   - **deploy**: Deploy a Vercel/Netlify (solo en main)
-- [ ] Configurar secrets:
+- [x] Configurar secrets:
   - VITE_API_URL
   - VERCEL_TOKEN (o NETLIFY_TOKEN)
-- [ ] Build artifacts guardados
+- [x] Build artifacts guardados
 
 #### ARCHIVOS AFECTADOS:
 

@@ -1,0 +1,161 @@
+name: Frontend CI/CD
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-ci-cd.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-ci-cd.yml'
+
+# Evitar múltiples ejecuciones concurrentes
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Job 1: Lint - Verificar calidad del código
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Run ESLint
+        working-directory: ./frontend
+        run: npm run lint
+        continue-on-error: false
+
+  # Job 2: Build - Build de producción con Vite
+  build:
+    name: Build Production
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Build with Vite
+        working-directory: ./frontend
+        run: npm run build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL || 'https://entre-amigas-backend.up.railway.app/api' }}
+
+      - name: Verify build output
+        working-directory: ./frontend
+        run: |
+          echo "Verificando build output..."
+          ls -la dist/
+          echo "✅ Build artifacts generados correctamente"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend/dist/
+          retention-days: 7
+
+  # Job 3: Deploy - Deploy a Vercel (solo en main)
+  deploy:
+    name: Deploy to Vercel
+    runs-on: ubuntu-latest
+    needs: [lint, build]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel Environment Information
+        working-directory: ./frontend
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        continue-on-error: true
+
+      - name: Build Project Artifacts
+        working-directory: ./frontend
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+
+      - name: Deploy to Vercel
+        working-directory: ./frontend
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        id: deploy
+
+      - name: Deployment notification
+        if: success()
+        run: |
+          echo "✅ Frontend deployed successfully to Vercel!"
+          echo "🚀 Check your deployment at Vercel dashboard"
+
+      - name: Deployment failed notification
+        if: failure()
+        run: |
+          echo "❌ Frontend deployment failed!"
+          echo "Please check the logs for more details."
+
+  # Job 4: Notificaciones
+  notify:
+    name: Send Notifications
+    runs-on: ubuntu-latest
+    needs: [lint, build, deploy]
+    if: always()
+
+    steps:
+      - name: Success notification
+        if: ${{ needs.lint.result == 'success' && needs.build.result == 'success' }}
+        run: |
+          echo "✅ CI/CD Pipeline completed successfully!"
+          echo "📦 Lint: ${{ needs.lint.result }}"
+          echo "🔨 Build: ${{ needs.build.result }}"
+          echo "🚀 Deploy: ${{ needs.deploy.result }}"
+
+      - name: Failure notification
+        if: ${{ needs.lint.result == 'failure' || needs.build.result == 'failure' }}
+        run: |
+          echo "❌ CI/CD Pipeline failed!"
+          echo "📦 Lint: ${{ needs.lint.result }}"
+          echo "🔨 Build: ${{ needs.build.result }}"
+          echo "🚀 Deploy: ${{ needs.deploy.result }}"
+          exit 1

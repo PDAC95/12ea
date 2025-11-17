@@ -60,7 +60,8 @@
       "Bash(cmd //c \"taskkill /F /PID 1916\")",
       "Bash(cmd //c \"taskkill /F /PID 132124\")",
       "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MTI1M2VkMTBlMzM3NmJhOGU4ODM2NiIsInR5cCI6ImF1dGgiLCJlbWFpbCI6ImRldkBqYXBwaS5jYSIsInJvbGUiOiJhZG1pbiIsImlzVmVyaWZpZWQiOnRydWUsImlhdCI6MTc2MzE1MzgwNiwiZXhwIjoxNzYzNzU4NjA2fQ.x7h2PIljzbCJqZDIpHx8piuNlJ4b9mEDtcMAP-1FA7w\")",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(.env.example)"
     ]
   },
   "enableAllProjectMcpServers": true,
