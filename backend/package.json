@@ -24,7 +24,10 @@
     "seed:registrations": "node src/scripts/seedEventRegistrations.js",
     "seed:blog": "node src/scripts/seedBlogPosts.js",
     "admin:set": "node src/scripts/setAdminUser.js",
-    "admin:create": "node src/scripts/createFirstAdmin.js"
+    "admin:create": "node src/scripts/createFirstAdmin.js",
+    "verify:resend": "node verify-resend-config.js",
+    "preview:email": "node src/scripts/preview-email.js verification",
+    "preview:email:welcome": "node src/scripts/preview-email.js welcome"
   },
   "keywords": [
     "express",
