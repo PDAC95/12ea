@@ -105,7 +105,10 @@ export const businessSchema = Yup.object().shape({
   phone: Yup.string()
     .nullable()
     .transform((value, originalValue) => (originalValue?.trim() === '' ? null : value))
-    .matches(PHONE_REGEX, 'Formato de teléfono inválido (10-20 dígitos, puede incluir espacios, guiones, paréntesis)')
+    .matches(
+      PHONE_REGEX,
+      'Formato de teléfono inválido. Ejemplos válidos: +1 (416) 123-4567, 416-123-4567, 4161234567'
+    )
     .max(20, 'El teléfono no puede exceder 20 caracteres'),
 
   /**
@@ -115,8 +118,8 @@ export const businessSchema = Yup.object().shape({
   email: Yup.string()
     .nullable()
     .transform((value, originalValue) => (originalValue?.trim() === '' ? null : value))
-    .matches(EMAIL_REGEX, 'Formato de email inválido')
-    .email('Debe ser un email válido')
+    .matches(EMAIL_REGEX, 'Formato de email inválido. Ejemplo: contacto@ejemplo.com')
+    .email('Debe ser un email válido con @ y dominio')
     .max(100, 'El email no puede exceder 100 caracteres'),
 
   /**
@@ -126,7 +129,10 @@ export const businessSchema = Yup.object().shape({
   whatsapp: Yup.string()
     .nullable()
     .transform((value, originalValue) => (originalValue?.trim() === '' ? null : value))
-    .matches(PHONE_REGEX, 'Formato de WhatsApp inválido (10-20 dígitos, puede incluir espacios, guiones, paréntesis)')
+    .matches(
+      PHONE_REGEX,
+      'Formato de WhatsApp inválido. Ejemplos válidos: +1 (416) 123-4567, 416-123-4567, 4161234567'
+    )
     .max(20, 'El WhatsApp no puede exceder 20 caracteres'),
 
   /**
@@ -145,7 +151,10 @@ export const businessSchema = Yup.object().shape({
   website: Yup.string()
     .nullable()
     .transform((value, originalValue) => (originalValue?.trim() === '' ? null : value))
-    .matches(URL_REGEX, 'Formato de URL inválido (ej: https://ejemplo.com)')
+    .matches(
+      URL_REGEX,
+      'Formato de URL inválido. Ejemplos válidos: https://ejemplo.com, http://www.ejemplo.com, ejemplo.com'
+    )
     .max(200, 'La URL no puede exceder 200 caracteres'),
 
   /**
@@ -157,7 +166,7 @@ export const businessSchema = Yup.object().shape({
     .transform((value, originalValue) => (originalValue?.trim() === '' ? null : value))
     .matches(
       INSTAGRAM_REGEX,
-      'Handle de Instagram inválido (solo letras, números, puntos y guiones bajos, máx 30 caracteres)'
+      'Handle de Instagram inválido. Solo letras, números, puntos y guiones bajos. Ejemplos: mi_negocio, negocio.123'
     )
     .max(30, 'El handle de Instagram no puede exceder 30 caracteres'),
 
@@ -170,7 +179,7 @@ export const businessSchema = Yup.object().shape({
     .transform((value, originalValue) => (originalValue?.trim() === '' ? null : value))
     .matches(
       FACEBOOK_REGEX,
-      'Handle de Facebook inválido (solo letras, números y puntos, 5-50 caracteres)'
+      'Handle de Facebook inválido. Solo letras, números y puntos (mín 5 caracteres). Ejemplos: mi.negocio, negocio123'
     )
     .min(5, 'El handle de Facebook debe tener al menos 5 caracteres')
     .max(50, 'El handle de Facebook no puede exceder 50 caracteres'),

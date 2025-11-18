@@ -180,18 +180,70 @@ const BusinessForm = ({ initialData, onSubmit, onCancel, isLoading = false, subm
     </div>
   );
 
+  /**
+   * Renderizar error del servidor con información detallada
+   * Sprint 5 - Task 5.4.3: Mejorar mensajes de error
+   */
+  const renderServerError = () => {
+    if (!submitError) return null;
+
+    // Detectar tipo de error
+    const isValidationError = submitError.toLowerCase().includes('inválid') ||
+                               submitError.toLowerCase().includes('formato') ||
+                               submitError.toLowerCase().includes('requerido');
+
+    const isUrlError = submitError.toLowerCase().includes('url') ||
+                      submitError.toLowerCase().includes('website');
+
+    return (
+      <div className="bg-red-50 border-2 border-red-300 rounded-lg p-4 flex items-start gap-3">
+        <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+        <div className="flex-1">
+          <h4 className="text-base font-semibold text-red-900 mb-1">
+            {isValidationError ? '❌ Error de Validación' : '❌ Error al Guardar el Negocio'}
+          </h4>
+          <p className="text-sm text-red-800 mb-2 font-medium">{submitError}</p>
+
+          {/* Sugerencias para errores de validación */}
+          {isValidationError && (
+            <div className="bg-red-100 border border-red-300 rounded-md p-3 mt-2">
+              <p className="text-xs font-semibold text-red-900 mb-2">💡 Sugerencias para Resolver:</p>
+              <ul className="text-xs text-red-800 space-y-1.5 ml-4 list-disc">
+                <li>Verifica que todos los campos marcados con <span className="text-red-600 font-bold">*</span> estén completos</li>
+                <li>Revisa los formatos de contacto (teléfono, email, WhatsApp)</li>
+                <li className="font-medium">Los mensajes de error bajo cada campo muestran ejemplos válidos</li>
+              </ul>
+            </div>
+          )}
+
+          {/* Ayuda específica para errores de URL */}
+          {isUrlError && (
+            <div className="bg-blue-50 border border-blue-300 rounded-md p-3 mt-2">
+              <p className="text-xs font-semibold text-blue-900 mb-1">🌐 Formato de URL Correcto:</p>
+              <ul className="text-xs text-blue-800 space-y-0.5 ml-4 list-disc">
+                <li>✅ https://ejemplo.com</li>
+                <li>✅ http://www.ejemplo.com</li>
+                <li>✅ ejemplo.com (se agregará http:// automáticamente)</li>
+                <li>❌ www ejemplo com (sin puntos ni protocolo)</li>
+              </ul>
+            </div>
+          )}
+
+          {/* Mensaje para errores 400 genéricos */}
+          {!isValidationError && !isUrlError && submitError.includes('400') && (
+            <p className="text-xs text-red-700 mt-2 bg-red-100 border border-red-200 rounded px-2 py-1.5 italic">
+              ⚠️ El servidor rechazó los datos. Por favor, verifica que todos los campos tengan el formato correcto y vuelve a intentar.
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-6">
-      {/* Error del servidor */}
-      {submitError && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-          <div>
-            <h4 className="text-sm font-medium text-red-900">Error al guardar</h4>
-            <p className="text-sm text-red-700 mt-1">{submitError}</p>
-          </div>
-        </div>
-      )}
+      {/* Error del servidor mejorado */}
+      {renderServerError()}
 
       {/* Sección: Información Básica */}
       <div className="bg-white rounded-lg border border-gray-200 p-6">
