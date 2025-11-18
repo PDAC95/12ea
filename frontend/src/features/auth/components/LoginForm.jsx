@@ -6,6 +6,7 @@ import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import authService from '../services/authService';
 import { useAuth } from '../context/AuthContext';
+import { API_URL } from '../../../shared/config/constants';
 
 /**
  * Schema de validación con Yup para el formulario de login
@@ -215,8 +216,7 @@ const LoginForm = () => {
       <button
         type="button"
         onClick={() => {
-          const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
-          window.location.href = `${backendUrl}/auth/google`;
+          window.location.href = `${API_URL}/auth/google`;
         }}
         className="w-full bg-white border-2 border-gray-300 text-gray-700 py-3 px-4 rounded-xl font-semibold hover:bg-gray-50 hover:border-primary-300 hover:shadow-soft transition-all duration-300 flex items-center justify-center gap-3"
       >
