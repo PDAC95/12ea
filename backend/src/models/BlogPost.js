@@ -1,8 +1,20 @@
 import mongoose from 'mongoose';
+import { VALID_CATEGORY_IDS } from '../constants/blog.js';
 
 /**
  * BlogPost Model - Entre Amigas
  * Modelo para gestión de artículos del blog sobre wellness, amistad y migración
+ *
+ * Categorías oficiales:
+ * - bienestar 🧘‍♀️
+ * - finanzas 💰
+ * - maternidad 👶
+ * - emprendimiento 💼
+ * - inmigracion 🌍
+ * - comunidad 🤝
+ * - educacion 📚
+ *
+ * Last Updated: 2025-01-19 (Sprint 5 - Task 5.6.1)
  */
 
 const blogPostSchema = new mongoose.Schema(
@@ -61,15 +73,8 @@ const blogPostSchema = new mongoose.Schema(
       type: String,
       required: [true, 'La categoría es requerida'],
       enum: {
-        values: [
-          'Wellness',
-          'Amistad',
-          'Amor Propio',
-          'Migración',
-          'Consejos',
-          'Historias',
-        ],
-        message: '{VALUE} no es una categoría válida',
+        values: VALID_CATEGORY_IDS,
+        message: '{VALUE} no es una categoría válida. Opciones: bienestar, finanzas, maternidad, emprendimiento, inmigracion, comunidad, educacion',
       },
       index: true, // Índice para filtrar por categoría
     },

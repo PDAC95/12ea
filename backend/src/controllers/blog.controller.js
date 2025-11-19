@@ -1,4 +1,5 @@
 import BlogPost from '../models/BlogPost.js';
+import { BLOG_CATEGORIES, getCategoriesForSelect } from '../constants/blog.js';
 
 /**
  * Blog Controller - Entre Amigas
@@ -8,6 +9,33 @@ import BlogPost from '../models/BlogPost.js';
 // =====================================
 // PUBLIC ENDPOINTS
 // =====================================
+
+/**
+ * @desc    Get all blog categories
+ * @route   GET /api/v1/blog/categories
+ * @access  Public
+ */
+export const getCategories = async (req, res) => {
+  try {
+    res.status(200).json({
+      success: true,
+      data: {
+        categories: BLOG_CATEGORIES,
+        categoriesForSelect: getCategoriesForSelect(),
+      },
+      message: 'Categorías de blog obtenidas exitosamente',
+    });
+  } catch (error) {
+    console.error('Error al obtener categorías de blog:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'SERVER_ERROR',
+        message: 'Error al obtener categorías de blog',
+      },
+    });
+  }
+};
 
 /**
  * @desc    Get all published blog posts

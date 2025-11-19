@@ -6,6 +6,7 @@ import {
   updateBlogPost,
   deleteBlogPost,
   getBlogStats,
+  getCategories,
 } from '../controllers/blog.controller.js';
 import { protect, requireAdmin } from '../middleware/auth.middleware.js';
 
@@ -16,10 +17,17 @@ const router = express.Router();
 // =====================================
 
 /**
+ * GET /api/v1/blog/categories
+ * Obtener lista de categorías oficiales del blog
+ * IMPORTANTE: Esta ruta debe ir ANTES de '/:slug' para evitar conflictos
+ */
+router.get('/categories', getCategories);
+
+/**
  * GET /api/v1/blog
  * Lista pública de artículos del blog (solo publicados)
  * Query params:
- *   - category: Wellness|Amistad|Amor Propio|Migración|Consejos|Historias
+ *   - category: bienestar|finanzas|maternidad|emprendimiento|inmigracion|comunidad|educacion
  *   - page: número de página (default: 1)
  *   - limit: resultados por página (default: 10, max: 50)
  *   - featured: true para artículos destacados

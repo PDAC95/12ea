@@ -106,9 +106,7 @@ const businessSchema = new mongoose.Schema(
       validate: {
         validator: function (value) {
           if (!value) return true; // Campo opcional
-          return /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(
-            value
-          );
+          return /^(https?:\/\/)?(www\.)?[\w\-]+(\.[\w\-]+)+.*$/.test(value);
         },
         message: 'Por favor ingresa una URL válida',
       },
@@ -132,9 +130,11 @@ const businessSchema = new mongoose.Schema(
       validate: {
         validator: function (value) {
           if (!value) return true; // Campo opcional
-          return /^(https?:\/\/)?(www\.)?facebook\.com\/[\w.]+\/?$/.test(value);
+          const usernameRegex = /^[a-zA-Z0-9.]{5,50}$/;
+          const urlRegex = /^(https?:\/\/)?(www\.)?facebook\.com\/[\w.]+\/?$/;
+          return usernameRegex.test(value) || urlRegex.test(value);
         },
-        message: 'Por favor ingresa una URL de Facebook válida',
+        message: 'Por favor ingresa un usuario de Facebook válido (5-50 caracteres) o URL completa',
       },
     },
 

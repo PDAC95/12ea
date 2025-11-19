@@ -93,8 +93,8 @@ export const createBusinessValidation = [
   body('website')
     .optional({ checkFalsy: true })
     .trim()
-    .matches(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/)
-    .withMessage('El sitio web debe tener un formato válido de URL'),
+    .matches(/^(https?:\/\/)?(www\.)?[\w\-]+(\.[\w\-]+)+.*$/)
+    .withMessage('El sitio web debe tener un formato válido. Ejemplos: ejemplo.com, www.ejemplo.com, https://ejemplo.com'),
 
   // Instagram (opcional)
   body('instagram')
@@ -115,8 +115,16 @@ export const createBusinessValidation = [
   body('facebook')
     .optional({ checkFalsy: true })
     .trim()
-    .matches(/^(https?:\/\/)?(www\.)?facebook\.com\/[\w.]+\/?$/)
-    .withMessage('Facebook debe ser una URL válida de Facebook'),
+    .custom((value) => {
+      if (!value) return true;
+      const usernameRegex = /^[a-zA-Z0-9.]{5,50}$/;
+      const urlRegex = /^(https?:\/\/)?(www\.)?facebook\.com\/[\w.]+\/?$/;
+
+      if (!usernameRegex.test(value) && !urlRegex.test(value)) {
+        throw new Error('Facebook debe ser un nombre de usuario válido (5-50 caracteres) o URL de Facebook');
+      }
+      return true;
+    }),
 
   // Logo (opcional)
   body('logo')
@@ -210,8 +218,8 @@ export const updateBusinessValidation = [
   body('website')
     .optional({ checkFalsy: true })
     .trim()
-    .matches(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/)
-    .withMessage('El sitio web debe tener un formato válido de URL'),
+    .matches(/^(https?:\/\/)?(www\.)?[\w\-]+(\.[\w\-]+)+.*$/)
+    .withMessage('El sitio web debe tener un formato válido. Ejemplos: ejemplo.com, www.ejemplo.com, https://ejemplo.com'),
 
   // Instagram (opcional)
   body('instagram')
@@ -231,8 +239,16 @@ export const updateBusinessValidation = [
   body('facebook')
     .optional({ checkFalsy: true })
     .trim()
-    .matches(/^(https?:\/\/)?(www\.)?facebook\.com\/[\w.]+\/?$/)
-    .withMessage('Facebook debe ser una URL válida de Facebook'),
+    .custom((value) => {
+      if (!value) return true;
+      const usernameRegex = /^[a-zA-Z0-9.]{5,50}$/;
+      const urlRegex = /^(https?:\/\/)?(www\.)?facebook\.com\/[\w.]+\/?$/;
+
+      if (!usernameRegex.test(value) && !urlRegex.test(value)) {
+        throw new Error('Facebook debe ser un nombre de usuario válido (5-50 caracteres) o URL de Facebook');
+      }
+      return true;
+    }),
 
   // Logo (opcional)
   body('logo')
@@ -279,19 +295,31 @@ export const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
+    // 🔍 DEBUGGING: Log de errores de validación express-validator
+    console.error('\n⚠️ === VALIDATION ERRORS (express-validator) ===');
+    console.error('📦 Request Body:', JSON.stringify(req.body, null, 2));
+    console.error('❌ Errores encontrados:', errors.array().length);
+
     // Formatear errores para respuesta más amigable
     const formattedErrors = errors.array().map((error) => ({
       field: error.path || error.param,
       message: error.msg,
       value: error.value,
+      location: error.location,
     }));
+
+    console.error('📛 Detalle de errores:', JSON.stringify(formattedErrors, null, 2));
+    console.error('=== END VALIDATION ERRORS ===\n');
 
     return res.status(400).json({
       success: false,
-      message: 'Error de validación',
+      message: 'Error de validación (express-validator)',
       errors: formattedErrors,
     });
   }
+
+  // 🔍 DEBUGGING: Log de validación exitosa
+  console.log('✅ Validación de express-validator pasó correctamente');
 
   next();
 };
