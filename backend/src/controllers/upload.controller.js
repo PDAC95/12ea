@@ -166,7 +166,15 @@ export const getSignedUrl = async (req, res, next) => {
  */
 export const uploadImage = async (req, res, next) => {
   try {
+    console.log('\n📤 === UPLOAD IMAGE DEBUG ===');
+    console.log('📦 req.file:', req.file);
+    console.log('📦 req.body:', req.body);
+    console.log('📦 req.query:', req.query);
+    console.log('📦 Content-Type:', req.headers['content-type']);
+    console.log('=== END DEBUG ===\n');
+
     if (!req.file) {
+      console.error('❌ NO FILE RECEIVED');
       return res.status(400).json({
         success: false,
         message: 'No se proporcionó ninguna imagen',
