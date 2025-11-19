@@ -108,6 +108,90 @@ export const getAll = async (req, res) => {
 };
 
 /**
+ * @route   GET /api/v1/admin/businesses
+ * @desc    Obtener TODOS los negocios (incluye inactivos) - Admin only
+ * @access  Private/Admin
+ * @query   search, category, city, page, limit
+ */
+export const getAllAdmin = async (req, res) => {
+  try {
+    const {
+      search,
+      category,
+      city,
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'desc',
+    } = req.query;
+
+    // Build query - SIN FILTRO de isActive (muestra todos)
+    const query = {};
+
+    // Filtro por categoría
+    if (category) {
+      query.category = category;
+    }
+
+    // Filtro por ciudad
+    if (city) {
+      query.city = { $regex: new RegExp(city, 'i') };
+    }
+
+    // Búsqueda de texto completo
+    if (search) {
+      query.$text = { $search: search };
+    }
+
+    // Paginación
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    // Sorting
+    const sortOptions = {};
+    if (search) {
+      sortOptions.score = { $meta: 'textScore' };
+    } else {
+      sortOptions[sortBy] = sortOrder === 'desc' ? -1 : 1;
+    }
+
+    // Execute query
+    const projection = search ? { score: { $meta: 'textScore' } } : {};
+
+    const businesses = await Business.find(query, projection)
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(limitNum)
+      .populate('owner', 'preferredName email profileImage city')
+      .lean();
+
+    // Total count
+    const total = await Business.countDocuments(query);
+    const totalPages = Math.ceil(total / limitNum);
+
+    // Response en formato esperado por frontend
+    res.status(200).json({
+      success: true,
+      businesses, // Array de negocios
+      total,
+      page: pageNum,
+      limit: limitNum,
+      totalPages,
+      hasNext: pageNum < totalPages,
+      hasPrev: pageNum > 1,
+    });
+  } catch (error) {
+    console.error('Error en getAllAdmin:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener negocios',
+      error: error.message,
+    });
+  }
+};
+
+/**
  * @route   GET /api/v1/businesses/:id
  * @desc    Obtener detalle de un negocio por ID
  * @access  Public
@@ -287,6 +371,12 @@ export const getStats = async (req, res) => {
  */
 export const create = async (req, res) => {
   try {
+    // 🔍 DEBUGGING: Log del request body completo
+    console.log('\n📋 === CREATE BUSINESS DEBUG ===');
+    console.log('🔐 Usuario autenticado:', req.user?.id, req.user?.email);
+    console.log('📦 Request Body:', JSON.stringify(req.body, null, 2));
+    console.log('📝 Campos recibidos:', Object.keys(req.body));
+
     const {
       name,
       category,
@@ -303,8 +393,21 @@ export const create = async (req, res) => {
       images,
     } = req.body;
 
+    // 🔍 DEBUGGING: Log de campos extraídos
+    console.log('\n✅ Campos extraídos:');
+    console.log('  - name:', name);
+    console.log('  - category:', category);
+    console.log('  - description:', description ? `${description.substring(0, 50)}...` : 'N/A');
+    console.log('  - city:', city);
+    console.log('  - website:', website || 'N/A');
+    console.log('  - phone:', phone || 'N/A');
+    console.log('  - email:', email || 'N/A');
+
     // El owner es el usuario autenticado
     const owner = req.user.id;
+
+    // 🔍 DEBUGGING: Log antes de crear
+    console.log('\n🚀 Intentando crear negocio en MongoDB...');
 
     // Crear negocio
     const business = await Business.create({
@@ -324,6 +427,9 @@ export const create = async (req, res) => {
       owner,
     });
 
+    console.log('✅ Negocio creado exitosamente:', business._id);
+    console.log('=== END DEBUG ===\n');
+
     // Populate owner para respuesta
     await business.populate('owner', 'preferredName email');
 
@@ -333,21 +439,33 @@ export const create = async (req, res) => {
       data: business,
     });
   } catch (error) {
-    console.error('Error en create business:', error);
+    console.error('\n❌ === ERROR EN CREATE BUSINESS ===');
+    console.error('📛 Error completo:', error);
+    console.error('📛 Error message:', error.message);
+    console.error('📛 Error name:', error.name);
 
     // Errores de validación de Mongoose
     if (error.name === 'ValidationError') {
+      console.error('📛 Validation Error detectado');
       const errors = Object.values(error.errors).map((err) => ({
         field: err.path,
         message: err.message,
+        value: err.value,
       }));
+
+      console.error('📛 Errores de validación:', JSON.stringify(errors, null, 2));
+      console.error('=== END ERROR DEBUG ===\n');
 
       return res.status(400).json({
         success: false,
-        message: 'Error de validación',
+        message: 'Error de validación de MongoDB',
         errors,
       });
     }
+
+    console.error('📛 Error tipo:', typeof error);
+    console.error('📛 Error stack:', error.stack);
+    console.error('=== END ERROR DEBUG ===\n');
 
     res.status(500).json({
       success: false,
