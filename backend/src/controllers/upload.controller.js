@@ -177,7 +177,7 @@ export const uploadImage = async (req, res, next) => {
     const { folder = 'temp', subfolder } = req.query;
 
     // Validar carpetas permitidas
-    const allowedFolders = ['events', 'blog', 'profiles', 'temp'];
+    const allowedFolders = ['events', 'blog', 'profiles', 'businesses', 'temp'];
     if (!allowedFolders.includes(folder)) {
       return res.status(400).json({
         success: false,
