@@ -50,10 +50,11 @@ export const BUSINESS_CATEGORIES = [
 
 /**
  * Regex patterns (basados en backend/src/models/Business.js)
+ * Sprint 5 - Task 5.4.1: URL regex actualizado para aceptar más formatos
  */
 const PHONE_REGEX = /^[\d\s\-\+\()]{10,20}$/;
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-const URL_REGEX = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+const URL_REGEX = /^(https?:\/\/)?(www\.)?[\w\-]+(\.[\w\-]+)+.*$/;
 const INSTAGRAM_REGEX = /^[a-zA-Z0-9._]{1,30}$/;
 const FACEBOOK_REGEX = /^[a-zA-Z0-9.]{5,50}$/;
 
@@ -183,6 +184,17 @@ export const businessSchema = Yup.object().shape({
     )
     .min(5, 'El handle de Facebook debe tener al menos 5 caracteres')
     .max(50, 'El handle de Facebook no puede exceder 50 caracteres'),
+
+  /**
+   * Logo del negocio
+   * Opcional, URL de la imagen en S3
+   * Sprint 5 - Task: Logo Upload
+   */
+  logo: Yup.string()
+    .nullable()
+    .transform((value, originalValue) => (originalValue?.trim() === '' ? null : value))
+    .url('La URL del logo debe ser válida')
+    .max(500, 'La URL del logo no puede exceder 500 caracteres'),
 });
 
 /**
@@ -200,6 +212,7 @@ export const defaultBusinessValues = {
   website: '',
   instagram: '',
   facebook: '',
+  logo: '',
 };
 
 /**
@@ -222,6 +235,7 @@ export const businessToFormValues = (business) => {
     website: business.website || '',
     instagram: business.instagram || '',
     facebook: business.facebook || '',
+    logo: business.logo || '',
   };
 };
 

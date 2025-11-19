@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import PropTypes from 'prop-types';
@@ -9,6 +9,7 @@ import {
   businessToFormValues,
   BUSINESS_CATEGORIES,
 } from '../validation/businessSchema';
+import ImageUpload from '../../../shared/components/ImageUpload';
 
 /**
  * BusinessForm - Formulario para crear/editar negocios
@@ -54,6 +55,11 @@ const BusinessForm = ({ initialData, onSubmit, onCancel, isLoading = false, subm
   });
 
   /**
+   * Estado para logo upload
+   */
+  const [logoUrl, setLogoUrl] = useState(initialData?.logo || null);
+
+  /**
    * Resetear form si cambian los datos iniciales (modo edit)
    */
   useEffect(() => {
@@ -66,7 +72,21 @@ const BusinessForm = ({ initialData, onSubmit, onCancel, isLoading = false, subm
    * Handler para submit
    */
   const onSubmitHandler = (data) => {
-    onSubmit(data);
+    console.log('🔍 === BUSINESS FORM SUBMIT DEBUG ===');
+    console.log('📋 Data from React Hook Form:', data);
+    console.log('🖼️  logoUrl state:', logoUrl);
+
+    // Agregar logo al data antes de enviar
+    const submitData = {
+      ...data,
+      logo: logoUrl,
+    };
+
+    console.log('📤 Final submitData:', submitData);
+    console.log('📝 submitData keys:', Object.keys(submitData));
+    console.log('=== END DEBUG ===');
+
+    onSubmit(submitData);
   };
 
   /**
@@ -286,6 +306,22 @@ const BusinessForm = ({ initialData, onSubmit, onCancel, isLoading = false, subm
             rows: 5,
           })}
         </div>
+
+        {/* Logo */}
+        <div className="mt-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Logo del Negocio
+          </label>
+          <ImageUpload
+            currentImage={logoUrl}
+            onImageUploaded={setLogoUrl}
+            folder="businesses"
+            maxSizeMB={5}
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Esta imagen aparecerá en la tarjeta del negocio
+          </p>
+        </div>
       </div>
 
       {/* Sección: Información de Contacto */}
@@ -318,9 +354,9 @@ const BusinessForm = ({ initialData, onSubmit, onCancel, isLoading = false, subm
           {renderTextField({
             name: 'website',
             label: 'Sitio Web',
-            type: 'url',
-            placeholder: 'https://ejemplo.com',
-            helperText: 'Incluye http:// o https://',
+            type: 'text',
+            placeholder: 'www.ejemplo.com',
+            helperText: 'Opcional. Puedes incluir http:// o solo escribir ejemplo.com',
           })}
         </div>
       </div>

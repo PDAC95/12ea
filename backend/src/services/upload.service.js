@@ -118,13 +118,20 @@ export const uploadToS3 = async (file, folder, subfolder = '') => {
 
     try {
       // Subir archivo a S3
+      console.log(`🔄 Intentando subir a S3...`);
+      console.log(`   Bucket: ${s3Config.bucket}`);
+      console.log(`   Region: ${s3Config.region}`);
+      console.log(`   Key: ${key}`);
+
       const command = new PutObjectCommand(params);
-      await s3Config.client.send(command);
+      const result = await s3Config.client.send(command);
 
       // Construir URL del archivo
       const fileUrl = `https://${s3Config.bucket}.s3.${s3Config.region}.amazonaws.com/${key}`;
 
-      console.log(`☁️  Archivo subido a S3: ${key}`);
+      console.log(`✅ ÉXITO: Archivo subido a S3: ${key}`);
+      console.log(`   ETag: ${result.ETag}`);
+      console.log(`   URL: ${fileUrl}`);
 
       return {
         success: true,
@@ -139,7 +146,12 @@ export const uploadToS3 = async (file, folder, subfolder = '') => {
       };
     } catch (s3Error) {
       // Si falla S3, usar almacenamiento local como fallback
-      console.log(`⚠️  Error en S3. Usando almacenamiento local como fallback: ${s3Error.message}`);
+      console.error(`❌ ERROR AL SUBIR A S3:`);
+      console.error(`   Error: ${s3Error.message}`);
+      console.error(`   Code: ${s3Error.code || 'N/A'}`);
+      console.error(`   StatusCode: ${s3Error.$metadata?.httpStatusCode || 'N/A'}`);
+      console.error(`   Stack: ${s3Error.stack}`);
+      console.log(`⚠️  Usando almacenamiento local como fallback...`);
       return await saveFileLocally(file, folder, subfolder);
     }
 

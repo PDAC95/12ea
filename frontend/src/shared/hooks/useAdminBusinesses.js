@@ -47,7 +47,7 @@ const useAdminBusinesses = () => {
         params.search = search;
       }
 
-      const response = await api.get('/businesses', { params });
+      const response = await api.get('/admin/businesses', { params });
 
       setBusinesses(response.data.businesses || []);
       setPagination({
@@ -75,7 +75,7 @@ const useAdminBusinesses = () => {
     setError(null);
 
     try {
-      const response = await api.post('/businesses', businessData);
+      const response = await api.post('/admin/businesses', businessData);
 
       // Refetch para actualizar lista
       await fetchBusinesses(pagination.page, searchQuery);
@@ -99,7 +99,7 @@ const useAdminBusinesses = () => {
     setError(null);
 
     try {
-      const response = await api.put(`/businesses/${businessId}`, businessData);
+      const response = await api.put(`/admin/businesses/${businessId}`, businessData);
 
       // Actualizar en la lista local
       setBusinesses((prev) =>
@@ -127,7 +127,7 @@ const useAdminBusinesses = () => {
     setError(null);
 
     try {
-      await api.delete(`/businesses/${businessId}`);
+      await api.delete(`/admin/businesses/${businessId}`);
 
       // Remover de la lista local
       setBusinesses((prev) => prev.filter((business) => business._id !== businessId));
