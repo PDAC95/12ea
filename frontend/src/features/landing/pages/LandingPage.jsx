@@ -4,6 +4,7 @@ import logo from '../../../assets/images/logo/logo.png';
 import mainPhoto from '../../../assets/images/photos/main.jpg';
 import photo1 from '../../../assets/images/photos/photo1.jpg';
 import photo2 from '../../../assets/images/photos/photo2.jpg';
+import BusinessCTA from '../components/BusinessCTA';
 
 /**
  * LandingPage - Página pública de inicio con diseño moderno y femenino profesional
@@ -17,6 +18,7 @@ import photo2 from '../../../assets/images/photos/photo2.jpg';
  * - Secciones visuales atractivas
  * - Testimonios y estadísticas
  * - CTAs destacados y estratégicos
+ * - Sección BusinessCTA para emprendedoras (Sprint 5 Task 5.11.1)
  *
  * @returns {JSX.Element} Landing page profesional
  */
@@ -411,6 +413,9 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
+
+      {/* Business CTA Section - Sprint 5 Task 5.11.1 */}
+      <BusinessCTA />
 
       {/* CTA Final Premium */}
       <section className="relative py-24 overflow-hidden">

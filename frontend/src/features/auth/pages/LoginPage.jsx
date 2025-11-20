@@ -50,16 +50,6 @@ const LoginPage = () => {
         <p className="text-center text-sm text-gray-500 mt-6">
           Juntas somos más fuertes 💜
         </p>
-
-        {/* Link discreto para administradoras - Sprint 3.5 FE-2 */}
-        <div className="mt-4 text-center">
-          <Link
-            to="/admin/login"
-            className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            ¿Eres administradora?
-          </Link>
-        </div>
       </div>
     </div>
   );

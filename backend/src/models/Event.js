@@ -136,7 +136,7 @@ const eventSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: {
-        values: ['draft', 'published', 'cancelled', 'completed'],
+        values: ['draft', 'published', 'cancelled', 'completed', 'pending'],
         message: '{VALUE} no es un estado válido',
       },
       default: 'published',

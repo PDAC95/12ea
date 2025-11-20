@@ -24,6 +24,7 @@ import EventsPage from '../features/events/pages/EventsPage';
 import MyEventsPage from '../features/events/pages/MyEventsPage';
 import BlogPage from '../features/blog/pages/BlogPage';
 import BlogPostPage from '../features/blog/pages/BlogPostPage';
+import ProfilePage from '../features/profile/pages/ProfilePage';
 
 // Admin Pages
 import AdminLoginPage from '../features/admin/pages/AdminLoginPage';
@@ -31,6 +32,7 @@ import AdminDashboardPage from '../features/admin/pages/AdminDashboardPage';
 import AdminBusinessesPage from '../features/admin/pages/AdminBusinessesPage';
 import AdminEventsPage from '../features/admin/pages/AdminEventsPage';
 import AdminBlogPage from '../features/admin/pages/AdminBlogPage';
+import EventApproval from '../features/admin/events/EventApproval';
 
 // Common Pages
 import NotFoundPage from '../shared/components/common/NotFoundPage';
@@ -53,6 +55,9 @@ import NotFoundPage from '../shared/components/common/NotFoundPage';
  * - /dashboard/services → ServiceDirectoryPage
  * - /dashboard/events → EventsPage
  * - /dashboard/my-events → MyEventsPage
+ * - /dashboard/blog → BlogPage
+ * - /dashboard/blog/:slug → BlogPostPage
+ * - /dashboard/profile → ProfilePage
  *
  * Ruta de Error:
  * - * → NotFoundPage (404)
@@ -160,6 +165,16 @@ const AppRoutes = () => {
         }
       />
 
+      {/* Profile Page - Sprint 5 US-5.9 Task 5.9.3 */}
+      <Route
+        path="/dashboard/profile"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
+
       {/* ============================================
           RUTAS ADMIN - Solo para usuarios con role='admin'
           ============================================ */}
@@ -204,6 +219,16 @@ const AppRoutes = () => {
         }
       />
 
+      {/* Admin Event Approval - Sprint 5 Task 5.10.3 */}
+      <Route
+        path="/admin/events/pending"
+        element={
+          <AdminRoute>
+            <EventApproval />
+          </AdminRoute>
+        }
+      />
+
       {/* TODO: Agregar más rutas admin en futuras tasks:
           - /admin/services → AdminServicesPage
           - /admin/users → AdminUsersPage
@@ -212,7 +237,6 @@ const AppRoutes = () => {
       {/* TODO: Agregar más rutas protegidas en futuros sprints:
           - /events/:id → EventDetailPage
           - /businesses/:id → BusinessDetailPage
-          - /profile → ProfilePage
       */}
 
       {/* ============================================

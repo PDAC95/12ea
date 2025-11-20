@@ -170,6 +170,39 @@ const businessSchema = new mongoose.Schema(
       index: true, // Índice para búsquedas por owner
     },
 
+    // Sistema de Aprobación de Propuestas
+    status: {
+      type: String,
+      required: [true, 'El estado es requerido'],
+      enum: {
+        values: ['pending', 'approved', 'rejected'],
+        message: '{VALUE} no es un estado válido. Usa: pending, approved o rejected',
+      },
+      default: 'pending',
+      index: true, // Índice para filtrar por estado de aprobación
+    },
+    submittedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'El usuario que propuso el negocio es requerido'],
+      index: true, // Índice para búsquedas por usuario que propuso
+    },
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    approvedAt: {
+      type: Date,
+      default: null,
+    },
+    rejectionReason: {
+      type: String,
+      trim: true,
+      maxlength: [500, 'El motivo de rechazo no puede exceder 500 caracteres'],
+      default: null,
+    },
+
     // Estado y Visibilidad
     isActive: {
       type: Boolean,
@@ -240,12 +273,15 @@ businessSchema.index({ owner: 1 });
 businessSchema.index({ isActive: 1 });
 businessSchema.index({ isVerified: 1 });
 businessSchema.index({ isFeatured: 1 });
+businessSchema.index({ status: 1 }); // Índice para filtrar por estado de aprobación
+businessSchema.index({ submittedBy: 1 }); // Índice para buscar propuestas por usuario
 
 // Índices compuestos para queries comunes
 businessSchema.index({ city: 1, category: 1 });
 businessSchema.index({ city: 1, isActive: 1 });
 businessSchema.index({ category: 1, isActive: 1 });
 businessSchema.index({ isActive: 1, isFeatured: 1, createdAt: -1 });
+businessSchema.index({ status: 1, createdAt: -1 }); // Para dashboard de admin (propuestas pendientes)
 
 // Índice para estadísticas
 businessSchema.index({ views: -1 });
@@ -319,6 +355,36 @@ businessSchema.methods.verify = async function () {
  */
 businessSchema.methods.feature = async function () {
   this.isFeatured = true;
+  return await this.save();
+};
+
+/**
+ * Aprobar propuesta de negocio
+ * @param {ObjectId} adminId - ID del admin que aprueba
+ * @returns {Promise<Business>}
+ */
+businessSchema.methods.approve = async function (adminId) {
+  this.status = 'approved';
+  this.approvedBy = adminId;
+  this.approvedAt = new Date();
+  this.rejectionReason = null; // Limpiar razón de rechazo si existía
+  return await this.save();
+};
+
+/**
+ * Rechazar propuesta de negocio
+ * @param {ObjectId} adminId - ID del admin que rechaza
+ * @param {String} reason - Motivo del rechazo
+ * @returns {Promise<Business>}
+ */
+businessSchema.methods.reject = async function (adminId, reason) {
+  if (!reason || reason.trim().length === 0) {
+    throw new Error('Se requiere un motivo de rechazo');
+  }
+  this.status = 'rejected';
+  this.approvedBy = adminId;
+  this.approvedAt = new Date();
+  this.rejectionReason = reason;
   return await this.save();
 };
 
@@ -441,6 +507,41 @@ businessSchema.statics.getStats = async function () {
     byCategory,
     byCity,
   };
+};
+
+/**
+ * Buscar propuestas pendientes de aprobación
+ * @returns {Promise<Business[]>}
+ */
+businessSchema.statics.findPendingProposals = function () {
+  return this.find({ status: 'pending' })
+    .sort({ createdAt: -1 })
+    .populate('submittedBy', 'preferredName email')
+    .populate('owner', 'preferredName email');
+};
+
+/**
+ * Buscar propuestas por estado
+ * @param {String} status - Estado de la propuesta ('pending', 'approved', 'rejected')
+ * @returns {Promise<Business[]>}
+ */
+businessSchema.statics.findByStatus = function (status) {
+  return this.find({ status })
+    .sort({ createdAt: -1 })
+    .populate('submittedBy', 'preferredName email')
+    .populate('owner', 'preferredName email')
+    .populate('approvedBy', 'preferredName email');
+};
+
+/**
+ * Buscar propuestas de un usuario específico
+ * @param {ObjectId} userId - ID del usuario
+ * @returns {Promise<Business[]>}
+ */
+businessSchema.statics.findBySubmitter = function (userId) {
+  return this.find({ submittedBy: userId })
+    .sort({ createdAt: -1 })
+    .populate('approvedBy', 'preferredName email');
 };
 
 // =====================================

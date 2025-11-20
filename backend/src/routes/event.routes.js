@@ -9,6 +9,7 @@ import {
   updateEvent,
   deleteEvent,
   getEventRegistrations,
+  proposeEvent,
 } from '../controllers/event.controller.js';
 import { protect, requireAdmin } from '../middleware/auth.middleware.js';
 
@@ -44,6 +45,26 @@ router.get('/', getAllEvents);
  * IMPORTANTE: Esta ruta debe ir ANTES de '/:id' para evitar conflictos
  */
 router.get('/my-registrations', protect, getMyRegistrations);
+
+/**
+ * POST /api/v1/events/propose
+ * Proponer nuevo evento (User submission - Sprint 5 Task 5.10.2)
+ * Crea un evento con status "pending" para revisión de admin
+ * Body (required):
+ *   - title: string
+ *   - description: string
+ *   - date: date (ISO format)
+ *   - time: string HH:MM
+ *   - mode: virtual|presencial|híbrido
+ *   - capacity: number (1-1000)
+ * Body (conditional):
+ *   - location: string (required for presencial/híbrido)
+ *   - link: string URL (required for virtual/híbrido)
+ * Body (optional):
+ *   - image: string URL
+ * IMPORTANTE: Esta ruta debe ir ANTES de '/:id' para evitar conflictos
+ */
+router.post('/propose', protect, proposeEvent);
 
 /**
  * GET /api/v1/events/:id

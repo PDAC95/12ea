@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Loader2, CheckCircle, XCircle } from 'lucide-react';
 import authService from '../services/authService';
@@ -12,9 +12,16 @@ const VerifyEmailPage = () => {
   const { token } = useParams();
   const [status, setStatus] = useState('loading'); // loading, success, error
   const [message, setMessage] = useState('');
+  const hasVerified = useRef(false); // Prevenir doble ejecución en React Strict Mode
 
   useEffect(() => {
     const verifyEmail = async () => {
+      // Prevenir doble ejecución (React 18 Strict Mode ejecuta useEffect 2 veces)
+      if (hasVerified.current) {
+        return;
+      }
+      hasVerified.current = true;
+
       try {
         const response = await authService.verifyEmail(token);
         setStatus('success');

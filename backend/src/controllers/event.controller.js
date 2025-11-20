@@ -800,3 +800,160 @@ export const exportEventRegistrationsCSV = async (req, res, next) => {
     next(error);
   }
 };
+
+// =====================================
+// USER SUBMISSION WORKFLOWS (Sprint 5 - Task 5.10.2)
+// =====================================
+
+/**
+ * @desc    Propose new event (User submission)
+ * @route   POST /api/v1/events/propose
+ * @access  Private (authenticated users)
+ * @body    {
+ *            title: string (required),
+ *            description: string (required),
+ *            date: date (required),
+ *            time: string HH:MM (required),
+ *            mode: virtual|presencial|híbrido (required),
+ *            location: string (required for presencial/híbrido),
+ *            link: string URL (required for virtual/híbrido),
+ *            capacity: number (required),
+ *            image: string URL (optional)
+ *          }
+ */
+export const proposeEvent = async (req, res, next) => {
+  try {
+    const {
+      title,
+      description,
+      date,
+      time,
+      mode,
+      location,
+      link,
+      capacity,
+      image,
+    } = req.body;
+
+    // Validación de campos requeridos
+    if (!title || !description || !date || !time || !mode || !capacity) {
+      return res.status(400).json({
+        success: false,
+        message: 'Campos requeridos faltantes',
+        details: {
+          required: ['title', 'description', 'date', 'time', 'mode', 'capacity'],
+          received: Object.keys(req.body),
+        },
+      });
+    }
+
+    // Validación de modalidad
+    const validModes = ['virtual', 'presencial', 'híbrido'];
+    if (!validModes.includes(mode.toLowerCase())) {
+      return res.status(400).json({
+        success: false,
+        message: `Modalidad inválida. Debe ser: ${validModes.join(', ')}`,
+      });
+    }
+
+    // Validación condicional: location requerido para presencial/híbrido
+    if ((mode === 'presencial' || mode === 'híbrido') && !location) {
+      return res.status(400).json({
+        success: false,
+        message: 'La ubicación es requerida para eventos presenciales o híbridos',
+      });
+    }
+
+    // Validación condicional: link requerido para virtual/híbrido
+    if ((mode === 'virtual' || mode === 'híbrido') && !link) {
+      return res.status(400).json({
+        success: false,
+        message: 'El link es requerido para eventos virtuales o híbridos',
+      });
+    }
+
+    // Validación de fecha futura
+    const eventDate = new Date(date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (eventDate < today) {
+      return res.status(400).json({
+        success: false,
+        message: 'La fecha del evento debe ser futura',
+      });
+    }
+
+    // Validación de capacidad
+    if (capacity < 1 || capacity > 1000) {
+      return res.status(400).json({
+        success: false,
+        message: 'La capacidad debe estar entre 1 y 1000 personas',
+      });
+    }
+
+    // Crear evento con status "pending"
+    const eventData = {
+      title: title.trim(),
+      description: description.trim(),
+      date: eventDate,
+      time: time.trim(),
+      mode: mode.toLowerCase(),
+      location: location?.trim() || null,
+      link: link?.trim() || null,
+      capacity: parseInt(capacity),
+      image: image?.trim() || undefined,
+      organizer: req.user.id, // Usuario que propone el evento
+      status: 'pending', // ⭐ Status pendiente para revisión de admin
+      isActive: false, // No visible hasta que admin apruebe
+    };
+
+    // Crear evento
+    const event = await Event.create(eventData);
+
+    // Log para admin
+    console.log(`📝 Nueva propuesta de evento recibida:
+      - ID: ${event._id}
+      - Título: ${event.title}
+      - Propuesto por: ${req.user.id} (${req.user.email})
+      - Fecha: ${event.date}
+      - Modalidad: ${event.mode}
+    `);
+
+    // Response
+    res.status(201).json({
+      success: true,
+      message: 'Propuesta de evento enviada exitosamente. Será revisada por un administrador.',
+      data: {
+        _id: event._id,
+        title: event.title,
+        description: event.description,
+        date: event.date,
+        time: event.time,
+        mode: event.mode,
+        location: event.location,
+        link: event.link,
+        capacity: event.capacity,
+        image: event.image,
+        status: event.status,
+        isActive: event.isActive,
+        organizer: event.organizer,
+        createdAt: event.createdAt,
+      },
+    });
+  } catch (error) {
+    console.error('Error in proposeEvent:', error);
+
+    // Handle Mongoose validation errors
+    if (error.name === 'ValidationError') {
+      const errors = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({
+        success: false,
+        message: 'Error de validación',
+        details: errors,
+      });
+    }
+
+    next(error);
+  }
+};

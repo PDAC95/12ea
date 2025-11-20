@@ -275,9 +275,9 @@ const ServiceForm = ({ initialData, onSubmit, onCancel, isLoading = false, submi
           {renderTextField({
             name: 'website',
             label: 'Sitio Web',
-            type: 'url',
-            placeholder: 'https://ejemplo.com',
-            helperText: 'Incluye http:// o https://',
+            type: 'text',
+            placeholder: 'www.ejemplo.com',
+            helperText: 'Opcional. Puedes incluir http:// o solo escribir ejemplo.com',
           })}
         </div>
       </div>

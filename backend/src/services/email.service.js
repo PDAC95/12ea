@@ -1591,6 +1591,675 @@ export const sendEventConfirmationEmail = async (to, userName, event, registrati
   return sendEmail({ to, subject, html });
 };
 
+/**
+ * Enviar email de aprobación de evento
+ * @param {string} to - Email del usuario
+ * @param {string} userName - Nombre del usuario
+ * @param {Object} event - Datos del evento aprobado
+ * @returns {Promise<Object>} Resultado del envío
+ * Sprint 5 - Task 5.10.3
+ */
+export const sendEventApprovalEmail = async (to, userName, event) => {
+  const subject = `✅ ¡Tu evento ha sido aprobado! - ${event.title}`;
+
+  // Formatear fecha
+  const eventDate = new Date(event.date);
+  const formattedDate = eventDate.toLocaleDateString('es-ES', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        body {
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          background: linear-gradient(135deg, #fef5f8 0%, #f9f6fe 100%);
+          margin: 0;
+          padding: 40px 20px;
+          line-height: 1.6;
+        }
+        .email-wrapper {
+          max-width: 600px;
+          margin: 0 auto;
+          background-color: #ffffff;
+          border-radius: 24px;
+          overflow: hidden;
+          box-shadow: 0 10px 40px -5px rgba(16, 185, 129, 0.15), 0 20px 25px -5px rgba(59, 130, 246, 0.1);
+        }
+        .header {
+          position: relative;
+          background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+          padding: 48px 40px;
+          text-align: center;
+          color: #ffffff;
+          overflow: hidden;
+        }
+        .header::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        }
+        .header-icon {
+          font-size: 72px;
+          margin-bottom: 20px;
+          display: block;
+          position: relative;
+          z-index: 1;
+        }
+        .logo {
+          position: relative;
+          z-index: 1;
+          width: 80px;
+          height: 80px;
+          margin: 0 auto 20px;
+          background-color: white;
+          border-radius: 20px;
+          padding: 12px;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+        .logo img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+        .header h1 {
+          position: relative;
+          z-index: 1;
+          margin: 0;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 28px;
+          font-weight: 700;
+          letter-spacing: -0.5px;
+          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header p {
+          position: relative;
+          z-index: 1;
+          margin: 12px 0 0;
+          font-size: 15px;
+          opacity: 0.95;
+          font-weight: 500;
+        }
+        .content {
+          padding: 48px 40px;
+          color: #1a202c;
+        }
+        .greeting {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 24px;
+          font-weight: 700;
+          color: #2d3748;
+          margin-bottom: 20px;
+        }
+        .content p {
+          margin: 20px 0;
+          font-size: 16px;
+          color: #4a5568;
+          line-height: 1.8;
+        }
+        .content strong {
+          color: #2d3748;
+          font-weight: 600;
+        }
+        .success-box {
+          background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+          border-left: 5px solid #10b981;
+          padding: 28px;
+          margin: 32px 0;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+        }
+        .success-box strong {
+          color: #065f46;
+          display: block;
+          margin-bottom: 16px;
+          font-size: 17px;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .success-box p {
+          margin: 8px 0;
+          font-size: 15px;
+          color: #064e3b;
+          line-height: 1.7;
+        }
+        .event-details {
+          background: #f9fafb;
+          padding: 24px;
+          border-radius: 12px;
+          margin: 24px 0;
+        }
+        .event-details p {
+          margin: 8px 0;
+          font-size: 15px;
+        }
+        .cta-container {
+          text-align: center;
+          margin: 40px 0;
+        }
+        .cta-button {
+          display: inline-block;
+          padding: 18px 48px;
+          background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+          color: #ffffff !important;
+          text-decoration: none;
+          border-radius: 16px;
+          font-weight: 700;
+          font-size: 17px;
+          box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35), 0 4px 12px rgba(59, 130, 246, 0.25);
+          transition: all 0.3s ease;
+          letter-spacing: 0.3px;
+        }
+        .divider {
+          height: 2px;
+          background: linear-gradient(90deg, transparent, #e2e8f0 20%, #e2e8f0 80%, transparent);
+          margin: 40px 0;
+        }
+        .footer {
+          background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+          padding: 40px;
+          text-align: center;
+          color: #cbd5e0;
+        }
+        .footer-logo {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 24px;
+          font-weight: 700;
+          color: #ffffff;
+          margin-bottom: 8px;
+        }
+        .footer-tagline {
+          color: #a0aec0;
+          font-size: 14px;
+          margin-bottom: 24px;
+        }
+        .footer p {
+          margin: 8px 0;
+          font-size: 14px;
+          color: #a0aec0;
+        }
+        .footer a {
+          color: #10b981;
+          text-decoration: none;
+          font-weight: 600;
+          transition: color 0.2s;
+        }
+        .footer a:hover {
+          color: #34d399;
+        }
+        .footer-links {
+          margin-top: 20px;
+          padding-top: 20px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .heart {
+          display: inline-block;
+          color: #10b981;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="email-wrapper">
+        <!-- Header -->
+        <div class="header">
+          <div class="logo">
+            <img src="https://entre-amigas-dev.s3.us-east-1.amazonaws.com/temp/logo.png" alt="Entre Amigas Logo" />
+          </div>
+          <h1>¡Evento Aprobado!</h1>
+          <p>Tu evento ha sido publicado exitosamente</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+          <h2 class="greeting">¡Hola ${userName}! 🎉</h2>
+
+          <div class="success-box">
+            <strong>✅ ¡Excelentes noticias!</strong>
+            <p>
+              Tu evento <strong>"${event.title}"</strong> ha sido aprobado por nuestro equipo
+              y ahora está publicado en la plataforma.
+            </p>
+          </div>
+
+          <p>
+            Gracias por contribuir a nuestra comunidad de <strong>Entre Amigas</strong>.
+            Tu evento ya está visible para todas las usuarias y pueden registrarse.
+          </p>
+
+          <div class="event-details">
+            <p><strong>📅 Fecha:</strong> ${formattedDate}</p>
+            <p><strong>🕒 Hora:</strong> ${event.time}</p>
+            <p><strong>📍 Modalidad:</strong> ${event.mode}</p>
+            ${event.location ? `<p><strong>📌 Ubicación:</strong> ${event.location}</p>` : ''}
+            ${event.link ? `<p><strong>🔗 Link:</strong> ${event.link}</p>` : ''}
+          </div>
+
+          <!-- CTA Button -->
+          <div class="cta-container">
+            <a href="${emailConfig.frontendUrl}/events/${event._id}" class="cta-button">
+              👀 Ver mi Evento Publicado
+            </a>
+          </div>
+
+          <!-- Divider -->
+          <div class="divider"></div>
+
+          <p style="font-size: 14px; color: #718096;">
+            Puedes gestionar tu evento desde el panel de administración.
+            Si tienes alguna pregunta, no dudes en contactarnos.
+          </p>
+
+          <p style="margin-top: 32px; text-align: center; font-size: 15px;">
+            ¡Gracias por ser parte de nuestra comunidad!<br>
+            <strong style="font-size: 17px;">El equipo de Entre Amigas <span class="heart">💚</span></strong>
+          </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+          <div class="footer-logo">Entre Amigas</div>
+          <p class="footer-tagline">Comunidad de mujeres hispanas en Canadá</p>
+
+          <p style="margin: 20px 0;">
+            Conecta con mujeres que comparten tu experiencia migratoria.<br>
+            Encuentra apoyo, amistad y oportunidades.
+          </p>
+
+          <p style="margin-top: 24px; font-size: 13px;">
+            © ${new Date().getFullYear()} Entre Amigas. Todos los derechos reservados.
+          </p>
+
+          <div class="footer-links">
+            <a href="${emailConfig.frontendUrl}/privacy">Privacidad</a>
+            <span style="color: #4a5568; margin: 0 8px;">·</span>
+            <a href="${emailConfig.frontendUrl}/terms">Términos</a>
+            <span style="color: #4a5568; margin: 0 8px;">·</span>
+            <a href="${emailConfig.frontendUrl}/contact">Contacto</a>
+          </div>
+
+          <p style="margin-top: 20px; font-size: 13px; color: #718096;">
+            Hecho con <span class="heart">💚</span> en Canadá
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return sendEmail({ to, subject, html });
+};
+
+/**
+ * Enviar email de rechazo de evento
+ * @param {string} to - Email del usuario
+ * @param {string} userName - Nombre del usuario
+ * @param {Object} event - Datos del evento rechazado
+ * @param {string} reason - Motivo del rechazo
+ * @returns {Promise<Object>} Resultado del envío
+ * Sprint 5 - Task 5.10.3
+ */
+export const sendEventRejectionEmail = async (to, userName, event, reason) => {
+  const subject = `📋 Actualización sobre tu propuesta de evento - ${event.title}`;
+
+  // Formatear fecha
+  const eventDate = new Date(event.date);
+  const formattedDate = eventDate.toLocaleDateString('es-ES', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        body {
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          background: linear-gradient(135deg, #fef5f8 0%, #f9f6fe 100%);
+          margin: 0;
+          padding: 40px 20px;
+          line-height: 1.6;
+        }
+        .email-wrapper {
+          max-width: 600px;
+          margin: 0 auto;
+          background-color: #ffffff;
+          border-radius: 24px;
+          overflow: hidden;
+          box-shadow: 0 10px 40px -5px rgba(245, 158, 11, 0.15), 0 20px 25px -5px rgba(249, 115, 22, 0.1);
+        }
+        .header {
+          position: relative;
+          background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+          padding: 48px 40px;
+          text-align: center;
+          color: #ffffff;
+          overflow: hidden;
+        }
+        .header::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        }
+        .logo {
+          position: relative;
+          z-index: 1;
+          width: 80px;
+          height: 80px;
+          margin: 0 auto 20px;
+          background-color: white;
+          border-radius: 20px;
+          padding: 12px;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+        .logo img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+        .header h1 {
+          position: relative;
+          z-index: 1;
+          margin: 0;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 28px;
+          font-weight: 700;
+          letter-spacing: -0.5px;
+          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header p {
+          position: relative;
+          z-index: 1;
+          margin: 12px 0 0;
+          font-size: 15px;
+          opacity: 0.95;
+          font-weight: 500;
+        }
+        .content {
+          padding: 48px 40px;
+          color: #1a202c;
+        }
+        .greeting {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 24px;
+          font-weight: 700;
+          color: #2d3748;
+          margin-bottom: 20px;
+        }
+        .content p {
+          margin: 20px 0;
+          font-size: 16px;
+          color: #4a5568;
+          line-height: 1.8;
+        }
+        .content strong {
+          color: #2d3748;
+          font-weight: 600;
+        }
+        .warning-box {
+          background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+          border-left: 5px solid #f59e0b;
+          padding: 28px;
+          margin: 32px 0;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
+        }
+        .warning-box strong {
+          color: #92400e;
+          display: block;
+          margin-bottom: 16px;
+          font-size: 17px;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .warning-box p {
+          margin: 8px 0;
+          font-size: 15px;
+          color: #78350f;
+          line-height: 1.7;
+        }
+        .reason-box {
+          background: #f9fafb;
+          padding: 24px;
+          border-radius: 12px;
+          margin: 24px 0;
+          border-left: 4px solid #6b7280;
+        }
+        .reason-box strong {
+          display: block;
+          margin-bottom: 12px;
+          color: #1f2937;
+          font-size: 16px;
+        }
+        .reason-box p {
+          margin: 0;
+          font-size: 15px;
+          color: #374151;
+          font-style: italic;
+        }
+        .info-box {
+          background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+          border-left: 5px solid #3b82f6;
+          padding: 24px;
+          margin: 32px 0;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        }
+        .info-box strong {
+          color: #1e40af;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+          font-size: 16px;
+          font-weight: 700;
+        }
+        .info-box p {
+          margin: 8px 0;
+          font-size: 15px;
+          color: #1e3a8a;
+          line-height: 1.7;
+        }
+        .cta-container {
+          text-align: center;
+          margin: 40px 0;
+        }
+        .cta-button {
+          display: inline-block;
+          padding: 18px 48px;
+          background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+          color: #ffffff !important;
+          text-decoration: none;
+          border-radius: 16px;
+          font-weight: 700;
+          font-size: 17px;
+          box-shadow: 0 8px 24px rgba(245, 158, 11, 0.35), 0 4px 12px rgba(249, 115, 22, 0.25);
+          transition: all 0.3s ease;
+          letter-spacing: 0.3px;
+        }
+        .divider {
+          height: 2px;
+          background: linear-gradient(90deg, transparent, #e2e8f0 20%, #e2e8f0 80%, transparent);
+          margin: 40px 0;
+        }
+        .footer {
+          background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+          padding: 40px;
+          text-align: center;
+          color: #cbd5e0;
+        }
+        .footer-logo {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 24px;
+          font-weight: 700;
+          color: #ffffff;
+          margin-bottom: 8px;
+        }
+        .footer-tagline {
+          color: #a0aec0;
+          font-size: 14px;
+          margin-bottom: 24px;
+        }
+        .footer p {
+          margin: 8px 0;
+          font-size: 14px;
+          color: #a0aec0;
+        }
+        .footer a {
+          color: #f59e0b;
+          text-decoration: none;
+          font-weight: 600;
+          transition: color 0.2s;
+        }
+        .footer a:hover {
+          color: #fbbf24;
+        }
+        .footer-links {
+          margin-top: 20px;
+          padding-top: 20px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .heart {
+          display: inline-block;
+          color: #f59e0b;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="email-wrapper">
+        <!-- Header -->
+        <div class="header">
+          <div class="logo">
+            <img src="https://entre-amigas-dev.s3.us-east-1.amazonaws.com/temp/logo.png" alt="Entre Amigas Logo" />
+          </div>
+          <h1>Actualización de Propuesta</h1>
+          <p>Revisión de tu evento propuesto</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+          <h2 class="greeting">Hola ${userName},</h2>
+
+          <p>
+            Gracias por tu interés en organizar un evento en <strong>Entre Amigas</strong>.
+            Hemos revisado tu propuesta para el evento <strong>"${event.title}"</strong>.
+          </p>
+
+          <div class="warning-box">
+            <strong>📋 Estado de la Propuesta</strong>
+            <p>
+              Después de revisar cuidadosamente tu propuesta, en este momento no podemos aprobar
+              el evento para publicación en la plataforma.
+            </p>
+          </div>
+
+          <div class="reason-box">
+            <strong>💬 Motivo de la decisión:</strong>
+            <p>"${reason}"</p>
+          </div>
+
+          <div class="info-box">
+            <strong>💡 ¿Qué puedes hacer?</strong>
+            <p>
+              • Puedes revisar los detalles del evento y ajustarlos según la retroalimentación<br>
+              • Si tienes preguntas sobre esta decisión, contáctanos directamente<br>
+              • Estamos aquí para ayudarte a organizar eventos exitosos en el futuro
+            </p>
+          </div>
+
+          <p style="margin-top: 32px;">
+            <strong>Detalles del evento propuesto:</strong>
+          </p>
+          <div style="background: #f9fafb; padding: 20px; border-radius: 12px; margin: 16px 0;">
+            <p><strong>📅 Fecha:</strong> ${formattedDate}</p>
+            <p><strong>🕒 Hora:</strong> ${event.time}</p>
+            <p><strong>📍 Modalidad:</strong> ${event.mode}</p>
+          </div>
+
+          <!-- CTA Button -->
+          <div class="cta-container">
+            <a href="${emailConfig.frontendUrl}/contact" class="cta-button">
+              💬 Contactar al Equipo
+            </a>
+          </div>
+
+          <!-- Divider -->
+          <div class="divider"></div>
+
+          <p style="font-size: 14px; color: #718096;">
+            Valoramos tu participación en nuestra comunidad y esperamos poder trabajar contigo
+            en futuros eventos que beneficien a todas nuestras miembros.
+          </p>
+
+          <p style="margin-top: 32px; text-align: center; font-size: 15px;">
+            Con aprecio,<br>
+            <strong style="font-size: 17px;">El equipo de Entre Amigas <span class="heart">🧡</span></strong>
+          </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+          <div class="footer-logo">Entre Amigas</div>
+          <p class="footer-tagline">Comunidad de mujeres hispanas en Canadá</p>
+
+          <p style="margin: 20px 0;">
+            Conecta con mujeres que comparten tu experiencia migratoria.<br>
+            Encuentra apoyo, amistad y oportunidades.
+          </p>
+
+          <p style="margin-top: 24px; font-size: 13px;">
+            © ${new Date().getFullYear()} Entre Amigas. Todos los derechos reservados.
+          </p>
+
+          <div class="footer-links">
+            <a href="${emailConfig.frontendUrl}/privacy">Privacidad</a>
+            <span style="color: #4a5568; margin: 0 8px;">·</span>
+            <a href="${emailConfig.frontendUrl}/terms">Términos</a>
+            <span style="color: #4a5568; margin: 0 8px;">·</span>
+            <a href="${emailConfig.frontendUrl}/contact">Contacto</a>
+          </div>
+
+          <p style="margin-top: 20px; font-size: 13px; color: #718096;">
+            Hecho con <span class="heart">🧡</span> en Canadá
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return sendEmail({ to, subject, html });
+};
+
 // Export default con todas las funciones
 export default {
   sendEmail,
@@ -1599,4 +2268,6 @@ export default {
   sendPasswordResetEmail,
   sendPasswordChangedEmail,
   sendEventConfirmationEmail,
+  sendEventApprovalEmail,
+  sendEventRejectionEmail,
 };

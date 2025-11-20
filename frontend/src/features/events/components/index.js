@@ -10,3 +10,4 @@
 export { default as EventList } from './EventList';
 export { default as EventDetailModal } from './EventDetailModal';
 export { default as MyEventsSection } from './MyEventsSection';
+export { default as ProposeEventModal } from './ProposeEventModal';

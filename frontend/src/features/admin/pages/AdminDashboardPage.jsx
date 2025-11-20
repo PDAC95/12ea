@@ -1,45 +1,75 @@
-import { BarChart3, Store, Briefcase, Users, TrendingUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { BarChart3, Store, Briefcase, Users, TrendingUp, Calendar, FileText, AlertCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import AdminLayout from '../components/AdminLayout';
+import api from '../../../shared/utils/api';
 
 /**
  * AdminDashboardPage - Dashboard principal del panel de administración
  *
  * Features:
- * - Cards con estadísticas generales
- * - Placeholder para gráficos y métricas
+ * - Cards con estadísticas generales desde el backend
+ * - Estadísticas en tiempo real
  * - Diseño limpio y moderno
  * - 100% Responsive
  *
- * Sprint 3 - US-009: Panel Admin
- * Task 9.4 - Frontend Admin Layout
+ * Sprint 5 - US-5.3: Admin Dashboard Data Fix
+ * Task 5.3.2 - Conectar frontend con endpoint /api/v1/admin/stats
  *
  * @returns {JSX.Element} Admin dashboard page
  */
 const AdminDashboardPage = () => {
+  const [statsData, setStatsData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   /**
-   * Estadísticas placeholder
-   * TODO: Conectar con API en futuras tasks
+   * Fetch admin stats from backend
    */
-  const stats = [
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setLoading(true);
+        const response = await api.get('/admin/stats');
+
+        if (response.data.success) {
+          setStatsData(response.data.data);
+          setError(null);
+        }
+      } catch (err) {
+        console.error('Error al cargar estadísticas:', err);
+        setError('Error al cargar las estadísticas. Intenta de nuevo más tarde.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  /**
+   * Construir array de estadísticas con datos del backend
+   */
+  const stats = statsData ? [
     {
       name: 'Total Negocios',
-      value: '0',
+      value: statsData.businesses.toString(),
       icon: Store,
       change: '+0%',
-      changeType: 'increase',
+      changeType: 'neutral',
       color: 'blue',
     },
     {
       name: 'Total Servicios',
-      value: '0',
+      value: statsData.services.toString(),
       icon: Briefcase,
       change: '+0%',
-      changeType: 'increase',
+      changeType: 'neutral',
       color: 'green',
     },
     {
       name: 'Total Usuarios',
-      value: '1',
+      value: statsData.users.toString(),
       icon: Users,
       change: '+0%',
       changeType: 'neutral',
@@ -47,13 +77,13 @@ const AdminDashboardPage = () => {
     },
     {
       name: 'Actividad Mensual',
-      value: '0',
+      value: statsData.posts.toString(),
       icon: TrendingUp,
       change: '+0%',
       changeType: 'neutral',
       color: 'orange',
     },
-  ];
+  ] : [];
 
   /**
    * Obtener color del ícono según tipo
@@ -91,30 +121,100 @@ const AdminDashboardPage = () => {
           </p>
         </div>
 
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            <p className="font-medium">⚠️ {error}</p>
+          </div>
+        )}
+
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat) => {
-            const Icon = stat.icon;
-            return (
+          {loading ? (
+            // Loading skeletons
+            Array.from({ length: 4 }).map((_, index) => (
               <div
-                key={stat.name}
-                className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow"
+                key={index}
+                className="bg-white rounded-xl p-6 border border-gray-200 animate-pulse"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <div className={`w-12 h-12 rounded-lg ${getIconColor(stat.color)} flex items-center justify-center`}>
-                    <Icon className="w-6 h-6" />
-                  </div>
-                  <span className={`text-sm font-medium ${getChangeColor(stat.changeType)}`}>
-                    {stat.change}
-                  </span>
+                  <div className="w-12 h-12 rounded-lg bg-gray-200"></div>
+                  <div className="w-12 h-4 bg-gray-200 rounded"></div>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">{stat.name}</p>
-                  <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+                  <div className="w-24 h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="w-16 h-8 bg-gray-200 rounded"></div>
                 </div>
               </div>
-            );
-          })}
+            ))
+          ) : (
+            // Real stats
+            stats.map((stat) => {
+              const Icon = stat.icon;
+              return (
+                <div
+                  key={stat.name}
+                  className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-shadow"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className={`w-12 h-12 rounded-lg ${getIconColor(stat.color)} flex items-center justify-center`}>
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <span className={`text-sm font-medium ${getChangeColor(stat.changeType)}`}>
+                      {stat.change}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600 mb-1">{stat.name}</p>
+                    <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        {/* Quick Actions - Sprint 5 Task 5.10.3 */}
+        <div>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">Acciones Rápidas</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Eventos Pendientes */}
+            <Link
+              to="/admin/events/pending"
+              className="block bg-white rounded-2xl shadow-soft p-6 hover:shadow-soft-lg transition-shadow border border-gray-200"
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-purple-100 rounded-xl">
+                  <Calendar className="w-6 h-6 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="font-display text-lg font-semibold text-gray-900">
+                    Eventos Pendientes
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Revisar propuestas de la comunidad
+                  </p>
+                </div>
+              </div>
+            </Link>
+
+            {/* Placeholder para futuras acciones */}
+            <div className="bg-gray-50 rounded-2xl p-6 border-2 border-dashed border-gray-300">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gray-200 rounded-xl">
+                  <AlertCircle className="w-6 h-6 text-gray-400" />
+                </div>
+                <div>
+                  <h3 className="font-display text-lg font-semibold text-gray-500">
+                    Próximamente
+                  </h3>
+                  <p className="text-sm text-gray-400">
+                    Más acciones en desarrollo
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Placeholder para gráficos */}
@@ -181,12 +281,15 @@ const AdminDashboardPage = () => {
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
-                  <span>Las estadísticas se actualizan en tiempo real</span>
+                  <span>✅ Las estadísticas se cargan desde MongoDB en tiempo real</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
                   <span>
-                    Funcionalidades de gestión se implementarán en las siguientes tasks
+                    {statsData && statsData.lastUpdated && (
+                      <>Última actualización: {new Date(statsData.lastUpdated).toLocaleString('es-ES')}</>
+                    )}
+                    {!statsData && 'Cargando datos...'}
                   </span>
                 </li>
               </ul>

@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import authService from '../services/authService';
+import { useAuth } from '../context/AuthContext';
+import { useToast } from '../../../shared/context/ToastContext';
 import { API_URL } from '../../../shared/config/constants';
 
 /**
@@ -74,11 +77,15 @@ const registerSchema = yup.object({
 /**
  * RegisterForm - Formulario de registro de usuarios
  * Usa React Hook Form + Yup para validaciones
+ * Implementa auto-login después de registro exitoso (Task 5.5.1)
  */
 const RegisterForm = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+  const { toast } = useToast();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
-  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -86,7 +93,6 @@ const RegisterForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm({
     resolver: yupResolver(registerSchema),
     mode: 'onBlur', // Validar al perder el foco
@@ -94,42 +100,44 @@ const RegisterForm = () => {
 
   /**
    * Maneja el envío del formulario
+   * Implementa auto-login después de registro exitoso
    */
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     setSubmitError('');
-    setSubmitSuccess(false);
 
     try {
-      await authService.register(data);
-      setSubmitSuccess(true);
-      reset(); // Limpiar formulario
+      // 1. Registrar usuario
+      const response = await authService.register(data);
+
+      // 2. Verificar que la respuesta incluye token y usuario
+      if (response.success && response.data) {
+        const { token, user } = response.data;
+
+        if (token && user) {
+          // 3. Guardar token y usuario en localStorage y contexto (auto-login)
+          login(token, user);
+
+          // 4. Mostrar toast de bienvenida
+          toast.success(`¡Bienvenida a Entre Amigas, ${user.preferredName || user.fullName}! 🎉`);
+
+          // 5. Redirect al dashboard después de un pequeño delay
+          setTimeout(() => {
+            navigate('/dashboard');
+          }, 500); // Pequeño delay para que el usuario vea el toast
+        } else {
+          // Si no hay token, mostrar mensaje de verificación de email (flujo antiguo)
+          toast.info('Revisa tu email para verificar tu cuenta antes de iniciar sesión.');
+          setSubmitError('Por favor verifica tu email antes de continuar.');
+        }
+      }
     } catch (error) {
       setSubmitError(error.message);
+      toast.error(error.message || 'Error al crear tu cuenta');
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  // Si el registro fue exitoso, mostrar mensaje de éxito
-  if (submitSuccess) {
-    return (
-      <div className="w-full max-w-md mx-auto">
-        <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-          <div className="text-green-600 text-5xl mb-4">✓</div>
-          <h3 className="text-xl font-semibold text-green-900 mb-2">
-            ¡Registro Exitoso!
-          </h3>
-          <p className="text-green-700 mb-4">
-            Revisa tu email para verificar tu cuenta antes de iniciar sesión.
-          </p>
-          <p className="text-sm text-green-600">
-            Si no recibes el email en unos minutos, revisa tu carpeta de spam.
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md mx-auto space-y-4">

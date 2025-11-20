@@ -19,6 +19,7 @@ import {
 import api from '../../../shared/utils/api';
 import EventForm from './EventForm';
 import EventRegistrations from './EventRegistrations';
+import AdminLayout from '../components/AdminLayout';
 
 /**
  * AdminEventList - Lista de gestión de eventos para admin
@@ -253,7 +254,8 @@ const AdminEventList = () => {
   // ===== RENDER =====
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <AdminLayout>
+      <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
@@ -537,7 +539,8 @@ const AdminEventList = () => {
           />
         )}
       </div>
-    </div>
+      </div>
+    </AdminLayout>
   );
 };
 
