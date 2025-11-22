@@ -11,6 +11,7 @@ import {
   getStats,
   getMyBusinesses,
   getCategories,
+  proposeBusiness,
 } from '../controllers/business.controller.js';
 import {
   createBusinessValidation,
@@ -18,6 +19,7 @@ import {
   handleValidationErrors,
 } from '../validators/business.validator.js';
 import { protect, optionalAuth } from '../middleware/auth.middleware.js';
+import { uploadSingleImage, handleMulterError } from '../middleware/upload.middleware.js';
 
 /**
  * Business Routes - Entre Amigas
@@ -60,6 +62,25 @@ router.get('/stats', getStats);
  * @note    IMPORTANTE: Esta ruta debe estar ANTES de /:id para evitar conflictos
  */
 router.get('/my/list', protect, getMyBusinesses);
+
+/**
+ * @route   POST /api/v1/businesses/propose
+ * @desc    Proponer negocio para revisión admin (usuario regular)
+ * @access  Private
+ * @headers Authorization: Bearer {token}
+ * @body    { name, category, description, phone?, email?, whatsapp?, city, address?, website?, instagram?, facebook?, logo?, images? }
+ * @note    IMPORTANTE: Esta ruta debe estar ANTES de /:id para evitar conflictos
+ * Sistema de Propuesta de Negocios - PLAN-BUSINESS-PROPOSAL-SYSTEM
+ */
+router.post(
+  '/propose',
+  protect,                      // 1. Verificar autenticación
+  uploadSingleImage('logo'),    // 2. Procesar upload de logo (opcional)
+  handleMulterError,            // 3. Manejar errores de multer
+  createBusinessValidation,     // 4. Validar datos de entrada (reutilizar validaciones existentes)
+  handleValidationErrors,       // 5. Manejar errores de validación
+  proposeBusiness               // 6. Ejecutar controlador
+);
 
 /**
  * @route   GET /api/v1/businesses

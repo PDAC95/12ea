@@ -174,7 +174,7 @@ const AdminDashboardPage = () => {
           )}
         </div>
 
-        {/* Quick Actions - Sprint 5 Task 5.10.3 */}
+        {/* Quick Actions - Sprint 5 Task 5.10.3 + Business Proposal System */}
         <div>
           <h2 className="text-xl font-bold text-gray-900 mb-4">Acciones Rápidas</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -190,6 +190,26 @@ const AdminDashboardPage = () => {
                 <div>
                   <h3 className="font-display text-lg font-semibold text-gray-900">
                     Eventos Pendientes
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Revisar propuestas de la comunidad
+                  </p>
+                </div>
+              </div>
+            </Link>
+
+            {/* Negocios Pendientes - Business Proposal System */}
+            <Link
+              to="/admin/businesses/pending"
+              className="block bg-white rounded-2xl shadow-soft p-6 hover:shadow-soft-lg transition-shadow border border-gray-200"
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-blue-100 rounded-xl">
+                  <Store className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="font-display text-lg font-semibold text-gray-900">
+                    Negocios Pendientes
                   </h3>
                   <p className="text-sm text-gray-600">
                     Revisar propuestas de la comunidad

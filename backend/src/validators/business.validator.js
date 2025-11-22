@@ -7,18 +7,26 @@ import { body, validationResult } from 'express-validator';
 
 /**
  * Categorías válidas de negocios
+ * IMPORTANTE: Debe coincidir con frontend/src/shared/constants/categories.js
  */
 const VALID_CATEGORIES = [
   'Gastronomía',
   'Belleza y Bienestar',
-  'Moda y Accesorios',
-  'Servicios Profesionales',
-  'Educación y Talleres',
-  'Arte y Manualidades',
   'Salud',
+  'Fitness',
+  'Consultoría',
+  'Moda y Accesorios',
+  'Servicios del Hogar',
+  'Artesanías',
+  'Fotografía y Video',
+  'Educación y Tutorías',
   'Tecnología',
-  'Eventos y Entretenimiento',
-  'Otros',
+  'Entretenimiento',
+  'Deportes',
+  'Automotriz',
+  'Bienes Raíces',
+  'Seguros',
+  'Trámites y Gestorías',
 ];
 
 /**

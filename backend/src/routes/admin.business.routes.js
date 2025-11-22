@@ -6,6 +6,9 @@ import {
   create,
   update,
   remove,
+  getPendingBusinesses,
+  approveBusiness,
+  rejectBusiness,
 } from '../controllers/business.controller.js';
 import { protect, requireAdmin } from '../middleware/auth.middleware.js';
 import {
@@ -25,6 +28,15 @@ const router = express.Router();
 // Aplicar middlewares de autenticación y autorización a todas las rutas
 router.use(protect); // Verificar autenticación
 router.use(requireAdmin); // Verificar role = 'admin'
+
+/**
+ * @route   GET /api/v1/admin/businesses/pending
+ * @desc    Obtener negocios pendientes de aprobación
+ * @access  Private/Admin
+ * @query   page, limit
+ * Sistema de Propuesta de Negocios - PLAN-BUSINESS-PROPOSAL-SYSTEM
+ */
+router.get('/pending', getPendingBusinesses);
 
 /**
  * @route   GET /api/v1/admin/businesses
@@ -63,5 +75,22 @@ router.put('/:id', updateBusinessValidation, handleValidationErrors, update);
  * @access  Private/Admin
  */
 router.delete('/:id', remove);
+
+/**
+ * @route   PATCH /api/v1/admin/businesses/:id/approve
+ * @desc    Aprobar negocio pendiente
+ * @access  Private/Admin
+ * Sistema de Propuesta de Negocios - PLAN-BUSINESS-PROPOSAL-SYSTEM
+ */
+router.patch('/:id/approve', approveBusiness);
+
+/**
+ * @route   PATCH /api/v1/admin/businesses/:id/reject
+ * @desc    Rechazar negocio pendiente
+ * @access  Private/Admin
+ * @body    { reason: String }
+ * Sistema de Propuesta de Negocios - PLAN-BUSINESS-PROPOSAL-SYSTEM
+ */
+router.patch('/:id/reject', rejectBusiness);
 
 export default router;

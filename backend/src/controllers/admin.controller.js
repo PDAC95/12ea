@@ -384,6 +384,209 @@ export const rejectEvent = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Obtener negocios pendientes de aprobación
+ * @route   GET /api/v1/admin/business/pending
+ * @access  Private/Admin
+ * Sistema de Propuesta de Negocios - PLAN-BUSINESS-PROPOSAL-SYSTEM
+ */
+export const getPendingBusinesses = async (req, res) => {
+  try {
+    const { page = 1, limit = 20 } = req.query;
+
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    const pendingBusinesses = await Business.find({ status: 'pending' })
+      .populate('submittedBy', 'preferredName fullName email profileImage')
+      .populate('owner', 'preferredName email')
+      .sort({ createdAt: -1 }) // Más recientes primero
+      .skip(skip)
+      .limit(limitNum);
+
+    const total = await Business.countDocuments({ status: 'pending' });
+    const totalPages = Math.ceil(total / limitNum);
+
+    console.log(`📋 Admin consultó ${pendingBusinesses.length} negocios pendientes (página ${pageNum}/${totalPages})`);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        businesses: pendingBusinesses,
+        pagination: {
+          page: pageNum,
+          limit: limitNum,
+          total,
+          totalPages,
+          hasNext: pageNum < totalPages,
+          hasPrev: pageNum > 1,
+        },
+      },
+    });
+  } catch (error) {
+    console.error('❌ Error al obtener negocios pendientes:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener negocios pendientes',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
+  }
+};
+
+/**
+ * @desc    Aprobar negocio propuesto por usuario
+ * @route   PATCH /api/v1/admin/business/:id/approve
+ * @access  Private/Admin
+ * Sistema de Propuesta de Negocios - PLAN-BUSINESS-PROPOSAL-SYSTEM
+ */
+export const approveBusiness = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Buscar negocio
+    const business = await Business.findById(id).populate('submittedBy', 'preferredName fullName email');
+
+    if (!business) {
+      return res.status(404).json({
+        success: false,
+        message: 'Negocio no encontrado',
+      });
+    }
+
+    // Verificar que el negocio esté pendiente
+    if (business.status !== 'pending') {
+      return res.status(409).json({
+        success: false,
+        message: `El negocio no está pendiente de aprobación. Status actual: ${business.status}`,
+      });
+    }
+
+    // Aprobar usando método del modelo
+    await business.approve(req.user.id);
+
+    // Enviar email de aprobación al usuario
+    try {
+      const { sendBusinessApprovalEmail } = await import('../services/email.service.js');
+      await sendBusinessApprovalEmail(
+        business.submittedBy.email,
+        business.submittedBy.preferredName || business.submittedBy.fullName,
+        {
+          name: business.name,
+          category: business.category,
+          city: business.city,
+          _id: business._id,
+        }
+      );
+      console.log(`📧 Email de aprobación enviado a ${business.submittedBy.email}`);
+    } catch (emailError) {
+      console.error('⚠️ Error al enviar email de aprobación:', emailError);
+      // No fallar la aprobación si el email falla
+    }
+
+    console.log(`✅ Admin [${req.user.email}] aprobó negocio: "${business.name}" (ID: ${business._id})`);
+
+    res.status(200).json({
+      success: true,
+      message: 'Negocio aprobado exitosamente',
+      data: business,
+    });
+  } catch (error) {
+    console.error('❌ Error al aprobar negocio:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al aprobar negocio',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
+  }
+};
+
+/**
+ * @desc    Rechazar negocio propuesto por usuario
+ * @route   PATCH /api/v1/admin/business/:id/reject
+ * @access  Private/Admin
+ * Sistema de Propuesta de Negocios - PLAN-BUSINESS-PROPOSAL-SYSTEM
+ */
+export const rejectBusiness = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+
+    // Validar que se proporcione un motivo
+    if (!reason || reason.trim().length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'El motivo del rechazo es requerido',
+      });
+    }
+
+    if (reason.trim().length < 10) {
+      return res.status(400).json({
+        success: false,
+        message: 'El motivo del rechazo debe tener al menos 10 caracteres',
+      });
+    }
+
+    // Buscar negocio
+    const business = await Business.findById(id).populate('submittedBy', 'preferredName fullName email');
+
+    if (!business) {
+      return res.status(404).json({
+        success: false,
+        message: 'Negocio no encontrado',
+      });
+    }
+
+    // Verificar que el negocio esté pendiente
+    if (business.status !== 'pending') {
+      return res.status(409).json({
+        success: false,
+        message: `El negocio no está pendiente de aprobación. Status actual: ${business.status}`,
+      });
+    }
+
+    // Rechazar usando método del modelo
+    await business.reject(req.user.id, reason.trim());
+
+    // Enviar email de rechazo al usuario
+    try {
+      const { sendBusinessRejectionEmail } = await import('../services/email.service.js');
+      await sendBusinessRejectionEmail(
+        business.submittedBy.email,
+        business.submittedBy.preferredName || business.submittedBy.fullName,
+        {
+          name: business.name,
+          category: business.category,
+          city: business.city,
+        },
+        reason.trim()
+      );
+      console.log(`📧 Email de rechazo enviado a ${business.submittedBy.email}`);
+    } catch (emailError) {
+      console.error('⚠️ Error al enviar email de rechazo:', emailError);
+      // No fallar el rechazo si el email falla
+    }
+
+    console.log(`❌ Admin [${req.user.email}] rechazó negocio: "${business.name}" - Razón: ${reason.trim()}`);
+
+    res.status(200).json({
+      success: true,
+      message: 'Negocio rechazado exitosamente',
+      data: {
+        business,
+        reason: reason.trim(),
+      },
+    });
+  } catch (error) {
+    console.error('❌ Error al rechazar negocio:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al rechazar negocio',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
+  }
+};
+
 export default {
   getStats,
   getUserStats,
@@ -392,4 +595,7 @@ export default {
   getPendingEvents,
   approveEvent,
   rejectEvent,
+  getPendingBusinesses,
+  approveBusiness,
+  rejectBusiness,
 };

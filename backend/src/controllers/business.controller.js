@@ -1,5 +1,6 @@
 import Business from '../models/Business.js';
 import User from '../models/User.js';
+import { sendBusinessApprovalEmail, sendBusinessRejectionEmail } from '../services/email.service.js';
 
 /**
  * Business Controller - Entre Amigas
@@ -26,8 +27,8 @@ export const getAll = async (req, res) => {
       sortOrder = 'desc',
     } = req.query;
 
-    // Build query
-    const query = { isActive: true };
+    // Build query - Solo mostrar negocios activos Y aprobados
+    const query = { isActive: true, status: 'approved' };
 
     // Filtro por categoría
     if (category) {
@@ -670,6 +671,283 @@ export const getCategories = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error al obtener categorías',
+    });
+  }
+};
+
+/**
+ * @route   POST /api/v1/businesses/propose
+ * @desc    Proponer negocio para revisión (usuario regular)
+ * @access  Private (requiere autenticación)
+ * Sistema de Propuesta de Negocios - PLAN-BUSINESS-PROPOSAL-SYSTEM
+ */
+export const proposeBusiness = async (req, res) => {
+  try {
+    console.log('\n📋 === PROPOSE BUSINESS DEBUG ===');
+    console.log('🔐 Usuario autenticado:', req.user?.id, req.user?.email);
+    console.log('📦 Request Body:', JSON.stringify(req.body, null, 2));
+    console.log('📝 Campos recibidos:', Object.keys(req.body));
+    console.log('📎 Archivo recibido (req.file):', req.file ? req.file.originalname : 'No hay archivo');
+
+    const {
+      name,
+      category,
+      description,
+      phone,
+      email,
+      whatsapp,
+      city,
+      address,
+      website,
+      instagram,
+      facebook,
+    } = req.body;
+
+    console.log('\n✅ Campos extraídos:');
+    console.log('  - name:', name);
+    console.log('  - category:', category);
+    console.log('  - description:', description ? `${description.substring(0, 50)}...` : 'N/A');
+    console.log('  - city:', city);
+    console.log('  - website:', website || 'N/A');
+    console.log('  - phone:', phone || 'N/A');
+    console.log('  - email:', email || 'N/A');
+
+    // El owner y submittedBy son el usuario autenticado
+    const userId = req.user.id;
+
+    // Si hay archivo de logo, subirlo a S3
+    let logoUrl = null;
+    if (req.file) {
+      console.log('\n📤 Subiendo logo a S3...');
+      const { uploadToS3 } = await import('../services/upload.service.js');
+      const uploadResult = await uploadToS3(req.file, 'businesses', userId);
+      logoUrl = uploadResult.url;
+      console.log('✅ Logo subido:', logoUrl);
+    }
+
+    console.log('\n🚀 Creando negocio con status="pending" para revisión...');
+
+    // Crear negocio con status='pending'
+    const business = await Business.create({
+      name,
+      category,
+      description,
+      phone,
+      email,
+      whatsapp,
+      city,
+      address,
+      website,
+      instagram,
+      facebook,
+      logo: logoUrl, // URL de S3 o null
+      owner: userId,
+      submittedBy: userId,
+      status: 'pending', // IMPORTANTE: status pending para revisión
+    });
+
+    console.log(`📋 Usuario [${req.user.email}] propuso negocio: "${name}" (ID: ${business._id})`);
+    console.log('=== END DEBUG ===\n');
+
+    // Populate para respuesta
+    await business.populate('submittedBy', 'preferredName email');
+
+    res.status(201).json({
+      success: true,
+      message: 'Tu negocio ha sido enviado para revisión. Nuestro equipo lo revisará pronto.',
+      data: business,
+    });
+  } catch (error) {
+    console.error('\n❌ === ERROR EN PROPOSE BUSINESS ===');
+    console.error('📛 Error completo:', error);
+    console.error('📛 Error message:', error.message);
+    console.error('📛 Error name:', error.name);
+
+    // Errores de validación de Mongoose
+    if (error.name === 'ValidationError') {
+      console.error('📛 Validation Error detectado');
+      const errors = Object.values(error.errors).map((err) => ({
+        field: err.path,
+        message: err.message,
+        value: err.value,
+      }));
+
+      console.error('📛 Errores de validación:', JSON.stringify(errors, null, 2));
+      console.error('=== END ERROR DEBUG ===\n');
+
+      return res.status(400).json({
+        success: false,
+        message: 'Error de validación',
+        errors,
+      });
+    }
+
+    console.error('📛 Error stack:', error.stack);
+    console.error('=== END ERROR DEBUG ===\n');
+
+    res.status(500).json({
+      success: false,
+      message: 'Error al enviar propuesta de negocio',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+    });
+  }
+};
+
+/**
+ * @route   GET /api/v1/admin/businesses/pending
+ * @desc    Obtener negocios pendientes de aprobación
+ * @access  Private/Admin
+ * Sistema de Propuesta de Negocios - PLAN-BUSINESS-PROPOSAL-SYSTEM
+ */
+export const getPendingBusinesses = async (req, res) => {
+  try {
+    const { page = 1, limit = 20 } = req.query;
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
+
+    const businesses = await Business.find({ status: 'pending' })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limitNum)
+      .populate('submittedBy', 'preferredName email profileImage')
+      .populate('owner', 'preferredName email')
+      .lean();
+
+    const total = await Business.countDocuments({ status: 'pending' });
+
+    console.log(`📋 Admin solicitó ${businesses.length} negocios pendientes (total: ${total})`);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        businesses,
+        pagination: {
+          total,
+          page: pageNum,
+          limit: limitNum,
+          totalPages: Math.ceil(total / limitNum),
+        },
+      },
+    });
+  } catch (error) {
+    console.error('Error en getPendingBusinesses:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener negocios pendientes',
+    });
+  }
+};
+
+/**
+ * @route   PATCH /api/v1/admin/businesses/:id/approve
+ * @desc    Aprobar negocio pendiente
+ * @access  Private/Admin
+ * Sistema de Propuesta de Negocios - PLAN-BUSINESS-PROPOSAL-SYSTEM
+ */
+export const approveBusiness = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const business = await Business.findById(id).populate('submittedBy', 'preferredName email');
+
+    if (!business) {
+      return res.status(404).json({
+        success: false,
+        message: 'Negocio no encontrado',
+      });
+    }
+
+    if (business.status !== 'pending') {
+      return res.status(409).json({
+        success: false,
+        message: `Este negocio ya fue ${business.status === 'approved' ? 'aprobado' : 'rechazado'}`,
+      });
+    }
+
+    await business.approve(req.user.id);
+
+    console.log(`✅ Admin [${req.user.email}] aprobó negocio: "${business.name}" (ID: ${business._id})`);
+
+    // Enviar email de aprobación
+    try {
+      await sendBusinessApprovalEmail(business.submittedBy.email, business.submittedBy.preferredName, business);
+      console.log(`📧 Email de aprobación enviado a ${business.submittedBy.email}`);
+    } catch (emailError) {
+      console.error('⚠️ Error al enviar email de aprobación:', emailError);
+      // No falla la operación si el email falla
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Negocio aprobado exitosamente',
+      data: business,
+    });
+  } catch (error) {
+    console.error('Error en approveBusiness:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al aprobar el negocio',
+    });
+  }
+};
+
+/**
+ * @route   PATCH /api/v1/admin/businesses/:id/reject
+ * @desc    Rechazar negocio pendiente
+ * @access  Private/Admin
+ * Sistema de Propuesta de Negocios - PLAN-BUSINESS-PROPOSAL-SYSTEM
+ */
+export const rejectBusiness = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+
+    if (!reason || reason.trim().length < 10) {
+      return res.status(400).json({
+        success: false,
+        message: 'Debes proporcionar una razón de rechazo (mínimo 10 caracteres)',
+      });
+    }
+
+    const business = await Business.findById(id).populate('submittedBy', 'preferredName email');
+
+    if (!business) {
+      return res.status(404).json({
+        success: false,
+        message: 'Negocio no encontrado',
+      });
+    }
+
+    if (business.status !== 'pending') {
+      return res.status(409).json({
+        success: false,
+        message: 'Este negocio ya fue procesado',
+      });
+    }
+
+    await business.reject(req.user.id, reason);
+
+    console.log(`❌ Admin [${req.user.email}] rechazó negocio: "${business.name}" - Razón: "${reason}"`);
+
+    // Enviar email de rechazo
+    try {
+      await sendBusinessRejectionEmail(business.submittedBy.email, business.submittedBy.preferredName, business, reason);
+      console.log(`📧 Email de rechazo enviado a ${business.submittedBy.email}`);
+    } catch (emailError) {
+      console.error('⚠️ Error al enviar email de rechazo:', emailError);
+      // No falla la operación si el email falla
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Negocio rechazado',
+      data: business,
+    });
+  } catch (error) {
+    console.error('Error en rejectBusiness:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al rechazar el negocio',
     });
   }
 };

@@ -166,7 +166,7 @@ BlogCard.propTypes = {
       name: PropTypes.string.isRequired,
       profileImage: PropTypes.string,
     }),
-    publishedAt: PropTypes.string.isRequired,
+    publishedAt: PropTypes.string, // Opcional - puede ser null si el post está en draft
     slug: PropTypes.string.isRequired,
   }).isRequired,
   onClick: PropTypes.func,

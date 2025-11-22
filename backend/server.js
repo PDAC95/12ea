@@ -22,9 +22,11 @@ connectDB();
 // Middleware de seguridad
 app.use(helmet());
 
-// CORS
+// CORS - Acepta cualquier puerto localhost en desarrollo
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: process.env.NODE_ENV === 'development'
+    ? /http:\/\/localhost:\d+/  // Acepta cualquier puerto localhost en dev
+    : process.env.CORS_ORIGIN,
   credentials: true,
 }));
 

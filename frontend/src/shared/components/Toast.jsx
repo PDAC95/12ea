@@ -51,7 +51,9 @@ const Toast = ({ type = 'success', message, onClose, duration = 5000 }) => {
     },
   };
 
-  const { bgColor, borderColor, textColor, iconColor, icon: Icon } = config[type];
+  // Validar tipo y usar 'error' como fallback si el tipo es inválido
+  const validType = config[type] ? type : 'error';
+  const { bgColor, borderColor, textColor, iconColor, icon: Icon } = config[validType];
 
   return (
     <div

@@ -13,6 +13,9 @@ import {
   getPendingEvents,
   approveEvent,
   rejectEvent,
+  getPendingBusinesses,
+  approveBusiness,
+  rejectBusiness,
 } from '../controllers/admin.controller.js';
 import { protect, requireAdmin } from '../middleware/auth.middleware.js';
 
@@ -78,5 +81,32 @@ router.patch('/events/:id/approve', approveEvent);
  * Body: { reason: string } (requerido)
  */
 router.patch('/events/:id/reject', rejectEvent);
+
+// =====================================
+// BUSINESS APPROVAL ROUTES (Sistema de Propuesta de Negocios)
+// =====================================
+
+/**
+ * @route   GET /api/v1/admin/business/pending
+ * @desc    Obtener lista de negocios pendientes de aprobación
+ * @access  Private/Admin
+ * Query: { page?: number, limit?: number }
+ */
+router.get('/business/pending', getPendingBusinesses);
+
+/**
+ * @route   PATCH /api/v1/admin/business/:id/approve
+ * @desc    Aprobar negocio propuesto por usuario
+ * @access  Private/Admin
+ */
+router.patch('/business/:id/approve', approveBusiness);
+
+/**
+ * @route   PATCH /api/v1/admin/business/:id/reject
+ * @desc    Rechazar negocio propuesto por usuario
+ * @access  Private/Admin
+ * Body: { reason: string } (requerido, mínimo 10 caracteres)
+ */
+router.patch('/business/:id/reject', rejectBusiness);
 
 export default router;

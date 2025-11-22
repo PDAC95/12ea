@@ -2261,6 +2261,640 @@ export const sendEventRejectionEmail = async (to, userName, event, reason) => {
 };
 
 // Export default con todas las funciones
+/**
+ * Enviar email de aprobación de negocio
+ * @param {string} to - Email del usuario
+ * @param {string} userName - Nombre del usuario
+ * @param {Object} business - Datos del negocio aprobado
+ * @returns {Promise<Object>} Resultado del envío
+ * Sistema de Propuesta de Negocios - PLAN-BUSINESS-PROPOSAL-SYSTEM
+ */
+export const sendBusinessApprovalEmail = async (to, userName, business) => {
+  const subject = `✅ ¡Tu negocio ha sido aprobado! - ${business.name}`;
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        body {
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          background: linear-gradient(135deg, #fef5f8 0%, #f9f6fe 100%);
+          margin: 0;
+          padding: 40px 20px;
+          line-height: 1.6;
+        }
+        .email-wrapper {
+          max-width: 600px;
+          margin: 0 auto;
+          background-color: #ffffff;
+          border-radius: 24px;
+          overflow: hidden;
+          box-shadow: 0 10px 40px -5px rgba(16, 185, 129, 0.15), 0 20px 25px -5px rgba(59, 130, 246, 0.1);
+        }
+        .header {
+          position: relative;
+          background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+          padding: 48px 40px;
+          text-align: center;
+          color: #ffffff;
+          overflow: hidden;
+        }
+        .header::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        }
+        .logo {
+          position: relative;
+          z-index: 1;
+          width: 80px;
+          height: 80px;
+          margin: 0 auto 20px;
+          background-color: white;
+          border-radius: 20px;
+          padding: 12px;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+        .logo img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+        .header h1 {
+          position: relative;
+          z-index: 1;
+          margin: 0;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 28px;
+          font-weight: 700;
+          letter-spacing: -0.5px;
+          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header p {
+          position: relative;
+          z-index: 1;
+          margin: 12px 0 0;
+          font-size: 15px;
+          opacity: 0.95;
+          font-weight: 500;
+        }
+        .content {
+          padding: 48px 40px;
+          color: #1a202c;
+        }
+        .greeting {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 24px;
+          font-weight: 700;
+          color: #2d3748;
+          margin-bottom: 20px;
+        }
+        .content p {
+          margin: 20px 0;
+          font-size: 16px;
+          color: #4a5568;
+          line-height: 1.8;
+        }
+        .content strong {
+          color: #2d3748;
+          font-weight: 600;
+        }
+        .success-box {
+          background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+          border-left: 5px solid #10b981;
+          padding: 28px;
+          margin: 32px 0;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+        }
+        .success-box strong {
+          color: #065f46;
+          display: block;
+          margin-bottom: 16px;
+          font-size: 17px;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .success-box p {
+          margin: 8px 0;
+          font-size: 15px;
+          color: #064e3b;
+          line-height: 1.7;
+        }
+        .business-details {
+          background: #f9fafb;
+          padding: 24px;
+          border-radius: 12px;
+          margin: 24px 0;
+        }
+        .business-details p {
+          margin: 8px 0;
+          font-size: 15px;
+        }
+        .cta-container {
+          text-align: center;
+          margin: 40px 0;
+        }
+        .cta-button {
+          display: inline-block;
+          padding: 18px 48px;
+          background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+          color: #ffffff !important;
+          text-decoration: none;
+          border-radius: 16px;
+          font-weight: 700;
+          font-size: 17px;
+          box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35), 0 4px 12px rgba(59, 130, 246, 0.25);
+          transition: all 0.3s ease;
+          letter-spacing: 0.3px;
+        }
+        .divider {
+          height: 2px;
+          background: linear-gradient(90deg, transparent, #e2e8f0 20%, #e2e8f0 80%, transparent);
+          margin: 40px 0;
+        }
+        .footer {
+          background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+          padding: 40px;
+          text-align: center;
+          color: #cbd5e0;
+        }
+        .footer-logo {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 24px;
+          font-weight: 700;
+          color: #ffffff;
+          margin-bottom: 8px;
+        }
+        .footer-tagline {
+          color: #a0aec0;
+          font-size: 14px;
+          margin-bottom: 24px;
+        }
+        .footer p {
+          margin: 8px 0;
+          font-size: 14px;
+          color: #a0aec0;
+        }
+        .footer a {
+          color: #10b981;
+          text-decoration: none;
+          font-weight: 600;
+          transition: color 0.2s;
+        }
+        .footer a:hover {
+          color: #34d399;
+        }
+        .footer-links {
+          margin-top: 20px;
+          padding-top: 20px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .heart {
+          display: inline-block;
+          color: #10b981;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="email-wrapper">
+        <!-- Header -->
+        <div class="header">
+          <div class="logo">
+            <img src="https://entre-amigas-dev.s3.us-east-1.amazonaws.com/temp/logo.png" alt="Entre Amigas Logo" />
+          </div>
+          <h1>¡Negocio Aprobado!</h1>
+          <p>Tu negocio ha sido publicado exitosamente</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+          <h2 class="greeting">¡Hola ${userName}! 🎉</h2>
+
+          <div class="success-box">
+            <strong>✅ ¡Excelentes noticias!</strong>
+            <p>
+              Tu negocio <strong>"${business.name}"</strong> ha sido aprobado por nuestro equipo
+              y ahora está publicado en el directorio de negocios.
+            </p>
+          </div>
+
+          <p>
+            Gracias por contribuir a nuestra comunidad de <strong>Entre Amigas</strong>.
+            Tu negocio ya está visible para todas las usuarias en la plataforma.
+          </p>
+
+          <div class="business-details">
+            <p><strong>📍 Ciudad:</strong> ${business.city}</p>
+            <p><strong>🏷️ Categoría:</strong> ${business.category}</p>
+          </div>
+
+          <!-- CTA Button -->
+          <div class="cta-container">
+            <a href="${emailConfig.frontendUrl}/businesses/${business._id}" class="cta-button">
+              👀 Ver mi Negocio Publicado
+            </a>
+          </div>
+
+          <!-- Divider -->
+          <div class="divider"></div>
+
+          <p style="font-size: 14px; color: #718096;">
+            Puedes gestionar tu negocio desde tu panel de usuario.
+            Si tienes alguna pregunta, no dudes en contactarnos.
+          </p>
+
+          <p style="margin-top: 32px; text-align: center; font-size: 15px;">
+            ¡Gracias por ser parte de nuestra comunidad!<br>
+            <strong style="font-size: 17px;">El equipo de Entre Amigas <span class="heart">💚</span></strong>
+          </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+          <div class="footer-logo">Entre Amigas</div>
+          <p class="footer-tagline">Comunidad de mujeres hispanas en Canadá</p>
+
+          <p style="margin: 20px 0;">
+            Conecta con mujeres que comparten tu experiencia migratoria.<br>
+            Encuentra apoyo, amistad y oportunidades.
+          </p>
+
+          <p style="margin-top: 24px; font-size: 13px;">
+            © ${new Date().getFullYear()} Entre Amigas. Todos los derechos reservados.
+          </p>
+
+          <div class="footer-links">
+            <a href="${emailConfig.frontendUrl}/privacy">Privacidad</a>
+            <span style="color: #4a5568; margin: 0 8px;">·</span>
+            <a href="${emailConfig.frontendUrl}/terms">Términos</a>
+            <span style="color: #4a5568; margin: 0 8px;">·</span>
+            <a href="${emailConfig.frontendUrl}/contact">Contacto</a>
+          </div>
+
+          <p style="margin-top: 20px; font-size: 13px; color: #718096;">
+            Hecho con <span class="heart">💚</span> en Canadá
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return sendEmail({ to, subject, html });
+};
+
+/**
+ * Enviar email de rechazo de negocio
+ * @param {string} to - Email del usuario
+ * @param {string} userName - Nombre del usuario
+ * @param {Object} business - Datos del negocio rechazado
+ * @param {string} reason - Motivo del rechazo
+ * @returns {Promise<Object>} Resultado del envío
+ * Sistema de Propuesta de Negocios - PLAN-BUSINESS-PROPOSAL-SYSTEM
+ */
+export const sendBusinessRejectionEmail = async (to, userName, business, reason) => {
+  const subject = `📋 Actualización sobre tu propuesta de negocio - ${business.name}`;
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        body {
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          background: linear-gradient(135deg, #fef5f8 0%, #f9f6fe 100%);
+          margin: 0;
+          padding: 40px 20px;
+          line-height: 1.6;
+        }
+        .email-wrapper {
+          max-width: 600px;
+          margin: 0 auto;
+          background-color: #ffffff;
+          border-radius: 24px;
+          overflow: hidden;
+          box-shadow: 0 10px 40px -5px rgba(251, 113, 133, 0.15), 0 20px 25px -5px rgba(249, 115, 22, 0.1);
+        }
+        .header {
+          position: relative;
+          background: linear-gradient(135deg, #fb7185 0%, #f97316 100%);
+          padding: 48px 40px;
+          text-align: center;
+          color: #ffffff;
+          overflow: hidden;
+        }
+        .header::before {
+          content: '';
+          position: absolute;
+          top: -50%;
+          left: -50%;
+          width: 200%;
+          height: 200%;
+          background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        }
+        .logo {
+          position: relative;
+          z-index: 1;
+          width: 80px;
+          height: 80px;
+          margin: 0 auto 20px;
+          background-color: white;
+          border-radius: 20px;
+          padding: 12px;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+        .logo img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+        .header h1 {
+          position: relative;
+          z-index: 1;
+          margin: 0;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 28px;
+          font-weight: 700;
+          letter-spacing: -0.5px;
+          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header p {
+          position: relative;
+          z-index: 1;
+          margin: 12px 0 0;
+          font-size: 15px;
+          opacity: 0.95;
+          font-weight: 500;
+        }
+        .content {
+          padding: 48px 40px;
+          color: #1a202c;
+        }
+        .greeting {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 24px;
+          font-weight: 700;
+          color: #2d3748;
+          margin-bottom: 20px;
+        }
+        .content p {
+          margin: 20px 0;
+          font-size: 16px;
+          color: #4a5568;
+          line-height: 1.8;
+        }
+        .content strong {
+          color: #2d3748;
+          font-weight: 600;
+        }
+        .warning-box {
+          background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+          border-left: 5px solid #ef4444;
+          padding: 28px;
+          margin: 32px 0;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
+        }
+        .warning-box strong {
+          color: #7f1d1d;
+          display: block;
+          margin-bottom: 16px;
+          font-size: 17px;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .warning-box p {
+          margin: 8px 0;
+          font-size: 15px;
+          color: #991b1b;
+          line-height: 1.7;
+        }
+        .info-box {
+          background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+          border-left: 5px solid #3b82f6;
+          padding: 28px;
+          margin: 32px 0;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        }
+        .info-box strong {
+          color: #1e3a8a;
+          display: block;
+          margin-bottom: 16px;
+          font-size: 17px;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .info-box p {
+          margin: 8px 0;
+          font-size: 15px;
+          color: #1e40af;
+          line-height: 1.7;
+        }
+        .reason-box {
+          background: #f9fafb;
+          padding: 24px;
+          border-radius: 12px;
+          margin: 24px 0;
+          border: 2px solid #e5e7eb;
+        }
+        .reason-box strong {
+          color: #374151;
+          display: block;
+          margin-bottom: 12px;
+          font-size: 16px;
+        }
+        .reason-box p {
+          margin: 0;
+          font-size: 15px;
+          color: #6b7280;
+          font-style: italic;
+        }
+        .cta-container {
+          text-align: center;
+          margin: 40px 0;
+        }
+        .cta-button {
+          display: inline-block;
+          padding: 18px 48px;
+          background: linear-gradient(135deg, #f0568c 0%, #a076e7 100%);
+          color: #ffffff !important;
+          text-decoration: none;
+          border-radius: 16px;
+          font-weight: 700;
+          font-size: 17px;
+          box-shadow: 0 8px 24px rgba(240, 86, 140, 0.35), 0 4px 12px rgba(160, 118, 231, 0.25);
+          transition: all 0.3s ease;
+          letter-spacing: 0.3px;
+        }
+        .divider {
+          height: 2px;
+          background: linear-gradient(90deg, transparent, #e2e8f0 20%, #e2e8f0 80%, transparent);
+          margin: 40px 0;
+        }
+        .footer {
+          background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+          padding: 40px;
+          text-align: center;
+          color: #cbd5e0;
+        }
+        .footer-logo {
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 24px;
+          font-weight: 700;
+          color: #ffffff;
+          margin-bottom: 8px;
+        }
+        .footer-tagline {
+          color: #a0aec0;
+          font-size: 14px;
+          margin-bottom: 24px;
+        }
+        .footer p {
+          margin: 8px 0;
+          font-size: 14px;
+          color: #a0aec0;
+        }
+        .footer a {
+          color: #fb7185;
+          text-decoration: none;
+          font-weight: 600;
+          transition: color 0.2s;
+        }
+        .footer a:hover {
+          color: #f43f5e;
+        }
+        .footer-links {
+          margin-top: 20px;
+          padding-top: 20px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .heart {
+          display: inline-block;
+          color: #fb7185;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="email-wrapper">
+        <!-- Header -->
+        <div class="header">
+          <div class="logo">
+            <img src="https://entre-amigas-dev.s3.us-east-1.amazonaws.com/temp/logo.png" alt="Entre Amigas Logo" />
+          </div>
+          <h1>Actualización de Propuesta</h1>
+          <p>Revisión de tu negocio</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+          <h2 class="greeting">Hola ${userName},</h2>
+
+          <p>
+            Gracias por tu interés en formar parte del directorio de negocios de <strong>Entre Amigas</strong>.
+            Hemos revisado tu propuesta de negocio <strong>"${business.name}"</strong>.
+          </p>
+
+          <div class="warning-box">
+            <strong>📋 Estado de tu propuesta</strong>
+            <p>
+              Lamentablemente, en este momento no podemos aprobar tu negocio para su publicación
+              en nuestro directorio.
+            </p>
+          </div>
+
+          <div class="reason-box">
+            <strong>💬 Motivo del rechazo:</strong>
+            <p>"${reason}"</p>
+          </div>
+
+          <div class="info-box">
+            <strong>💡 ¿Qué puedes hacer ahora?</strong>
+            <p>
+              Puedes revisar la información de tu negocio y realizar los cambios necesarios
+              según el motivo indicado arriba. Luego, puedes enviar una nueva propuesta
+              desde tu panel de usuario.
+            </p>
+          </div>
+
+          <p>
+            Estamos comprometidas a mantener la calidad de nuestro directorio para beneficio
+            de toda la comunidad. Si tienes dudas sobre este rechazo, no dudes en contactarnos.
+          </p>
+
+          <!-- CTA Button -->
+          <div class="cta-container">
+            <a href="${emailConfig.frontendUrl}/dashboard/businesses" class="cta-button">
+              🔄 Enviar Nueva Propuesta
+            </a>
+          </div>
+
+          <!-- Divider -->
+          <div class="divider"></div>
+
+          <p style="font-size: 14px; color: #718096;">
+            Apreciamos tu comprensión y esperamos contar con tu negocio en nuestra plataforma pronto.
+          </p>
+
+          <p style="margin-top: 32px; text-align: center; font-size: 15px;">
+            Con cariño,<br>
+            <strong style="font-size: 17px;">El equipo de Entre Amigas <span class="heart">💜</span></strong>
+          </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+          <div class="footer-logo">Entre Amigas</div>
+          <p class="footer-tagline">Comunidad de mujeres hispanas en Canadá</p>
+
+          <p style="margin: 20px 0;">
+            Conecta con mujeres que comparten tu experiencia migratoria.<br>
+            Encuentra apoyo, amistad y oportunidades.
+          </p>
+
+          <p style="margin-top: 24px; font-size: 13px;">
+            © ${new Date().getFullYear()} Entre Amigas. Todos los derechos reservados.
+          </p>
+
+          <div class="footer-links">
+            <a href="${emailConfig.frontendUrl}/privacy">Privacidad</a>
+            <span style="color: #4a5568; margin: 0 8px;">·</span>
+            <a href="${emailConfig.frontendUrl}/terms">Términos</a>
+            <span style="color: #4a5568; margin: 0 8px;">·</span>
+            <a href="${emailConfig.frontendUrl}/contact">Contacto</a>
+          </div>
+
+          <p style="margin-top: 20px; font-size: 13px; color: #718096;">
+            Hecho con <span class="heart">💜</span> en Canadá
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  return sendEmail({ to, subject, html });
+};
+
 export default {
   sendEmail,
   sendWelcomeEmail,
@@ -2270,4 +2904,6 @@ export default {
   sendEventConfirmationEmail,
   sendEventApprovalEmail,
   sendEventRejectionEmail,
+  sendBusinessApprovalEmail,
+  sendBusinessRejectionEmail,
 };

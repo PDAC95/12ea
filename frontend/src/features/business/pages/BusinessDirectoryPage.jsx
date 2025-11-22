@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Building2 } from 'lucide-react';
+import { Building2, PlusCircle } from 'lucide-react';
 import DashboardLayout from '../../dashboard/components/DashboardLayout';
 import { BusinessList, FiltersBar, BusinessDetailModal } from '../components';
+import ProposeBusinessModal from '../components/ProposeBusinessModal';
 import useDebounce from '../../../shared/hooks/useDebounce';
 
 /**
@@ -36,9 +37,12 @@ const BusinessDirectoryPage = () => {
   // Estado de paginación
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Estados del modal
+  // Estados del modal de detalle
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBusiness, setSelectedBusiness] = useState(null);
+
+  // Estado del modal de propuesta
+  const [isProposeModalOpen, setIsProposeModalOpen] = useState(false);
 
   // Debounce del término de búsqueda (300ms)
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
@@ -73,27 +77,55 @@ const BusinessDirectoryPage = () => {
     setIsModalOpen(true);
   };
 
-  // Handler para cerrar modal
+  // Handler para cerrar modal de detalle
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedBusiness(null);
+  };
+
+  // Handler para abrir modal de propuesta
+  const handleOpenProposeModal = () => {
+    setIsProposeModalOpen(true);
+  };
+
+  // Handler para cerrar modal de propuesta
+  const handleCloseProposeModal = () => {
+    setIsProposeModalOpen(false);
+  };
+
+  // Handler para éxito en propuesta (opcional: refresh lista)
+  const handleProposeSuccess = () => {
+    // Podrías hacer un refresh de la lista aquí si quieres
+    // Por ahora solo cerramos el modal (ya se hace en ProposeBusinessModal)
   };
 
   return (
     <DashboardLayout>
       {/* Header Section */}
       <div className="mb-8">
-        {/* Icon + Title */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
-            <Building2 className="w-6 h-6 text-white" />
+        {/* Icon + Title + Botón Agregar */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
+              <Building2 className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Directorio de Negocios</h1>
+              <p className="text-gray-600 mt-1">
+                Descubre negocios de mujeres latinas emprendedoras
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Directorio de Negocios</h1>
-            <p className="text-gray-600 mt-1">
-              Descubre negocios de mujeres latinas emprendedoras
-            </p>
-          </div>
+
+          {/* Botón Agregar Mi Negocio */}
+          <button
+            onClick={handleOpenProposeModal}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-medium hover:shadow-soft-lg transition-all"
+          >
+            <PlusCircle size={20} />
+            <span className="hidden sm:inline">Agregar Mi Negocio</span>
+            <span className="sm:hidden">Agregar</span>
+          </button>
         </div>
 
         {/* Divider */}
@@ -126,6 +158,13 @@ const BusinessDirectoryPage = () => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         business={selectedBusiness}
+      />
+
+      {/* Propose Business Modal - Sprint 5+ Business Proposal System */}
+      <ProposeBusinessModal
+        isOpen={isProposeModalOpen}
+        onClose={handleCloseProposeModal}
+        onSuccess={handleProposeSuccess}
       />
 
       {/* TODO: Agregar en futuros sprints:
