@@ -173,6 +173,43 @@ const serviceSchema = new mongoose.Schema(
       required: [true, 'El propietario es requerido'],
       index: true,
     },
+    submittedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: false, // Opcional para servicios creados antes del sistema de aprobación
+      index: true,
+    },
+
+    // Sistema de Aprobación (Sprint 5+)
+    status: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'approved', // Por defecto aprobado para compatibilidad con servicios existentes
+      index: true,
+    },
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: false,
+    },
+    approvedAt: {
+      type: Date,
+      required: false,
+    },
+    rejectedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: false,
+    },
+    rejectedAt: {
+      type: Date,
+      required: false,
+    },
+    rejectionReason: {
+      type: String,
+      trim: true,
+      maxlength: [500, 'La razón del rechazo no puede exceder 500 caracteres'],
+    },
 
     // Estado y Visibilidad
     isActive: {
@@ -239,6 +276,7 @@ serviceSchema.index({ serviceType: 1, city: 1, isActive: 1 });
 serviceSchema.index({ owner: 1, isActive: 1 });
 serviceSchema.index({ createdAt: -1 });
 serviceSchema.index({ isVerified: 1, isFeatured: 1 });
+serviceSchema.index({ status: 1, createdAt: -1 }); // Para panel admin de aprobaciones
 
 // ========================================
 // VIRTUALS

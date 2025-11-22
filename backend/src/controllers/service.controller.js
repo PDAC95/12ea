@@ -568,3 +568,118 @@ export const getServiceTypes = async (req, res) => {
     });
   }
 };
+
+/**
+ * @route   POST /api/v1/services/propose
+ * @desc    Proponer servicio para revisión (usuario regular)
+ * @access  Private (requiere autenticación)
+ * Sistema de Propuesta de Servicios - Sprint 5+
+ */
+export const proposeService = async (req, res) => {
+  try {
+    console.log('\n📋 === PROPOSE SERVICE DEBUG ===');
+    console.log('🔐 Usuario autenticado:', req.user?.id, req.user?.email);
+    console.log('📦 Request Body:', JSON.stringify(req.body, null, 2));
+    console.log('📝 Campos recibidos:', Object.keys(req.body));
+    console.log('📎 Archivo recibido (req.file):', req.file ? req.file.originalname : 'No hay archivo');
+
+    const {
+      name,
+      serviceType,
+      description,
+      credentials,
+      phone,
+      email,
+      whatsapp,
+      city,
+      address,
+      website,
+      instagram,
+      facebook,
+      linkedin,
+    } = req.body;
+
+    console.log('\n✅ Campos extraídos:');
+    console.log('  - name:', name);
+    console.log('  - serviceType:', serviceType);
+    console.log('  - description:', description ? `${description.substring(0, 50)}...` : 'N/A');
+    console.log('  - city:', city);
+    console.log('  - credentials:', credentials || 'N/A');
+    console.log('  - phone:', phone || 'N/A');
+    console.log('  - email:', email || 'N/A');
+
+    // El owner y submittedBy son el usuario autenticado
+    const userId = req.user.id;
+
+    // Si hay archivo de logo, subirlo a S3
+    let logoUrl = null;
+    if (req.file) {
+      console.log('\n📤 Subiendo logo a S3...');
+      const { uploadToS3 } = await import('../services/upload.service.js');
+      const uploadResult = await uploadToS3(req.file, 'services', userId);
+      logoUrl = uploadResult.url;
+      console.log('✅ Logo subido:', logoUrl);
+    }
+
+    console.log('\n🚀 Creando servicio con status="pending" para revisión...');
+
+    // Crear servicio con status='pending'
+    const service = await Service.create({
+      name,
+      serviceType,
+      description,
+      credentials,
+      phone,
+      email,
+      whatsapp,
+      city,
+      address,
+      website,
+      instagram,
+      facebook,
+      linkedin,
+      logo: logoUrl,
+      owner: userId,
+      submittedBy: userId,
+      status: 'pending', // IMPORTANTE: status pending para revisión
+    });
+
+    console.log(`📋 Usuario [${req.user.email}] propuso servicio: "${name}" (ID: ${service._id})`);
+    console.log('=== END DEBUG ===\n');
+
+    // Populate para respuesta
+    await service.populate('submittedBy', 'preferredName email');
+
+    res.status(201).json({
+      success: true,
+      message: 'Tu servicio ha sido enviado para revisión. Nuestro equipo lo revisará pronto.',
+      data: service,
+    });
+  } catch (error) {
+    console.error('\n❌ === ERROR EN PROPOSE SERVICE ===');
+    console.error('📛 Error completo:', error);
+    console.error('📛 Error message:', error.message);
+    console.error('📛 Error name:', error.name);
+
+    // Errores de validación de Mongoose
+    if (error.name === 'ValidationError') {
+      console.error('📛 Validation Error detectado');
+      const errors = Object.values(error.errors).map((err) => ({
+        field: err.path,
+        message: err.message,
+      }));
+
+      return res.status(400).json({
+        success: false,
+        message: 'Error de validación de Mongoose',
+        errors,
+      });
+    }
+
+    // Error genérico
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error al proponer servicio',
+    });
+  }
+};

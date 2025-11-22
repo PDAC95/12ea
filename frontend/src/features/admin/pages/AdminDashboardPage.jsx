@@ -218,6 +218,26 @@ const AdminDashboardPage = () => {
               </div>
             </Link>
 
+            {/* Servicios Pendientes - Service Proposal System */}
+            <Link
+              to="/admin/services/pending"
+              className="block bg-white rounded-2xl shadow-soft p-6 hover:shadow-soft-lg transition-shadow border border-gray-200"
+            >
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-green-100 rounded-xl">
+                  <Briefcase className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <h3 className="font-display text-lg font-semibold text-gray-900">
+                    Servicios Pendientes
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Revisar propuestas de servicios
+                  </p>
+                </div>
+              </div>
+            </Link>
+
             {/* Placeholder para futuras acciones */}
             <div className="bg-gray-50 rounded-2xl p-6 border-2 border-dashed border-gray-300">
               <div className="flex items-center gap-4">

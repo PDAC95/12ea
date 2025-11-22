@@ -11,6 +11,7 @@ import {
   getStats,
   getMyServices,
   getServiceTypes,
+  proposeService,
 } from '../controllers/service.controller.js';
 import {
   createServiceValidation,
@@ -18,6 +19,7 @@ import {
   handleValidationErrors,
 } from '../validators/service.validator.js';
 import { protect, optionalAuth } from '../middleware/auth.middleware.js';
+import { uploadSingleImage, handleMulterError } from '../middleware/upload.middleware.js';
 
 /**
  * Service Routes - Entre Amigas
@@ -60,6 +62,25 @@ router.get('/stats', getStats);
  * @note    IMPORTANTE: Esta ruta debe estar ANTES de /:id para evitar conflictos
  */
 router.get('/my/list', protect, getMyServices);
+
+/**
+ * @route   POST /api/v1/services/propose
+ * @desc    Proponer servicio para revisión admin (usuario regular)
+ * @access  Private
+ * @headers Authorization: Bearer {token}
+ * @body    { name, serviceType, description, phone?, email?, credentials?, city, address?, website?, instagram?, facebook?, linkedin?, logo? }
+ * @note    IMPORTANTE: Esta ruta debe estar ANTES de /:id para evitar conflictos
+ * Sistema de Propuesta de Servicios - Sprint 5+
+ */
+router.post(
+  '/propose',
+  protect,                      // 1. Verificar autenticación
+  uploadSingleImage('logo'),    // 2. Procesar upload de logo (opcional)
+  handleMulterError,            // 3. Manejar errores de multer
+  createServiceValidation,      // 4. Validar datos de entrada
+  handleValidationErrors,       // 5. Manejar errores de validación
+  proposeService                // 6. Ejecutar controlador
+);
 
 /**
  * @route   GET /api/v1/services

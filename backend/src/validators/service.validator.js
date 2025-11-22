@@ -306,19 +306,31 @@ export const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
+    // 🔍 DEBUGGING: Log de errores de validación express-validator
+    console.error('\n⚠️ === VALIDATION ERRORS (express-validator - SERVICES) ===');
+    console.error('📦 Request Body:', JSON.stringify(req.body, null, 2));
+    console.error('❌ Errores encontrados:', errors.array().length);
+
     // Formatear errores para respuesta más amigable
     const formattedErrors = errors.array().map((error) => ({
       field: error.path || error.param,
       message: error.msg,
       value: error.value,
+      location: error.location,
     }));
+
+    console.error('📛 Detalle de errores:', JSON.stringify(formattedErrors, null, 2));
+    console.error('=== END VALIDATION ERRORS ===\n');
 
     return res.status(400).json({
       success: false,
-      message: 'Error de validación',
+      message: 'Error de validación (express-validator)',
       errors: formattedErrors,
     });
   }
+
+  // 🔍 DEBUGGING: Log de validación exitosa
+  console.log('✅ Validación de express-validator pasó correctamente (Services)');
 
   next();
 };

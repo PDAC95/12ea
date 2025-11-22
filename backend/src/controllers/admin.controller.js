@@ -587,6 +587,143 @@ export const rejectBusiness = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Aprobar servicio pendiente
+ * @route   PUT /api/v1/admin/services/:id/approve
+ * @access  Private/Admin
+ * Sistema de Propuesta de Servicios - Sprint 5+
+ */
+export const approveService = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const service = await Service.findById(id);
+
+    if (!service) {
+      return res.status(404).json({
+        success: false,
+        message: 'Servicio no encontrado',
+      });
+    }
+
+    if (service.status !== 'pending') {
+      return res.status(400).json({
+        success: false,
+        message: 'Solo se pueden aprobar servicios pendientes',
+      });
+    }
+
+    service.status = 'approved';
+    service.approvedBy = req.user.id;
+    service.approvedAt = new Date();
+    await service.save();
+
+    await service.populate('submittedBy', 'preferredName email');
+    await service.populate('approvedBy', 'preferredName email');
+
+    console.log(`✅ Admin [${req.user.email}] aprobó servicio: "${service.name}" (ID: ${service._id})`);
+
+    res.json({
+      success: true,
+      message: 'Servicio aprobado exitosamente',
+      data: service,
+    });
+  } catch (error) {
+    console.error('Error al aprobar servicio:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al aprobar servicio',
+    });
+  }
+};
+
+/**
+ * @desc    Rechazar servicio pendiente
+ * @route   PUT /api/v1/admin/services/:id/reject
+ * @access  Private/Admin
+ * Sistema de Propuesta de Servicios - Sprint 5+
+ */
+export const rejectService = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+
+    if (!reason || reason.trim().length < 10) {
+      return res.status(400).json({
+        success: false,
+        message: 'La razón del rechazo debe tener al menos 10 caracteres',
+      });
+    }
+
+    const service = await Service.findById(id);
+
+    if (!service) {
+      return res.status(404).json({
+        success: false,
+        message: 'Servicio no encontrado',
+      });
+    }
+
+    if (service.status !== 'pending') {
+      return res.status(400).json({
+        success: false,
+        message: 'Solo se pueden rechazar servicios pendientes',
+      });
+    }
+
+    service.status = 'rejected';
+    service.rejectedBy = req.user.id;
+    service.rejectedAt = new Date();
+    service.rejectionReason = reason.trim();
+    await service.save();
+
+    await service.populate('submittedBy', 'preferredName email');
+    await service.populate('rejectedBy', 'preferredName email');
+
+    console.log(`❌ Admin [${req.user.email}] rechazó servicio: "${service.name}" - Razón: ${reason.trim()}`);
+
+    res.json({
+      success: true,
+      message: 'Servicio rechazado',
+      data: service,
+    });
+  } catch (error) {
+    console.error('Error al rechazar servicio:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al rechazar servicio',
+    });
+  }
+};
+
+/**
+ * @desc    Obtener servicios pendientes de aprobación
+ * @route   GET /api/v1/admin/services/pending
+ * @access  Private/Admin
+ * Sistema de Propuesta de Servicios - Sprint 5+
+ */
+export const getPendingServices = async (req, res) => {
+  try {
+    const services = await Service.find({ status: 'pending' })
+      .populate('submittedBy', 'preferredName email profileImage')
+      .sort({ createdAt: -1 });
+
+    console.log(`📋 Admin consultó ${services.length} servicios pendientes`);
+
+    res.json({
+      success: true,
+      count: services.length,
+      data: services,
+    });
+  } catch (error) {
+    console.error('Error al obtener servicios pendientes:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener servicios pendientes',
+    });
+  }
+};
+
 export default {
   getStats,
   getUserStats,
@@ -598,4 +735,7 @@ export default {
   getPendingBusinesses,
   approveBusiness,
   rejectBusiness,
+  approveService,
+  rejectService,
+  getPendingServices,
 };

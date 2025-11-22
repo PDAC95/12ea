@@ -34,6 +34,7 @@ import AdminEventsPage from '../features/admin/pages/AdminEventsPage';
 import AdminBlogPage from '../features/admin/pages/AdminBlogPage';
 import EventApproval from '../features/admin/events/EventApproval';
 import BusinessApproval from '../features/admin/businesses/BusinessApproval';
+import ServiceApproval from '../features/admin/services/ServiceApproval';
 
 // Common Pages
 import NotFoundPage from '../shared/components/common/NotFoundPage';
@@ -236,6 +237,16 @@ const AppRoutes = () => {
         element={
           <AdminRoute>
             <BusinessApproval />
+          </AdminRoute>
+        }
+      />
+
+      {/* Admin Service Approval - Service Proposal System */}
+      <Route
+        path="/admin/services/pending"
+        element={
+          <AdminRoute>
+            <ServiceApproval />
           </AdminRoute>
         }
       />
