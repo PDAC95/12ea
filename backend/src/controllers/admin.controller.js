@@ -704,16 +704,33 @@ export const rejectService = async (req, res) => {
  */
 export const getPendingServices = async (req, res) => {
   try {
-    const services = await Service.find({ status: 'pending' })
-      .populate('submittedBy', 'preferredName email profileImage')
-      .sort({ createdAt: -1 });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
 
-    console.log(`📋 Admin consultó ${services.length} servicios pendientes`);
+    const [services, total] = await Promise.all([
+      Service.find({ status: 'pending' })
+        .populate('submittedBy', 'preferredName fullName email profileImage')
+        .populate('owner', 'preferredName fullName email')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      Service.countDocuments({ status: 'pending' }),
+    ]);
+
+    console.log(`📋 Admin consultó ${services.length} servicios pendientes (página ${page}/${Math.ceil(total / limit)})`);
 
     res.json({
       success: true,
-      count: services.length,
-      data: services,
+      data: {
+        services,
+        pagination: {
+          total,
+          page,
+          pages: Math.ceil(total / limit),
+          limit,
+        },
+      },
     });
   } catch (error) {
     console.error('Error al obtener servicios pendientes:', error);

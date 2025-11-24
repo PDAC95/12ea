@@ -26,18 +26,18 @@ router.use(requireAdmin);
 router.get('/pending', getPendingServices);
 
 /**
- * @route   PUT /api/v1/admin/services/:id/approve
+ * @route   PATCH /api/v1/admin/services/:id/approve
  * @desc    Aprobar servicio pendiente
  * @access  Private/Admin
  */
-router.put('/:id/approve', approveService);
+router.patch('/:id/approve', approveService);
 
 /**
- * @route   PUT /api/v1/admin/services/:id/reject
+ * @route   PATCH /api/v1/admin/services/:id/reject
  * @desc    Rechazar servicio pendiente
  * @access  Private/Admin
  * @body    { reason: string (min 10 caracteres) }
  */
-router.put('/:id/reject', rejectService);
+router.patch('/:id/reject', rejectService);
 
 export default router;
