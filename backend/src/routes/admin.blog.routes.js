@@ -33,22 +33,23 @@ router.use(requireAdmin);
 router.get('/stats', getBlogStats);
 
 /**
- * @route   GET /api/v1/admin/blog
+ * @route   GET /api/v1/admin/blog/posts
  * @desc    Listar todos los artículos (incluye drafts)
  * @access  Private/Admin
  * @query   status (all/draft/published), category, search, page, limit, sort
  * @returns Lista paginada de artículos
+ * IMPORTANTE: Esta ruta debe ir ANTES de '/:id' para evitar conflictos
  */
-router.get('/', getAllBlogPosts);
+router.get('/posts', getAllBlogPosts);
 
 /**
- * @route   POST /api/v1/admin/blog
+ * @route   POST /api/v1/admin/blog/posts
  * @desc    Crear nuevo artículo
  * @access  Private/Admin
  * @body    title, content, excerpt, featuredImage, category, tags, status, metaDescription, metaKeywords, isFeatured, allowComments
  * @returns Artículo creado
  */
-router.post('/', createBlogPost);
+router.post('/posts', createBlogPost);
 
 /**
  * @route   GET /api/v1/admin/blog/:id
