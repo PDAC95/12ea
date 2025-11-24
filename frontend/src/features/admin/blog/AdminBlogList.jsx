@@ -14,6 +14,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import api from '../../../shared/utils/api';
+import AdminLayout from '../components/AdminLayout';
 import BlogPostForm from './BlogPostForm';
 
 /**
@@ -240,9 +241,10 @@ const AdminBlogList = () => {
 
   // ===== RENDER =====
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <AdminLayout>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Artículos del Blog</h1>
           <p className="text-gray-600 mt-1">
@@ -584,7 +586,8 @@ const AdminBlogList = () => {
           }}
         />
       )}
-    </div>
+      </div>
+    </AdminLayout>
   );
 };
 
