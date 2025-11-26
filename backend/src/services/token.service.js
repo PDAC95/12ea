@@ -27,13 +27,17 @@ const jwtConfig = {
  * Generar token de autenticación JWT
  * @param {string} userId - ID del usuario (MongoDB ObjectId)
  * @param {Object} additionalPayload - Datos adicionales opcionales para incluir en el token
+ * @param {string} customExpiresIn - Duración personalizada del token (ej: '30d', '24h')
  * @returns {string} Token JWT firmado
  *
  * @example
  * const token = generateAuthToken('507f1f77bcf86cd799439011');
  * // token => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+ *
+ * const tokenLongExpiry = generateAuthToken('507f1f77bcf86cd799439011', {}, '30d');
+ * // token con expiración de 30 días
  */
-export const generateAuthToken = (userId, additionalPayload = {}) => {
+export const generateAuthToken = (userId, additionalPayload = {}, customExpiresIn = null) => {
   if (!userId) {
     throw new Error('userId es requerido para generar un token de autenticación');
   }
@@ -45,8 +49,10 @@ export const generateAuthToken = (userId, additionalPayload = {}) => {
       ...additionalPayload,
     };
 
+    const expiresIn = customExpiresIn || jwtConfig.expiresIn;
+
     const token = jwt.sign(payload, jwtConfig.secret, {
-      expiresIn: jwtConfig.expiresIn,
+      expiresIn: expiresIn,
     });
 
     return token;

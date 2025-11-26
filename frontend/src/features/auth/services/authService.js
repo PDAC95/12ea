@@ -55,12 +55,13 @@ const authService = {
    * Iniciar sesión
    * @param {string} email - Email del usuario
    * @param {string} password - Contraseña
+   * @param {boolean} [rememberMe=false] - Si debe extender la duración del token
    * @returns {Promise<Object>} { token: string, user: Object }
    * @throws {Error} Si las credenciales son inválidas
    */
-  login: async (email, password) => {
+  login: async (email, password, rememberMe = false) => {
     try {
-      const response = await api.post('/auth/login', { email, password });
+      const response = await api.post('/auth/login', { email, password, rememberMe });
       return response.data;
     } catch (error) {
       if (error.response) {

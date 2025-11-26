@@ -62,7 +62,7 @@ const LoginForm = () => {
 
     try {
       // Llamar al servicio de autenticación (POST /auth/login)
-      const response = await authService.login(data.email, data.password);
+      const response = await authService.login(data.email, data.password, data.rememberMe);
       const { token, user } = response.data;
 
       // Guardar token y usuario en contexto (localStorage + state)

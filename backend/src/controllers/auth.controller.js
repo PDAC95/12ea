@@ -114,7 +114,7 @@ export const register = async (req, res) => {
  */
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
 
     // 1. Buscar usuario por email (incluir password)
     const user = await User.findByEmail(email);
@@ -160,12 +160,13 @@ export const login = async (req, res) => {
     user.lastLogin = new Date();
     await user.save();
 
-    // 7. Generar token JWT
+    // 7. Generar token JWT con duración extendida si rememberMe es true
+    const tokenExpiration = rememberMe ? '30d' : null; // 30 días si Remember Me, 7 días por defecto
     const token = generateAuthToken(user._id, {
       email: user.email,
       role: user.role,
       isVerified: user.isVerified,
-    });
+    }, tokenExpiration);
 
     // 8. Retornar respuesta exitosa
     res.status(200).json({
@@ -195,7 +196,7 @@ export const login = async (req, res) => {
  */
 export const loginAdmin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
 
     // 1. Buscar usuario por email (incluir password)
     const user = await User.findByEmail(email);
@@ -238,12 +239,13 @@ export const loginAdmin = async (req, res) => {
     user.lastLogin = new Date();
     await user.save();
 
-    // 6. Generar token JWT
+    // 6. Generar token JWT con duración extendida si rememberMe es true
+    const tokenExpiration = rememberMe ? '30d' : null; // 30 días si Remember Me, 7 días por defecto
     const token = generateAuthToken(user._id, {
       email: user.email,
       role: user.role,
       isVerified: user.isVerified,
-    });
+    }, tokenExpiration);
 
     // 7. Retornar respuesta exitosa
     console.log(`🔐 Admin login exitoso: ${user.email}`);
