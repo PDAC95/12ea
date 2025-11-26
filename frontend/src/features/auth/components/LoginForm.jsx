@@ -177,7 +177,7 @@ const LoginForm = () => {
             disabled={isSubmitting}
           />
           <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-700 cursor-pointer">
-            Recordarme
+            Recordarme <span className="text-xs text-gray-500">(mantener sesión por 30 días)</span>
           </label>
         </div>
 
