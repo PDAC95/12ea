@@ -77,6 +77,7 @@ const UserProfilePage = () => {
 
   /**
    * Fetch data when switching tabs (lazy loading)
+   * Solo depende de activeTab y los estados de arrays, no de las funciones fetch
    */
   useEffect(() => {
     if (activeTab === 'businesses' && businesses.length === 0 && !loadingBusinesses) {
@@ -90,18 +91,8 @@ const UserProfilePage = () => {
     if (activeTab === 'events' && events.length === 0 && !loadingEvents) {
       fetchMyEvents();
     }
-  }, [
-    activeTab,
-    businesses.length,
-    loadingBusinesses,
-    fetchMyBusinesses,
-    services.length,
-    loadingServices,
-    fetchMyServices,
-    events.length,
-    loadingEvents,
-    fetchMyEvents,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, businesses.length, services.length, events.length]);
 
   /**
    * Handle profile update

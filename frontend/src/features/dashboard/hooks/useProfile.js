@@ -141,10 +141,12 @@ const useProfile = () => {
 
   /**
    * Fetch inicial del perfil al montar el hook
+   * Solo se ejecuta una vez al montar (no depende de fetchProfile para evitar loop)
    */
   useEffect(() => {
     fetchProfile();
-  }, [fetchProfile]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return {
     // Profile
