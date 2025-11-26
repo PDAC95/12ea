@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
       auth: '/api/v1/auth',
       businesses: '/api/v1/businesses ✅',
       services: '/api/v1/services ✅',
-      users: '/api/v1/users (próximamente)',
+      users: '/api/v1/users ✅ (Profile endpoints)',
       events: '/api/v1/events ✅',
       blog: '/api/v1/blog ✅',
       adminStats: '/api/v1/admin/stats ✅ (Admin only)',
@@ -22,6 +22,7 @@ router.get('/', (req, res) => {
       adminBlog: '/api/v1/admin/blog ✅ (Admin only)',
       adminBusiness: '/api/v1/admin/businesses ✅ (Admin only)',
       adminServices: '/api/v1/admin/services ✅ (Admin only)',
+      adminUsers: '/api/v1/admin/users ✅ (Admin only)',
     },
   });
 });
@@ -38,7 +39,8 @@ import adminEventsRoutes from './admin.events.routes.js';
 import adminBlogRoutes from './admin.blog.routes.js';
 import adminBusinessRoutes from './admin.business.routes.js';
 import adminServiceRoutes from './admin.service.routes.js';
-// import userRoutes from './user.routes.js';
+import adminUserRoutes from './admin.user.routes.js';
+import userRoutes from './user.routes.js';
 
 // Rutas de upload (AWS S3)
 router.use('/upload', uploadRoutes);
@@ -73,7 +75,10 @@ router.use('/admin/businesses', adminBusinessRoutes);
 // Rutas de administración - Servicios
 router.use('/admin/services', adminServiceRoutes);
 
+// Rutas de administración - Usuarios
+router.use('/admin/users', adminUserRoutes);
+
 // Rutas de usuarios
-// router.use('/users', userRoutes);
+router.use('/users', userRoutes);
 
 export default router;

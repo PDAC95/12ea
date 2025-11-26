@@ -24,7 +24,8 @@ import EventsPage from '../features/events/pages/EventsPage';
 import MyEventsPage from '../features/events/pages/MyEventsPage';
 import BlogPage from '../features/blog/pages/BlogPage';
 import BlogPostPage from '../features/blog/pages/BlogPostPage';
-import ProfilePage from '../features/profile/pages/ProfilePage';
+// import ProfilePage from '../features/profile/pages/ProfilePage'; // Old profile page
+import UserProfilePage from '../features/dashboard/pages/UserProfilePage';
 
 // Admin Pages
 import AdminLoginPage from '../features/admin/pages/AdminLoginPage';
@@ -35,6 +36,7 @@ import AdminBlogPage from '../features/admin/pages/AdminBlogPage';
 import EventApproval from '../features/admin/events/EventApproval';
 import BusinessApproval from '../features/admin/businesses/BusinessApproval';
 import ServiceApproval from '../features/admin/services/ServiceApproval';
+import AdminUsersPage from '../features/admin/pages/AdminUsersPage';
 
 // Common Pages
 import NotFoundPage from '../shared/components/common/NotFoundPage';
@@ -167,12 +169,12 @@ const AppRoutes = () => {
         }
       />
 
-      {/* Profile Page - Sprint 5 US-5.9 Task 5.9.3 */}
+      {/* Profile Page - Sprint 5+ - New Profile with 4 Tabs */}
       <Route
         path="/dashboard/profile"
         element={
           <ProtectedRoute>
-            <ProfilePage />
+            <UserProfilePage />
           </ProtectedRoute>
         }
       />
@@ -251,9 +253,18 @@ const AppRoutes = () => {
         }
       />
 
+      {/* Admin Users Management - Sprint 5+ */}
+      <Route
+        path="/admin/users"
+        element={
+          <AdminRoute>
+            <AdminUsersPage />
+          </AdminRoute>
+        }
+      />
+
       {/* TODO: Agregar más rutas admin en futuras tasks:
           - /admin/services → AdminServicesPage
-          - /admin/users → AdminUsersPage
       */}
 
       {/* TODO: Agregar más rutas protegidas en futuros sprints:

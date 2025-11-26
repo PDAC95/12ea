@@ -1,6 +1,7 @@
 import { LogOut, Menu } from 'lucide-react';
 import { useAuth } from '../../auth/context/AuthContext';
 import PropTypes from 'prop-types';
+import logo from '../../../assets/images/logo/logo.png';
 
 /**
  * Header - Componente de encabezado del dashboard
@@ -40,9 +41,11 @@ const Header = ({ onMenuClick }) => {
 
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">EA</span>
-            </div>
+            <img
+              src={logo}
+              alt="Entre Amigas"
+              className="h-10 w-auto"
+            />
             <h1 className="hidden sm:block text-xl font-bold text-gray-900">
               Entre Amigas
             </h1>
