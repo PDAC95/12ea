@@ -31,7 +31,6 @@ const NavigationCards = () => {
       icon: Calendar,
       path: '/dashboard/events',
       gradient: 'from-purple-400 to-pink-400',
-      badge: 'Próximamente',
     },
     {
       id: 'businesses',
@@ -56,7 +55,6 @@ const NavigationCards = () => {
       icon: BookOpen,
       path: '/dashboard/blog',
       gradient: 'from-orange-400 to-amber-400',
-      badge: 'Próximamente',
     },
     {
       id: 'profile',
@@ -65,7 +63,6 @@ const NavigationCards = () => {
       icon: User,
       path: '/dashboard/profile',
       gradient: 'from-primary-400 to-secondary-400',
-      badge: 'Próximamente',
     },
   ];
 
