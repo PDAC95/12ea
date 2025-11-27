@@ -14,6 +14,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { useAuth } from '../../auth/context/AuthContext';
+import logo from '../../../assets/images/logo/logo.png';
 
 /**
  * AdminLayout - Layout principal para el panel de administración
@@ -111,10 +112,8 @@ const AdminLayout = ({ children }) => {
       <aside className="hidden lg:flex lg:flex-col lg:w-64 bg-white border-r border-gray-200">
         {/* Logo */}
         <div className="h-16 flex items-center px-6 border-b border-gray-200">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">EA</span>
-            </div>
+          <div className="flex items-center gap-3">
+            <img src={logo} alt="Entre Amigas" className="h-10 w-auto" />
             <div>
               <h1 className="text-sm font-bold text-gray-900">Admin Panel</h1>
               <p className="text-xs text-gray-500">Entre Amigas</p>
@@ -193,10 +192,8 @@ const AdminLayout = ({ children }) => {
           >
             {/* Mobile Header */}
             <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">EA</span>
-                </div>
+              <div className="flex items-center gap-3">
+                <img src={logo} alt="Entre Amigas" className="h-10 w-auto" />
                 <div>
                   <h1 className="text-sm font-bold text-gray-900">Admin Panel</h1>
                   <p className="text-xs text-gray-500">Entre Amigas</p>

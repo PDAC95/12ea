@@ -71,7 +71,6 @@ const MobileNav = ({ isOpen, onClose }) => {
       path: '/dashboard/profile',
       icon: User,
       description: 'Configuración personal',
-      badge: 'Próximamente',
     },
   ];
 

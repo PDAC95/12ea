@@ -74,7 +74,6 @@ const Sidebar = () => {
       path: '/dashboard/profile',
       icon: User,
       description: 'Configuración personal',
-      badge: 'Próximamente',
     },
   ];
 

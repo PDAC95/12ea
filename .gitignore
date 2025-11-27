@@ -57,3 +57,10 @@ backend/uploads/
 credentials.json
 *.pem
 *.key
+
+# Claude Code settings (local configuration)
+.claude/settings.local.json
+
+# Debugging and documentation files (desarrollo local)
+DEBUGGING_*.md
+*_DEBUGGING.md
