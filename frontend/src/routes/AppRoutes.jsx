@@ -26,6 +26,9 @@ import BlogPage from '../features/blog/pages/BlogPage';
 import BlogPostPage from '../features/blog/pages/BlogPostPage';
 // import ProfilePage from '../features/profile/pages/ProfilePage'; // Old profile page
 import UserProfilePage from '../features/dashboard/pages/UserProfilePage';
+import TipsPage from '../features/tips/pages/TipsPage';
+import TipDetailPage from '../features/tips/pages/TipDetailPage';
+import MyTipsPage from '../features/tips/pages/MyTipsPage';
 
 // Admin Pages
 import AdminLoginPage from '../features/admin/pages/AdminLoginPage';
@@ -37,6 +40,7 @@ import EventApproval from '../features/admin/events/EventApproval';
 import BusinessApproval from '../features/admin/businesses/BusinessApproval';
 import ServiceApproval from '../features/admin/services/ServiceApproval';
 import AdminUsersPage from '../features/admin/pages/AdminUsersPage';
+import AdminTipsPendingPage from '../features/admin/pages/AdminTipsPendingPage';
 
 // Common Pages
 import NotFoundPage from '../shared/components/common/NotFoundPage';
@@ -179,6 +183,36 @@ const AppRoutes = () => {
         }
       />
 
+      {/* Tips Comunitarios - Sprint 5+ */}
+      <Route
+        path="/dashboard/tips"
+        element={
+          <ProtectedRoute>
+            <TipsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Tip Detail - Sprint 5+ */}
+      <Route
+        path="/dashboard/tips/:id"
+        element={
+          <ProtectedRoute>
+            <TipDetailPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* My Tips - Sprint 5+ */}
+      <Route
+        path="/dashboard/my-tips"
+        element={
+          <ProtectedRoute>
+            <MyTipsPage />
+          </ProtectedRoute>
+        }
+      />
+
       {/* ============================================
           RUTAS ADMIN - Solo para usuarios con role='admin'
           ============================================ */}
@@ -259,6 +293,16 @@ const AppRoutes = () => {
         element={
           <AdminRoute>
             <AdminUsersPage />
+          </AdminRoute>
+        }
+      />
+
+      {/* Admin Tips Pending - Sprint 5+ */}
+      <Route
+        path="/admin/tips/pending"
+        element={
+          <AdminRoute>
+            <AdminTipsPendingPage />
           </AdminRoute>
         }
       />

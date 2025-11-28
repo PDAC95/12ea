@@ -4,6 +4,7 @@ import {
   Briefcase,
   BookOpen,
   User,
+  Lightbulb,
 } from 'lucide-react';
 import NavigationCard from './NavigationCard';
 
@@ -55,6 +56,14 @@ const NavigationCards = () => {
       icon: BookOpen,
       path: '/dashboard/blog',
       gradient: 'from-orange-400 to-amber-400',
+    },
+    {
+      id: 'tips',
+      title: 'Tips Comunitarios',
+      description: 'Consejos y experiencias compartidas por nuestra comunidad',
+      icon: Lightbulb,
+      path: '/dashboard/tips',
+      gradient: 'from-yellow-400 to-orange-400',
     },
     {
       id: 'profile',

@@ -6,6 +6,7 @@ import {
   Building2,
   Briefcase,
   BookOpen,
+  Lightbulb,
   User,
   X,
 } from 'lucide-react';
@@ -65,6 +66,12 @@ const MobileNav = ({ isOpen, onClose }) => {
       path: '/dashboard/blog',
       icon: BookOpen,
       description: 'Artículos y recursos',
+    },
+    {
+      name: 'Tips Comunitarios',
+      path: '/dashboard/tips',
+      icon: Lightbulb,
+      description: 'Consejos de la comunidad',
     },
     {
       name: 'Mi Perfil',

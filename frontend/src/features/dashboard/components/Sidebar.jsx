@@ -6,6 +6,7 @@ import {
   Building2,
   Briefcase,
   BookOpen,
+  Lightbulb,
   User,
 } from 'lucide-react';
 
@@ -68,6 +69,12 @@ const Sidebar = () => {
       path: '/dashboard/blog',
       icon: BookOpen,
       description: 'Artículos y recursos',
+    },
+    {
+      name: 'Tips Comunitarios',
+      path: '/dashboard/tips',
+      icon: Lightbulb,
+      description: 'Consejos de la comunidad',
     },
     {
       name: 'Mi Perfil',

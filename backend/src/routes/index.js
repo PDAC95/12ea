@@ -23,6 +23,9 @@ router.get('/', (req, res) => {
       adminBusiness: '/api/v1/admin/businesses ✅ (Admin only)',
       adminServices: '/api/v1/admin/services ✅ (Admin only)',
       adminUsers: '/api/v1/admin/users ✅ (Admin only)',
+      tips: '/api/v1/tips ✅',
+      myTips: '/api/v1/tips/my ✅ (Auth required)',
+      adminTips: '/api/v1/admin/tips ✅ (Admin only)',
     },
   });
 });
@@ -41,6 +44,9 @@ import adminBusinessRoutes from './admin.business.routes.js';
 import adminServiceRoutes from './admin.service.routes.js';
 import adminUserRoutes from './admin.user.routes.js';
 import userRoutes from './user.routes.js';
+import tipsRoutes from './tips.js';
+import myTipsRoutes from './myTips.js';
+import adminTipsRoutes from './adminTips.js';
 
 // Rutas de upload (AWS S3)
 router.use('/upload', uploadRoutes);
@@ -80,5 +86,14 @@ router.use('/admin/users', adminUserRoutes);
 
 // Rutas de usuarios
 router.use('/users', userRoutes);
+
+// Rutas de tips (públicas)
+router.use('/tips', tipsRoutes);
+
+// Rutas de tips (autenticadas - mis tips)
+router.use('/tips/my', myTipsRoutes);
+
+// Rutas de administración - Tips
+router.use('/admin/tips', adminTipsRoutes);
 
 export default router;

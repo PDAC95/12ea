@@ -8,6 +8,7 @@ import {
   Briefcase,
   Users,
   FileText,
+  Lightbulb,
   Menu,
   X,
   LogOut,
@@ -72,6 +73,12 @@ const AdminLayout = ({ children }) => {
       path: '/admin/blog',
       icon: FileText,
       description: 'Gestión del blog',
+    },
+    {
+      name: 'Tips',
+      path: '/admin/tips',
+      icon: Lightbulb,
+      description: 'Gestión de tips',
     },
     {
       name: 'Usuarios',
