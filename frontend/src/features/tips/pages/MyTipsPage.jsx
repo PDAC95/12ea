@@ -40,8 +40,8 @@ const MyTipsPage = () => {
   const fetchMyTips = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/tips/my');
-      setTips(response.data.data.tips || []);
+      const response = await api.get('/tips/my/list');
+      setTips(response.data.data || []);
     } catch (error) {
       console.error('Error fetching my tips:', error);
       showToast('error', 'Error al cargar tus tips');

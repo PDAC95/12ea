@@ -141,6 +141,19 @@ export const getAllTips = async (req, res, next) => {
     // Count total documents
     const total = await Tip.countDocuments(query);
 
+    // Calcular category counts SOLO si no hay búsqueda activa
+    let categoryCounts = {};
+    if (!search) {
+      const countsAggregation = await Tip.aggregate([
+        { $match: { status: 'approved' } },
+        { $group: { _id: '$category', count: { $sum: 1 } } },
+      ]);
+
+      countsAggregation.forEach((item) => {
+        categoryCounts[item._id] = item.count;
+      });
+    }
+
     // Response
     res.status(200).json({
       success: true,
@@ -158,23 +171,26 @@ export const getAllTips = async (req, res, next) => {
         search: search || null,
         sortBy,
       },
-      data: tips.map((tip) => ({
-        _id: tip._id,
-        title: tip.title,
-        content: tip.content,
-        category: tip.category,
-        author: tip.author
-          ? {
-              _id: tip.author._id,
-              name: tip.author.preferredName,
-              profileImage: tip.author.profileImage,
-            }
-          : null,
-        views: tip.views,
-        likeCount: tip.likeCount || (tip.likes ? tip.likes.length : 0),
-        createdAt: tip.createdAt,
-        updatedAt: tip.updatedAt,
-      })),
+      data: {
+        tips: tips.map((tip) => ({
+          _id: tip._id,
+          title: tip.title,
+          content: tip.content,
+          category: tip.category,
+          author: tip.author
+            ? {
+                _id: tip.author._id,
+                name: tip.author.preferredName,
+                profileImage: tip.author.profileImage,
+              }
+            : null,
+          views: tip.views,
+          likeCount: tip.likeCount || (tip.likes ? tip.likes.length : 0),
+          createdAt: tip.createdAt,
+          updatedAt: tip.updatedAt,
+        })),
+        categoryCounts,
+      },
     });
   } catch (error) {
     console.error('Error in getAllTips:', error);
@@ -300,12 +316,8 @@ export const createTip = async (req, res, next) => {
   try {
     const { title, content, category } = req.body;
 
-    console.log('📝 createTip - Body received:', { title, content: content?.substring(0, 50), category });
-    console.log('👤 createTip - User:', req.user);
-
     // Validaciones
     if (!title || !content || !category) {
-      console.log('❌ createTip - Missing fields');
       return res.status(400).json({
         success: false,
         message: 'Título, contenido y categoría son requeridos',
@@ -313,7 +325,6 @@ export const createTip = async (req, res, next) => {
     }
 
     if (!TIP_CATEGORIES.includes(category)) {
-      console.log('❌ createTip - Invalid category:', category);
       return res.status(400).json({
         success: false,
         message: 'Categoría inválida',

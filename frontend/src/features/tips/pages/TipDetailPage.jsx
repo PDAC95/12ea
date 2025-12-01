@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Heart, Eye, User, Calendar, ChevronRight, Loader2 } from 'lucide-react';
+import DOMPurify from 'dompurify';
 import { useAuth } from '../../auth/context/AuthContext';
 import { useToast } from '../../../shared/context/ToastContext';
 import DashboardLayout from '../../dashboard/components/DashboardLayout';
@@ -168,11 +169,15 @@ const TipDetailPage = () => {
 
           {/* Contenido */}
           <div className="bg-white rounded-lg shadow-sm p-8">
-            <div className="prose prose-lg max-w-none">
-              <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
-                {tip.content}
-              </p>
-            </div>
+            <div
+              className="prose prose-lg max-w-none text-gray-700 whitespace-pre-wrap leading-relaxed"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(tip.content, {
+                  ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'a', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'],
+                  ALLOWED_ATTR: ['href', 'target', 'rel']
+                })
+              }}
+            />
           </div>
 
           {/* Botón de Like */}

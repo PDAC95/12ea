@@ -3,6 +3,7 @@ import {
   getAllTips,
   getTipById,
   likeTip,
+  unlikeTip,
 } from '../controllers/tipController.js';
 import { protect } from '../middleware/auth.middleware.js';
 
@@ -34,9 +35,16 @@ router.get('/:id', getTipById);
 
 /**
  * POST /api/v1/tips/:id/like
- * Like/unlike a un tip (toggle)
+ * Dar like a un tip
  * - Requiere autenticación
  */
 router.post('/:id/like', protect, likeTip);
+
+/**
+ * DELETE /api/v1/tips/:id/like
+ * Quitar like de un tip (toggle)
+ * - Requiere autenticación
+ */
+router.delete('/:id/like', protect, unlikeTip);
 
 export default router;

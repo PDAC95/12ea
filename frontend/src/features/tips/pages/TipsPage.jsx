@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Lightbulb, Filter, Search, Plus } from 'lucide-react';
+import debounce from 'lodash.debounce';
 import { useAuth } from '../../auth/context/AuthContext';
 import { useToast } from '../../../shared/context/ToastContext';
 import DashboardLayout from '../../dashboard/components/DashboardLayout';
 import TipCard from '../components/TipCard';
 import TipCardSkeleton from '../components/TipCardSkeleton';
 import ProposeTipModal from '../components/ProposeTipModal';
+import Pagination from '../../../shared/components/common/Pagination';
 import api from '../../../shared/utils/api';
 import { TIP_CATEGORIES } from '../../../shared/constants/tipCategories';
 
@@ -36,8 +38,14 @@ const TipsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const itemsPerPage = 12; // 12 tips por página (grid 3x4)
+
   /**
-   * Fetch tips aprobados
+   * Fetch tips aprobados con paginación
    */
   const fetchTips = async () => {
     try {
@@ -47,11 +55,19 @@ const TipsPage = () => {
           status: 'approved',
           category: selectedCategory !== 'all' ? selectedCategory : undefined,
           search: searchQuery || undefined,
+          page: currentPage,
+          limit: itemsPerPage,
         },
       });
 
-      setTips(response.data.data || []);
-      setCategoryCounts(response.data.categoryCounts || {});
+      setTips(response.data.data.tips || []);
+      setCategoryCounts(response.data.data.categoryCounts || {});
+
+      // Actualizar info de paginación desde el backend
+      if (response.data.pagination) {
+        setTotalPages(response.data.pagination.pages || 1);
+        setTotalItems(response.data.total || 0);
+      }
     } catch (error) {
       console.error('Error fetching tips:', error);
       showToast('error', 'Error al cargar los tips');
@@ -60,18 +76,43 @@ const TipsPage = () => {
     }
   };
 
-  // Fetch tips al montar y cuando cambien filtros
+  /**
+   * Debounced fetch - espera 500ms después de la última búsqueda
+   */
+  const debouncedFetchTips = useRef(
+    debounce(() => {
+      fetchTips();
+    }, 500)
+  ).current;
+
+  // Fetch tips cuando cambian los filtros o la página
   useEffect(() => {
     fetchTips();
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, currentPage]);
 
-  /**
-   * Handler para búsqueda
-   */
-  const handleSearch = (e) => {
-    e.preventDefault();
-    fetchTips();
-  };
+  // Fetch tips con debounce cuando cambia el searchQuery
+  useEffect(() => {
+    // Reset a página 1 cuando cambian los filtros
+    setCurrentPage(1);
+
+    if (searchQuery === '') {
+      // Si borra todo el texto, buscar inmediatamente
+      fetchTips();
+    } else {
+      // Si está escribiendo, esperar 500ms
+      debouncedFetchTips();
+    }
+
+    // Cleanup: cancelar debounce pendiente al desmontar
+    return () => {
+      debouncedFetchTips.cancel();
+    };
+  }, [searchQuery]);
+
+  // Reset página cuando cambia la categoría
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory]);
 
   /**
    * Handler para abrir modal
@@ -95,6 +136,15 @@ const TipsPage = () => {
     showToast('success', '¡Gracias! Tu tip será revisado por nuestro equipo');
   };
 
+  /**
+   * Handler para cambio de página
+   */
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    // Scroll suave al inicio de la página
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <DashboardLayout>
       {/* Header */}
@@ -112,7 +162,7 @@ const TipsPage = () => {
       <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Búsqueda */}
-          <form onSubmit={handleSearch} className="relative">
+          <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
@@ -121,7 +171,7 @@ const TipsPage = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
-          </form>
+          </div>
 
           {/* Filtro de Categoría */}
           <div className="relative">
@@ -172,11 +222,22 @@ const TipsPage = () => {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tips.map((tip) => (
-            <TipCard key={tip._id} tip={tip} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {tips.map((tip) => (
+              <TipCard key={tip._id} tip={tip} />
+            ))}
+          </div>
+
+          {/* Paginación */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={totalItems}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+          />
+        </>
       )}
 
       {/* Botón Flotante - Compartir Mi Tip */}
