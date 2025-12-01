@@ -5,7 +5,7 @@ import {
   Edit,
   Eye,
   Send,
-  Archive,
+  Trash2,
   Loader2,
   FileText,
   ChevronLeft,
@@ -171,20 +171,20 @@ const AdminBlogList = () => {
   };
 
   /**
-   * Handler para archivar post
+   * Handler para eliminar post
    */
-  const handleArchivePost = async () => {
+  const handleDeletePost = async () => {
     if (!selectedPost) return;
 
     try {
-      await api.patch(`/admin/blog/posts/${selectedPost._id}/archive`);
+      await api.delete(`/admin/blog/${selectedPost._id}`);
       setShowArchiveModal(false);
       setSelectedPost(null);
       fetchPosts();
-      alert('Artículo archivado exitosamente');
+      alert('Artículo eliminado exitosamente');
     } catch (err) {
-      console.error('Error archiving post:', err);
-      alert(err.response?.data?.message || 'Error al archivar el artículo');
+      console.error('Error deleting post:', err);
+      alert(err.response?.data?.message || 'Error al eliminar el artículo');
     }
   };
 
@@ -216,7 +216,6 @@ const AdminBlogList = () => {
     const badges = {
       draft: { label: 'Borrador', className: 'bg-yellow-100 text-yellow-800' },
       published: { label: 'Publicado', className: 'bg-green-100 text-green-800' },
-      archived: { label: 'Archivado', className: 'bg-gray-100 text-gray-800' },
     };
     return badges[status] || badges.draft;
   };
@@ -280,7 +279,6 @@ const AdminBlogList = () => {
               <option value="all">Todos los estados</option>
               <option value="draft">Borradores</option>
               <option value="published">Publicados</option>
-              <option value="archived">Archivados</option>
             </select>
           </div>
 
@@ -498,16 +496,16 @@ const AdminBlogList = () => {
                             </button>
                           )}
 
-                          {/* Archivar */}
+                          {/* Eliminar */}
                           <button
                             onClick={() => {
                               setSelectedPost(post);
                               setShowArchiveModal(true);
                             }}
                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
-                            title="Archivar"
+                            title="Eliminar"
                           >
-                            <Archive className="w-4 h-4" />
+                            <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
                       </td>
@@ -575,11 +573,11 @@ const AdminBlogList = () => {
         </Modal>
       )}
 
-      {/* Modal Confirmar Archivado */}
+      {/* Modal Confirmar Eliminación */}
       {showArchiveModal && selectedPost && (
         <ConfirmArchiveModal
           post={selectedPost}
-          onConfirm={handleArchivePost}
+          onConfirm={handleDeletePost}
           onCancel={() => {
             setShowArchiveModal(false);
             setSelectedPost(null);
@@ -615,15 +613,15 @@ const Modal = ({ title, onClose, children }) => {
 };
 
 /**
- * Modal de Confirmación de Archivado
+ * Modal de Confirmación de Eliminación
  */
 const ConfirmArchiveModal = ({ post, onConfirm, onCancel }) => {
-  const [isArchiving, setIsArchiving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleConfirm = async () => {
-    setIsArchiving(true);
+    setIsDeleting(true);
     await onConfirm();
-    setIsArchiving(false);
+    setIsDeleting(false);
   };
 
   return (
@@ -631,12 +629,12 @@ const ConfirmArchiveModal = ({ post, onConfirm, onCancel }) => {
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-            <Archive className="w-6 h-6 text-red-600" />
+            <Trash2 className="w-6 h-6 text-red-600" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">Archivar Artículo</h3>
+            <h3 className="text-lg font-semibold text-gray-900">Eliminar Artículo</h3>
             <p className="text-sm text-gray-600 mt-1">
-              ¿Estás segura de que deseas archivar este artículo?
+              ¿Estás segura de que deseas eliminar este artículo?
             </p>
           </div>
         </div>
@@ -649,10 +647,9 @@ const ConfirmArchiveModal = ({ post, onConfirm, onCancel }) => {
           </p>
         </div>
 
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-6">
-          <p className="text-sm text-yellow-800">
-            El artículo archivado no será visible en el blog público. Podrás restaurarlo más tarde
-            si es necesario.
+        <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-6">
+          <p className="text-sm text-red-800 font-medium">
+            ⚠️ Esta acción no se puede deshacer. El artículo será eliminado permanentemente de la base de datos.
           </p>
         </div>
 
@@ -660,22 +657,22 @@ const ConfirmArchiveModal = ({ post, onConfirm, onCancel }) => {
           <button
             onClick={onCancel}
             className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium"
-            disabled={isArchiving}
+            disabled={isDeleting}
           >
             Cancelar
           </button>
           <button
             onClick={handleConfirm}
             className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium disabled:opacity-50"
-            disabled={isArchiving}
+            disabled={isDeleting}
           >
-            {isArchiving ? (
+            {isDeleting ? (
               <span className="flex items-center justify-center gap-2">
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Archivando...
+                Eliminando...
               </span>
             ) : (
-              'Archivar'
+              'Eliminar Permanentemente'
             )}
           </button>
         </div>

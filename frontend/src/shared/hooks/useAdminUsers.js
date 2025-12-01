@@ -110,23 +110,27 @@ const useAdminUsers = () => {
   };
 
   /**
-   * Eliminar usuario
+   * Eliminar usuario (hard delete - permanente)
    */
   const deleteUser = async (userId) => {
     setLoading(true);
     setError(null);
 
     try {
-      await api.delete(`/admin/users/${userId}`);
+      // Agregar ?hard=true para eliminación permanente
+      await api.delete(`/admin/users/${userId}?hard=true`);
 
-      // Remover de la lista local
-      setUsers((prev) => prev.filter((user) => user._id !== userId));
+      // Calcular cuántos usuarios quedarán en la página actual
+      const remainingInPage = users.filter(u => u._id !== userId).length;
+      const currentPage = pagination.page;
 
-      // Actualizar total
-      setPagination((prev) => ({
-        ...prev,
-        total: prev.total - 1,
-      }));
+      // Si la página actual se quedará vacía y no es la página 1, ir a la página anterior
+      if (remainingInPage === 0 && currentPage > 1) {
+        await fetchUsers(currentPage - 1, searchQuery);
+      } else {
+        // De lo contrario, refetch la página actual
+        await fetchUsers(currentPage, searchQuery);
+      }
 
       return { success: true };
     } catch (err) {

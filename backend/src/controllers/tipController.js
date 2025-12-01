@@ -828,3 +828,13 @@ export const getTipStats = async (req, res, next) => {
     next(error);
   }
 };
+
+export default {
+  getAllTipsAdmin,
+  getPendingTips,
+  approveTip,
+  rejectTip,
+  updateTipAdmin,
+  deleteTipAdmin,
+  getTipStats,
+};

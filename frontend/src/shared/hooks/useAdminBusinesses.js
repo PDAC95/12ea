@@ -129,14 +129,17 @@ const useAdminBusinesses = () => {
     try {
       await api.delete(`/admin/businesses/${businessId}`);
 
-      // Remover de la lista local
-      setBusinesses((prev) => prev.filter((business) => business._id !== businessId));
+      // Calcular cuántos negocios quedarán en la página actual
+      const remainingInPage = businesses.filter(b => b._id !== businessId).length;
+      const currentPage = pagination.page;
 
-      // Actualizar total
-      setPagination((prev) => ({
-        ...prev,
-        total: prev.total - 1,
-      }));
+      // Si la página actual se quedará vacía y no es la página 1, ir a la página anterior
+      if (remainingInPage === 0 && currentPage > 1) {
+        await fetchBusinesses(currentPage - 1, searchQuery);
+      } else {
+        // De lo contrario, refetch la página actual
+        await fetchBusinesses(currentPage, searchQuery);
+      }
 
       return { success: true };
     } catch (err) {

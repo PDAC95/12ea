@@ -641,24 +641,22 @@ export const updateEvent = async (req, res, next) => {
 };
 
 /**
- * @desc    Delete/Cancel event (Admin only) - SOFT DELETE
+ * @desc    Delete/Cancel event (Admin only)
  * @route   DELETE /api/admin/events/:id
  * @access  Private/Admin
- * @note    Realiza soft delete marcando isActive=false en lugar de eliminar
+ * @query   {
+ *   hard: 'true' | 'false' (default: false) - Si true, elimina permanentemente
+ * }
+ * @note    Por defecto hace soft delete (marca isActive=false y status=cancelled)
+ *          Con ?hard=true elimina permanentemente el evento y sus registraciones
  */
 export const deleteEvent = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const { hard } = req.query;
 
-    // Soft delete: marcar como inactivo en lugar de eliminar
-    const event = await Event.findByIdAndUpdate(
-      id,
-      {
-        isActive: false,
-        status: 'cancelled' // También marcar como cancelado
-      },
-      { new: true }
-    );
+    // Verificar que el evento existe
+    const event = await Event.findById(id);
 
     if (!event) {
       return res.status(404).json({
@@ -667,17 +665,52 @@ export const deleteEvent = async (req, res, next) => {
       });
     }
 
-    // Cancelar todas las registraciones asociadas
-    await EventRegistration.updateMany(
-      { event: id },
-      { status: 'cancelled' }
-    );
+    // Hard delete (permanente) o soft delete (cancelar)
+    if (hard === 'true') {
+      // HARD DELETE - Eliminar permanentemente de la base de datos
+      await Event.findByIdAndDelete(id);
 
-    res.status(200).json({
-      success: true,
-      message: 'Evento cancelado exitosamente',
-      data: event,
-    });
+      // Eliminar todas las registraciones asociadas
+      await EventRegistration.deleteMany({ event: id });
+
+      console.log(`🗑️  Evento ${id} eliminado PERMANENTEMENTE por admin ${req.user.id}`);
+
+      return res.status(200).json({
+        success: true,
+        message: 'Evento eliminado permanentemente',
+        data: {
+          deletedEventId: id,
+          deletionType: 'hard',
+        },
+      });
+    } else {
+      // SOFT DELETE - Marcar como cancelado (recomendado)
+      const cancelledEvent = await Event.findByIdAndUpdate(
+        id,
+        {
+          isActive: false,
+          status: 'cancelled',
+        },
+        { new: true }
+      );
+
+      // Cancelar todas las registraciones asociadas
+      await EventRegistration.updateMany(
+        { event: id },
+        { status: 'cancelled' }
+      );
+
+      console.log(`⚠️  Evento ${id} cancelado (soft delete) por admin ${req.user.id}`);
+
+      return res.status(200).json({
+        success: true,
+        message: 'Evento cancelado exitosamente',
+        data: {
+          event: cancelledEvent,
+          deletionType: 'soft',
+        },
+      });
+    }
   } catch (error) {
     console.error('Error in deleteEvent:', error);
     next(error);

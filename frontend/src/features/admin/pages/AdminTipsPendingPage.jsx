@@ -99,7 +99,7 @@ const AdminTipsPendingPage = () => {
     try {
       setProcessingId(selectedTip._id);
       await api.put(`/admin/tips/${selectedTip._id}/reject`, {
-        rejectionReason: rejectionReason.trim(),
+        reason: rejectionReason.trim(),
       });
       showToast('success', `Tip "${selectedTip.title}" rechazado`);
       setRejectModalOpen(false);
@@ -109,7 +109,7 @@ const AdminTipsPendingPage = () => {
     } catch (error) {
       console.error('Error rejecting tip:', error);
       const errorMessage =
-        error.response?.data?.error?.message || 'Error al rechazar el tip';
+        error.response?.data?.message || 'Error al rechazar el tip';
       showToast('error', errorMessage);
     } finally {
       setProcessingId(null);

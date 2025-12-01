@@ -15,11 +15,13 @@ import {
   Video,
   Home,
   Smartphone,
+  XCircle,
 } from 'lucide-react';
 import api from '../../../shared/utils/api';
 import EventForm from './EventForm';
 import EventRegistrations from './EventRegistrations';
 import AdminLayout from '../components/AdminLayout';
+import { useToast } from '../../../shared/context/ToastContext';
 
 /**
  * AdminEventList - Lista de gestión de eventos para admin
@@ -36,6 +38,8 @@ import AdminLayout from '../components/AdminLayout';
  */
 
 const AdminEventList = () => {
+  const { showToast } = useToast();
+
   // ===== ESTADO =====
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,6 +60,7 @@ const AdminEventList = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showRegistrationsModal, setShowRegistrationsModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   // ===== FETCH EVENTOS =====
@@ -133,18 +138,38 @@ const AdminEventList = () => {
   };
 
   /**
-   * Handler para cancelar evento
+   * Handler para cancelar evento (soft delete)
    */
   const handleCancelEvent = async () => {
     try {
+      // Sin ?hard=true hace soft delete (status='cancelled', isActive=false)
       await api.delete(`/admin/events/${selectedEvent._id}`);
+      showToast('success', `Evento "${selectedEvent.title}" cancelado exitosamente`);
       setShowCancelModal(false);
       setSelectedEvent(null);
       fetchEvents(); // Refrescar lista
     } catch (err) {
       const errorMessage = err.response?.data?.message || 'Error al cancelar evento';
-      alert(errorMessage);
+      showToast('error', errorMessage);
       console.error('Error canceling event:', err);
+    }
+  };
+
+  /**
+   * Handler para eliminar evento permanentemente (hard delete)
+   */
+  const handleDeleteEvent = async () => {
+    try {
+      // Con ?hard=true elimina permanentemente de la BD
+      await api.delete(`/admin/events/${selectedEvent._id}?hard=true`);
+      showToast('success', `Evento "${selectedEvent.title}" eliminado permanentemente`);
+      setShowDeleteModal(false);
+      setSelectedEvent(null);
+      fetchEvents(); // Refrescar lista
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || 'Error al eliminar evento';
+      showToast('error', errorMessage);
+      console.error('Error deleting event:', err);
     }
   };
 
@@ -165,11 +190,19 @@ const AdminEventList = () => {
   };
 
   /**
-   * Abrir modal de cancelación
+   * Abrir modal de cancelación (soft delete)
    */
   const openCancelModal = (event) => {
     setSelectedEvent(event);
     setShowCancelModal(true);
+  };
+
+  /**
+   * Abrir modal de eliminación (hard delete)
+   */
+  const openDeleteModal = (event) => {
+    setSelectedEvent(event);
+    setShowDeleteModal(true);
   };
 
   /**
@@ -448,9 +481,16 @@ const AdminEventList = () => {
                           </button>
                           <button
                             onClick={() => openCancelModal(event)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
-                            title="Cancelar Evento"
-                            disabled={event.status === 'cancelled' || !event.isActive}
+                            className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            title="Cancelar Evento (soft delete)"
+                            disabled={event.status === 'cancelled'}
+                          >
+                            <XCircle className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => openDeleteModal(event)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            title="Eliminar Permanentemente"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -538,6 +578,18 @@ const AdminEventList = () => {
             }}
           />
         )}
+
+        {/* Modal Eliminar Evento */}
+        {showDeleteModal && selectedEvent && (
+          <ConfirmDeleteModal
+            event={selectedEvent}
+            onConfirm={handleDeleteEvent}
+            onCancel={() => {
+              setShowDeleteModal(false);
+              setSelectedEvent(null);
+            }}
+          />
+        )}
       </div>
       </div>
     </AdminLayout>
@@ -595,9 +647,11 @@ const ConfirmCancelModal = ({ event, onConfirm, onCancel }) => {
             {event.registeredCount || 0} personas registradas
           </p>
         </div>
-        <p className="text-sm text-red-600">
-          Esta acción no se puede deshacer. El evento será marcado como cancelado.
-        </p>
+        <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+          <p className="text-sm text-orange-800 font-medium">
+            ℹ️ El evento será marcado como cancelado pero se mantendrá en la base de datos. Para eliminar permanentemente, usa el botón de eliminar.
+          </p>
+        </div>
         <div className="flex gap-4 pt-4">
           <button
             onClick={handleConfirm}
@@ -611,7 +665,7 @@ const ConfirmCancelModal = ({ event, onConfirm, onCancel }) => {
               </>
             ) : (
               <>
-                <Trash2 className="w-4 h-4" />
+                <XCircle className="w-4 h-4" />
                 Confirmar Cancelación
               </>
             )}
@@ -626,6 +680,77 @@ const ConfirmCancelModal = ({ event, onConfirm, onCancel }) => {
         </div>
       </div>
     </Modal>
+  );
+};
+
+/**
+ * Modal de Confirmación de Eliminación Permanente
+ */
+const ConfirmDeleteModal = ({ event, onConfirm, onCancel }) => {
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleConfirm = async () => {
+    setIsDeleting(true);
+    await onConfirm();
+    setIsDeleting(false);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+            <Trash2 className="w-6 h-6 text-red-600" />
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">Eliminar Evento</h3>
+            <p className="text-sm text-gray-600 mt-1">
+              ¿Estás segura de que deseas eliminar este evento?
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-gray-50 rounded-lg p-4 mb-6">
+          <p className="text-sm font-medium text-gray-900">{event.title}</p>
+          <p className="text-xs text-gray-600 mt-1">
+            {new Date(event.date).toLocaleDateString('es-ES')} • {event.time}
+          </p>
+          <p className="text-xs text-gray-600 mt-1">
+            {event.registeredCount || 0} personas registradas
+          </p>
+        </div>
+
+        <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-6">
+          <p className="text-sm text-red-800 font-medium">
+            ⚠️ Esta acción no se puede deshacer. El evento será eliminado permanentemente de la base de datos.
+          </p>
+        </div>
+
+        <div className="flex gap-3">
+          <button
+            onClick={onCancel}
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition font-medium"
+            disabled={isDeleting}
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleConfirm}
+            className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium disabled:opacity-50"
+            disabled={isDeleting}
+          >
+            {isDeleting ? (
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Eliminando...
+              </span>
+            ) : (
+              'Eliminar Permanentemente'
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

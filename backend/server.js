@@ -49,6 +49,8 @@ const limiter = rateLimit({
   message: 'Demasiadas peticiones desde esta IP, por favor intenta de nuevo más tarde.',
   standardHeaders: true,
   legacyHeaders: false,
+  // Excluir rutas de admin del rate limiting (ya están protegidas por autenticación)
+  skip: (req) => req.url.startsWith('/v1/admin'),
 });
 
 app.use('/api/', limiter);

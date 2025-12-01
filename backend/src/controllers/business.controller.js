@@ -590,9 +590,8 @@ export const remove = async (req, res) => {
       });
     }
 
-    // Soft delete (marcar como inactivo)
-    business.isActive = false;
-    await business.save();
+    // Hard delete - Eliminar permanentemente de la base de datos
+    await Business.findByIdAndDelete(id);
 
     res.status(200).json({
       success: true,

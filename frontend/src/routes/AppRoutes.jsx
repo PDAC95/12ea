@@ -40,6 +40,7 @@ import EventApproval from '../features/admin/events/EventApproval';
 import BusinessApproval from '../features/admin/businesses/BusinessApproval';
 import ServiceApproval from '../features/admin/services/ServiceApproval';
 import AdminUsersPage from '../features/admin/pages/AdminUsersPage';
+import AdminServicesPage from '../features/admin/pages/AdminServicesPage';
 import AdminTipsPage from '../features/admin/pages/AdminTipsPage';
 import AdminTipsListPage from '../features/admin/pages/AdminTipsListPage';
 import AdminTipsPendingPage from '../features/admin/pages/AdminTipsPendingPage';
@@ -255,6 +256,16 @@ const AppRoutes = () => {
         element={
           <AdminRoute>
             <AdminBlogPage />
+          </AdminRoute>
+        }
+      />
+
+      {/* Admin Services */}
+      <Route
+        path="/admin/services"
+        element={
+          <AdminRoute>
+            <AdminServicesPage />
           </AdminRoute>
         }
       />
