@@ -14,8 +14,8 @@ export const proposeTipValidator = [
     .trim()
     .notEmpty()
     .withMessage('El título es requerido')
-    .isLength({ max: 150 })
-    .withMessage('El título no puede exceder 150 caracteres'),
+    .isLength({ min: 5, max: 150 })
+    .withMessage('El título debe tener entre 5 y 150 caracteres'),
 
   body('content')
     .trim()
@@ -41,8 +41,8 @@ export const updateTipValidator = [
   body('title')
     .optional()
     .trim()
-    .isLength({ max: 150 })
-    .withMessage('El título no puede exceder 150 caracteres'),
+    .isLength({ min: 5, max: 150 })
+    .withMessage('El título debe tener entre 5 y 150 caracteres'),
 
   body('content')
     .optional()

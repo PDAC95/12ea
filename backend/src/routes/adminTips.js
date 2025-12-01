@@ -1,11 +1,14 @@
 import express from 'express';
 import {
+  getAllTipsAdmin,
   getPendingTips,
   approveTip,
   rejectTip,
+  deleteTipAdmin,
+  updateTipAdmin,
 } from '../controllers/tipController.js';
 import { protect, authorize } from '../middleware/auth.middleware.js';
-import { rejectTipValidator } from '../validators/tipValidator.js';
+import { rejectTipValidator, updateTipValidator } from '../validators/tipValidator.js';
 import { validationResult } from 'express-validator';
 
 const router = express.Router();
@@ -31,6 +34,13 @@ const handleValidationErrors = (req, res, next) => {
  * Todas requieren protect + authorize('admin')
  * =====================================
  */
+
+/**
+ * GET /api/v1/admin/tips
+ * Obtener todos los tips (admin)
+ * - Todos los status, con stats
+ */
+router.get('/', protect, authorize('admin'), getAllTipsAdmin);
 
 /**
  * GET /api/v1/admin/tips/pending
@@ -61,5 +71,26 @@ router.put(
   handleValidationErrors,
   rejectTip
 );
+
+/**
+ * PUT /api/v1/admin/tips/:id
+ * Editar un tip (admin)
+ * - Admin puede editar cualquier tip
+ */
+router.put(
+  '/:id',
+  protect,
+  authorize('admin'),
+  updateTipValidator,
+  handleValidationErrors,
+  updateTipAdmin
+);
+
+/**
+ * DELETE /api/v1/admin/tips/:id
+ * Eliminar un tip (admin)
+ * - Admin puede borrar cualquier tip
+ */
+router.delete('/:id', protect, authorize('admin'), deleteTipAdmin);
 
 export default router;

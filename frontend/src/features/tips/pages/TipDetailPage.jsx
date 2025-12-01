@@ -48,29 +48,17 @@ const TipDetailPage = () => {
 
       // Fetch tip principal
       const response = await api.get(`/tips/${id}`);
-      const tipData = response.data.data.tip;
+      const tipData = response.data.data;
       setTip(tipData);
-      setLikesCount(tipData.likesCount || 0);
+      setLikesCount(tipData.likeCount || 0);
 
       // Verificar si el usuario dio like
       if (isAuthenticated && user) {
         setIsLiked(tipData.likedBy?.includes(user.id) || false);
       }
 
-      // Fetch tips relacionados (misma categoría, max 3)
-      const relatedResponse = await api.get('/tips', {
-        params: {
-          status: 'approved',
-          category: tipData.category,
-          limit: 4, // Traer 4 para excluir el actual y quedar con 3
-        },
-      });
-
-      // Filtrar tip actual de los relacionados
-      const related = (relatedResponse.data.data.tips || [])
-        .filter(t => t._id !== id)
-        .slice(0, 3);
-
+      // Related tips vienen en el mismo response
+      const related = response.data.relatedTips || [];
       setRelatedTips(related);
     } catch (error) {
       console.error('Error fetching tip:', error);

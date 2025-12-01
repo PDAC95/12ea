@@ -50,8 +50,8 @@ const TipsPage = () => {
         },
       });
 
-      setTips(response.data.data.tips || []);
-      setCategoryCounts(response.data.data.categoryCounts || {});
+      setTips(response.data.data || []);
+      setCategoryCounts(response.data.categoryCounts || {});
     } catch (error) {
       console.error('Error fetching tips:', error);
       showToast('error', 'Error al cargar los tips');

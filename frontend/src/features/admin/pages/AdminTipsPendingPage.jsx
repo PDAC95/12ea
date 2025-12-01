@@ -42,7 +42,7 @@ const AdminTipsPendingPage = () => {
     try {
       setLoading(true);
       const response = await api.get('/admin/tips/pending');
-      setTips(response.data.data.tips || []);
+      setTips(response.data.data || []);
     } catch (error) {
       console.error('Error fetching pending tips:', error);
       showToast('error', 'Error al cargar tips pendientes');

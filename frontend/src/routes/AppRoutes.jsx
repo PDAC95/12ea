@@ -40,6 +40,8 @@ import EventApproval from '../features/admin/events/EventApproval';
 import BusinessApproval from '../features/admin/businesses/BusinessApproval';
 import ServiceApproval from '../features/admin/services/ServiceApproval';
 import AdminUsersPage from '../features/admin/pages/AdminUsersPage';
+import AdminTipsPage from '../features/admin/pages/AdminTipsPage';
+import AdminTipsListPage from '../features/admin/pages/AdminTipsListPage';
 import AdminTipsPendingPage from '../features/admin/pages/AdminTipsPendingPage';
 
 // Common Pages
@@ -293,6 +295,26 @@ const AppRoutes = () => {
         element={
           <AdminRoute>
             <AdminUsersPage />
+          </AdminRoute>
+        }
+      />
+
+      {/* Admin Tips Dashboard - Sprint 5+ */}
+      <Route
+        path="/admin/tips"
+        element={
+          <AdminRoute>
+            <AdminTipsPage />
+          </AdminRoute>
+        }
+      />
+
+      {/* Admin Tips List - Sprint 5+ */}
+      <Route
+        path="/admin/tips/list"
+        element={
+          <AdminRoute>
+            <AdminTipsListPage />
           </AdminRoute>
         }
       />

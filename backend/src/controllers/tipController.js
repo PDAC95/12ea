@@ -300,8 +300,12 @@ export const createTip = async (req, res, next) => {
   try {
     const { title, content, category } = req.body;
 
+    console.log('📝 createTip - Body received:', { title, content: content?.substring(0, 50), category });
+    console.log('👤 createTip - User:', req.user);
+
     // Validaciones
     if (!title || !content || !category) {
+      console.log('❌ createTip - Missing fields');
       return res.status(400).json({
         success: false,
         message: 'Título, contenido y categoría son requeridos',
@@ -309,6 +313,7 @@ export const createTip = async (req, res, next) => {
     }
 
     if (!TIP_CATEGORIES.includes(category)) {
+      console.log('❌ createTip - Invalid category:', category);
       return res.status(400).json({
         success: false,
         message: 'Categoría inválida',
@@ -734,6 +739,43 @@ export const rejectTip = async (req, res, next) => {
     });
   } catch (error) {
     console.error('Error in rejectTip:', error);
+    next(error);
+  }
+};
+
+/**
+ * @desc    Update tip (admin)
+ * @route   PUT /api/v1/admin/tips/:id
+ * @access  Private/Admin
+ */
+export const updateTipAdmin = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { title, content, category } = req.body;
+
+    const tip = await Tip.findById(id);
+
+    if (!tip) {
+      return res.status(404).json({
+        success: false,
+        message: 'Tip no encontrado',
+      });
+    }
+
+    // Actualizar campos
+    if (title) tip.title = title;
+    if (content) tip.content = content;
+    if (category) tip.category = category;
+
+    await tip.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Tip actualizado exitosamente',
+      data: tip,
+    });
+  } catch (error) {
+    console.error('Error in updateTipAdmin:', error);
     next(error);
   }
 };

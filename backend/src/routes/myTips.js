@@ -1,6 +1,6 @@
 import express from 'express';
 import {
-  proposeTip,
+  createTip,
   getMyTips,
   updateMyTip,
   deleteMyTip,
@@ -47,7 +47,7 @@ router.post(
   protect,
   proposeTipValidator,
   handleValidationErrors,
-  proposeTip
+  createTip
 );
 
 /**
