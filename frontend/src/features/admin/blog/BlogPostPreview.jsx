@@ -1,5 +1,6 @@
 import { X, Send, Calendar, Tag } from 'lucide-react';
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 
 /**
  * BlogPostPreview - Modal de preview para artículos de blog
@@ -148,7 +149,12 @@ const BlogPostPreview = ({ post, isOpen, onClose, onPublish = null }) => {
                 prose-ol:list-decimal prose-ol:pl-6 prose-ol:mb-4
                 prose-li:mb-2 prose-li:text-gray-700
                 prose-img:rounded-lg prose-img:shadow-md prose-img:my-6"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(post.content, {
+                  ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 's', 'a', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'code', 'pre', 'img'],
+                  ALLOWED_ATTR: ['href', 'target', 'rel', 'src', 'alt', 'title', 'class']
+                })
+              }}
             />
           </article>
         </div>

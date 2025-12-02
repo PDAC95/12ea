@@ -16,6 +16,12 @@
 
 export const BLOG_CATEGORIES = [
   {
+    id: 'nosotras',
+    name: 'Nosotras',
+    emoji: '💖',
+    description: 'Sobre Entre Amigas: nuestra misión, valores y comunidad'
+  },
+  {
     id: 'bienestar',
     name: 'Bienestar',
     emoji: '🧘‍♀️',

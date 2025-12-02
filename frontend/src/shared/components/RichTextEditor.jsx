@@ -69,6 +69,9 @@ const RichTextEditor = ({
         heading: {
           levels: [2, 3], // Solo H2 y H3
         },
+        // Excluir Link de StarterKit para evitar duplicado
+        // Lo configuramos manualmente abajo
+        link: false,
       }),
       Link.configure({
         openOnClick: false,

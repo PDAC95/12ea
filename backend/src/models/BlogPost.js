@@ -6,6 +6,7 @@ import { VALID_CATEGORY_IDS } from '../constants/blog.js';
  * Modelo para gestión de artículos del blog sobre wellness, amistad y migración
  *
  * Categorías oficiales:
+ * - nosotras 💖 (sobre Entre Amigas)
  * - bienestar 🧘‍♀️
  * - finanzas 💰
  * - maternidad 👶
@@ -14,7 +15,7 @@ import { VALID_CATEGORY_IDS } from '../constants/blog.js';
  * - comunidad 🤝
  * - educacion 📚
  *
- * Last Updated: 2025-01-19 (Sprint 5 - Task 5.6.1)
+ * Last Updated: 2025-12-02 (Bug Fix - Sync con frontend)
  */
 
 const blogPostSchema = new mongoose.Schema(
@@ -74,7 +75,7 @@ const blogPostSchema = new mongoose.Schema(
       required: [true, 'La categoría es requerida'],
       enum: {
         values: VALID_CATEGORY_IDS,
-        message: '{VALUE} no es una categoría válida. Opciones: bienestar, finanzas, maternidad, emprendimiento, inmigracion, comunidad, educacion',
+        message: '{VALUE} no es una categoría válida. Opciones: nosotras, bienestar, finanzas, maternidad, emprendimiento, inmigracion, comunidad, educacion',
       },
       index: true, // Índice para filtrar por categoría
     },

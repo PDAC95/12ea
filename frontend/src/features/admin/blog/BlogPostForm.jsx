@@ -73,15 +73,14 @@ const blogPostSchema = yup.object({
     .required('La categoría es requerida')
     .oneOf(
       [
-        'emprendimiento',
-        'educacion',
-        'salud',
-        'legal',
-        'tecnologia',
-        'cultura',
+        'nosotras',
+        'bienestar',
         'finanzas',
-        'familia',
-        'otro',
+        'maternidad',
+        'emprendimiento',
+        'inmigracion',
+        'comunidad',
+        'educacion',
       ],
       'Categoría inválida'
     ),
@@ -89,17 +88,18 @@ const blogPostSchema = yup.object({
 
 /**
  * Categorías disponibles para blog posts
+ * SINCRONIZADAS CON BACKEND: backend/src/constants/blog.js
+ * Last Updated: 2025-12-02 - Bug Fix Sprint 5
  */
 const CATEGORIES = [
-  { value: 'emprendimiento', label: 'Emprendimiento' },
-  { value: 'educacion', label: 'Educación' },
-  { value: 'salud', label: 'Salud y Bienestar' },
-  { value: 'legal', label: 'Legal e Inmigración' },
-  { value: 'tecnologia', label: 'Tecnología' },
-  { value: 'cultura', label: 'Cultura y Comunidad' },
-  { value: 'finanzas', label: 'Finanzas Personales' },
-  { value: 'familia', label: 'Familia y Maternidad' },
-  { value: 'otro', label: 'Otros Temas' },
+  { value: 'nosotras', label: 'Nosotras 💖' },
+  { value: 'bienestar', label: 'Bienestar 🧘‍♀️' },
+  { value: 'finanzas', label: 'Finanzas 💰' },
+  { value: 'maternidad', label: 'Maternidad 👶' },
+  { value: 'emprendimiento', label: 'Emprendimiento 💼' },
+  { value: 'inmigracion', label: 'Inmigración 🌍' },
+  { value: 'comunidad', label: 'Comunidad 🤝' },
+  { value: 'educacion', label: 'Educación 📚' },
 ];
 
 const BlogPostForm = ({

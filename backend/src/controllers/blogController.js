@@ -8,6 +8,19 @@ import { generateUniqueSlug } from '../utils/slugify.js';
  */
 export const createBlogPost = async (req, res, next) => {
   try {
+    // 🔍 LOGGING DIAGNÓSTICO EXHAUSTIVO
+    console.log('\n========================================');
+    console.log('🔍 [DIAGNÓSTICO] createBlogPost iniciado');
+    console.log('========================================');
+    console.log('📦 req.body completo:', JSON.stringify(req.body, null, 2));
+    console.log('👤 req.user:', req.user ? {
+      id: req.user.id || req.user._id,
+      email: req.user.email,
+      role: req.user.role
+    } : 'NO AUTENTICADO');
+    console.log('📝 Content-Type:', req.headers['content-type']);
+    console.log('========================================\n');
+
     const {
       title,
       content,
@@ -22,8 +35,29 @@ export const createBlogPost = async (req, res, next) => {
       allowComments,
     } = req.body;
 
+    // 🔍 LOGGING: Campos extraídos
+    console.log('📋 Campos extraídos de req.body:');
+    console.log('  - title:', title, `(type: ${typeof title}, length: ${title?.length})`);
+    console.log('  - content:', content ? `${content.substring(0, 50)}... (length: ${content.length})` : 'UNDEFINED');
+    console.log('  - excerpt:', excerpt ? `${excerpt.substring(0, 50)}...` : 'UNDEFINED');
+    console.log('  - featuredImage:', featuredImage);
+    console.log('  - category:', category, `(type: ${typeof category})`);
+    console.log('  - tags:', tags, `(type: ${typeof tags})`);
+    console.log('  - status:', status);
+    console.log('  - metaDescription:', metaDescription);
+    console.log('  - metaKeywords:', metaKeywords);
+    console.log('  - isFeatured:', isFeatured, `(type: ${typeof isFeatured})`);
+    console.log('  - allowComments:', allowComments, `(type: ${typeof allowComments})`);
+
     // Validaciones requeridas
     if (!title || !content || !excerpt || !featuredImage || !category) {
+      console.error('❌ [VALIDACIÓN FALLÓ] Campos requeridos faltantes:');
+      console.error('  - title:', !title ? '❌ FALTA' : '✅ OK');
+      console.error('  - content:', !content ? '❌ FALTA' : '✅ OK');
+      console.error('  - excerpt:', !excerpt ? '❌ FALTA' : '✅ OK');
+      console.error('  - featuredImage:', !featuredImage ? '❌ FALTA' : '✅ OK');
+      console.error('  - category:', !category ? '❌ FALTA' : '✅ OK');
+
       return res.status(400).json({
         success: false,
         message: 'Faltan campos requeridos: title, content, excerpt, featuredImage, category',
@@ -31,10 +65,12 @@ export const createBlogPost = async (req, res, next) => {
     }
 
     // Generar slug único desde el título
+    console.log('🔄 Generando slug desde título:', title);
     const slug = await generateUniqueSlug(title);
+    console.log('✅ Slug generado:', slug);
 
-    // Crear artículo
-    const blogPost = await BlogPost.create({
+    // 🔍 LOGGING: Datos que se enviarán a MongoDB
+    const dataToCreate = {
       title,
       slug,
       content,
@@ -49,7 +85,14 @@ export const createBlogPost = async (req, res, next) => {
       allowComments: allowComments !== undefined ? allowComments : true,
       author: req.user.id, // Admin que lo crea
       lastEditedBy: req.user.id,
-    });
+    };
+
+    console.log('\n🗄️ Datos preparados para MongoDB.create():');
+    console.log(JSON.stringify(dataToCreate, null, 2));
+    console.log('\n🚀 Ejecutando BlogPost.create()...\n');
+
+    // Crear artículo
+    const blogPost = await BlogPost.create(dataToCreate);
 
     // Populate author
     await blogPost.populate('author', 'preferredName email profileImage');
@@ -60,11 +103,31 @@ export const createBlogPost = async (req, res, next) => {
       data: blogPost,
     });
   } catch (error) {
-    console.error('Error en createBlogPost:', error);
+    console.error('\n❌❌❌ ERROR CAPTURADO EN createBlogPost ❌❌❌');
+    console.error('📛 Error name:', error.name);
+    console.error('📝 Error message:', error.message);
+    console.error('📚 Error completo:', error);
 
     // Manejar error de validación de Mongoose
     if (error.name === 'ValidationError') {
+      console.error('\n🔴 [MONGOOSE VALIDATION ERROR] Detalles completos:');
+      console.error('Total de errores:', Object.keys(error.errors).length);
+
+      // Iterar sobre cada error de validación
+      Object.keys(error.errors).forEach((field) => {
+        const fieldError = error.errors[field];
+        console.error(`\n  Campo: "${field}"`);
+        console.error(`    - Tipo de error: ${fieldError.kind}`);
+        console.error(`    - Mensaje: ${fieldError.message}`);
+        console.error(`    - Valor recibido: ${JSON.stringify(fieldError.value)}`);
+        console.error(`    - Path completo: ${fieldError.path}`);
+      });
+
       const messages = Object.values(error.errors).map((err) => err.message);
+
+      console.error('\n📋 Mensajes de error que se enviarán al cliente:');
+      console.error(JSON.stringify(messages, null, 2));
+
       return res.status(400).json({
         success: false,
         message: 'Error de validación',
@@ -72,6 +135,8 @@ export const createBlogPost = async (req, res, next) => {
       });
     }
 
+    console.error('\n⚠️ Error NO es de validación Mongoose, pasando a next()');
+    console.error('Stack trace:', error.stack);
     next(error);
   }
 };
