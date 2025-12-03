@@ -51,7 +51,7 @@ const TipDetailPage = () => {
       const response = await api.get(`/tips/${id}`);
       const tipData = response.data.data;
       setTip(tipData);
-      setLikesCount(tipData.likeCount || 0);
+      setLikesCount(tipData.likesCount || 0);
 
       // Verificar si el usuario dio like
       if (isAuthenticated && user) {

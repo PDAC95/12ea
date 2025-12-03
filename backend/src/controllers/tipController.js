@@ -236,7 +236,7 @@ export const getTipById = async (req, res, next) => {
       status: 'approved',
       _id: { $ne: tip._id },
     })
-      .populate('author', 'preferredName profileImage')
+      .populate('author', 'preferredName fullName profileImage')
       .select('title category views likeCount createdAt')
       .limit(3)
       .sort({ createdAt: -1 });
@@ -251,14 +251,15 @@ export const getTipById = async (req, res, next) => {
         author: tip.author
           ? {
               _id: tip.author._id,
-              name: tip.author.preferredName,
+              preferredName: tip.author.preferredName,
               fullName: tip.author.fullName,
               profileImage: tip.author.profileImage,
               bio: tip.author.bio,
             }
           : null,
-        views: tip.views,
-        likeCount: tip.likeCount,
+        viewsCount: tip.views || 0,
+        likesCount: tip.likeCount || 0,
+        likedBy: tip.likes || [],
         createdAt: tip.createdAt,
         updatedAt: tip.updatedAt,
       },
@@ -266,11 +267,12 @@ export const getTipById = async (req, res, next) => {
         _id: t._id,
         title: t.title,
         category: t.category,
-        views: t.views,
-        likeCount: t.likeCount,
+        viewsCount: t.views || 0,
+        likesCount: t.likeCount || 0,
         author: t.author
           ? {
-              name: t.author.preferredName,
+              preferredName: t.author.preferredName,
+              fullName: t.author.fullName,
               profileImage: t.author.profileImage,
             }
           : null,
