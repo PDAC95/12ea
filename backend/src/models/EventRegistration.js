@@ -279,7 +279,7 @@ eventRegistrationSchema.statics.findByUser = function (userId, statusFilter = 'c
   return this.find(query)
     .populate({
       path: 'event',
-      select: 'title description date time mode location link image status isFeatured',
+      select: 'title description date time mode location link image status isFeatured capacity registeredCount',
       match: { isActive: true }, // Solo eventos activos
     })
     .sort({ 'event.date': 1 }); // Ordenar por fecha del evento (próximos primero)
