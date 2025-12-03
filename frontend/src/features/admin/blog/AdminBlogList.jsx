@@ -102,7 +102,7 @@ const AdminBlogList = () => {
         params.append('search', searchQuery.trim());
       }
 
-      const response = await api.get(`/admin/blog/posts?${params.toString()}`);
+      const response = await api.get(`/admin/blog?${params.toString()}`);
 
       // Backend retorna: { success, count, total, page, pages, data: [posts array] }
       const responseData = response.data || {};
@@ -128,7 +128,7 @@ const AdminBlogList = () => {
    */
   const handleCreatePost = async (data, isDraft) => {
     try {
-      await api.post('/admin/blog/posts', data);
+      await api.post('/admin/blog', data);
       setShowCreateModal(false);
       fetchPosts();
       alert(isDraft ? 'Borrador guardado exitosamente' : 'Artículo publicado exitosamente');
@@ -143,7 +143,7 @@ const AdminBlogList = () => {
    */
   const handleEditPost = async (data, isDraft) => {
     try {
-      await api.put(`/admin/blog/posts/${selectedPost._id}`, data);
+      await api.put(`/admin/blog/${selectedPost._id}`, data);
       setShowEditModal(false);
       setSelectedPost(null);
       fetchPosts();
@@ -161,7 +161,7 @@ const AdminBlogList = () => {
     if (!confirm(`¿Publicar el artículo "${post.title}"?`)) return;
 
     try {
-      await api.patch(`/admin/blog/posts/${post._id}/publish`);
+      await api.patch(`/admin/blog/${post._id}/publish`);
       fetchPosts();
       alert('Artículo publicado exitosamente');
     } catch (err) {
