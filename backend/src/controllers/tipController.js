@@ -228,47 +228,50 @@ export const getTipById = async (req, res, next) => {
     }
 
     // Incrementar vistas
-    await tip.incrementViews();
+    const updatedTip = await tip.incrementViews();
+
+    // Calcular likesCount explícitamente
+    const likesCount = updatedTip.likes ? updatedTip.likes.length : 0;
 
     // Buscar tips relacionados (misma categoría)
     const relatedTips = await Tip.find({
-      category: tip.category,
+      category: updatedTip.category,
       status: 'approved',
-      _id: { $ne: tip._id },
+      _id: { $ne: updatedTip._id },
     })
       .populate('author', 'preferredName fullName profileImage')
-      .select('title category views likeCount createdAt')
+      .select('title category views likes createdAt')
       .limit(3)
       .sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
       data: {
-        _id: tip._id,
-        title: tip.title,
-        content: tip.content,
-        category: tip.category,
-        author: tip.author
+        _id: updatedTip._id,
+        title: updatedTip.title,
+        content: updatedTip.content,
+        category: updatedTip.category,
+        author: updatedTip.author
           ? {
-              _id: tip.author._id,
-              preferredName: tip.author.preferredName,
-              fullName: tip.author.fullName,
-              profileImage: tip.author.profileImage,
-              bio: tip.author.bio,
+              _id: updatedTip.author._id,
+              preferredName: updatedTip.author.preferredName,
+              fullName: updatedTip.author.fullName,
+              profileImage: updatedTip.author.profileImage,
+              bio: updatedTip.author.bio,
             }
           : null,
-        viewsCount: tip.views || 0,
-        likesCount: tip.likeCount || 0,
-        likedBy: tip.likes || [],
-        createdAt: tip.createdAt,
-        updatedAt: tip.updatedAt,
+        viewsCount: updatedTip.views || 0,
+        likesCount: likesCount,
+        likedBy: updatedTip.likes || [],
+        createdAt: updatedTip.createdAt,
+        updatedAt: updatedTip.updatedAt,
       },
       relatedTips: relatedTips.map((t) => ({
         _id: t._id,
         title: t.title,
         category: t.category,
         viewsCount: t.views || 0,
-        likesCount: t.likeCount || 0,
+        likesCount: t.likes ? t.likes.length : 0,
         author: t.author
           ? {
               preferredName: t.author.preferredName,
