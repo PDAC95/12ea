@@ -1,10 +1,12 @@
-import { useState } from 'react';
-import { Plus, Search, Edit2, Trash2, X, AlertCircle, Store } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Plus, Search, Edit2, Trash2, X, AlertCircle, Store, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../components/AdminLayout';
 import BusinessForm from '../components/BusinessForm';
 import ConfirmDialog from '../../../shared/components/common/ConfirmDialog';
 import useAdminBusinesses from '../../../shared/hooks/useAdminBusinesses';
 import { formValuesToBusinessData } from '../validation/businessSchema';
+import api from '../../../shared/utils/api';
 
 /**
  * AdminBusinessesPage - Página de gestión de negocios para admin
@@ -24,6 +26,7 @@ import { formValuesToBusinessData } from '../validation/businessSchema';
  * @returns {JSX.Element} Admin businesses page
  */
 const AdminBusinessesPage = () => {
+  const navigate = useNavigate();
   const {
     businesses,
     pagination,
@@ -45,6 +48,38 @@ const AdminBusinessesPage = () => {
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState(null);
+
+  // Pending businesses count
+  const [pendingCount, setPendingCount] = useState(0);
+  const [loadingPendingCount, setLoadingPendingCount] = useState(true);
+
+  /**
+   * Fetch pending businesses count on mount
+   */
+  useEffect(() => {
+    const fetchPendingCount = async () => {
+      try {
+        setLoadingPendingCount(true);
+        const response = await api.get('/admin/businesses/pending');
+        const count = response.data?.count || 0;
+        setPendingCount(count);
+      } catch (err) {
+        console.error('Error fetching pending count:', err);
+        setPendingCount(0);
+      } finally {
+        setLoadingPendingCount(false);
+      }
+    };
+
+    fetchPendingCount();
+  }, []);
+
+  /**
+   * Navigate to pending businesses page
+   */
+  const handleViewPending = () => {
+    navigate('/admin/businesses/pending');
+  };
 
   /**
    * Handler para crear negocio
@@ -140,13 +175,31 @@ const AdminBusinessesPage = () => {
               {pagination.total} negocios registrados en total
             </p>
           </div>
-          <button
-            onClick={() => setIsCreateModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-          >
-            <Plus className="w-5 h-5" />
-            Nuevo Negocio
-          </button>
+          <div className="flex items-center gap-3">
+            {/* Pending Businesses Button */}
+            <button
+              onClick={handleViewPending}
+              disabled={loadingPendingCount}
+              className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors relative disabled:opacity-50"
+            >
+              <Clock className="w-5 h-5" />
+              <span>Negocios Pendientes</span>
+              {!loadingPendingCount && pendingCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-lg">
+                  {pendingCount > 99 ? '99+' : pendingCount}
+                </span>
+              )}
+            </button>
+
+            {/* Create New Business Button */}
+            <button
+              onClick={() => setIsCreateModalOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+            >
+              <Plus className="w-5 h-5" />
+              Nuevo Negocio
+            </button>
+          </div>
         </div>
 
         {/* Search Bar */}
