@@ -3,6 +3,45 @@ import { X, Users, Download, Loader2, AlertCircle } from 'lucide-react';
 import api from '../../../shared/utils/api';
 
 /**
+ * UserAvatar - Componente para mostrar avatar con inicial o foto
+ */
+const UserAvatar = ({ name, profileImage, size = 'md' }) => {
+  const [imageError, setImageError] = useState(false);
+
+  const sizeClasses = {
+    sm: 'h-10 w-10 text-sm',
+    md: 'h-12 w-12 text-base',
+    lg: 'h-16 w-16 text-xl',
+  };
+
+  const getInitial = (name) => {
+    if (!name || name === 'Sin nombre') return '?';
+    return name.charAt(0).toUpperCase();
+  };
+
+  // Si hay imagen y no hay error, mostrar imagen
+  if (profileImage && !imageError) {
+    return (
+      <img
+        className={`${sizeClasses[size]} rounded-full object-cover`}
+        src={profileImage}
+        alt={name || 'Usuario'}
+        onError={() => setImageError(true)}
+      />
+    );
+  }
+
+  // Fallback: círculo rosa con inicial
+  return (
+    <div
+      className={`${sizeClasses[size]} rounded-full bg-pink-500 text-white font-semibold flex items-center justify-center`}
+    >
+      {getInitial(name)}
+    </div>
+  );
+};
+
+/**
  * EventRegistrations - Modal para ver lista de registradas a un evento
  * Task 8.6 - Sprint 4
  *
@@ -34,7 +73,23 @@ const EventRegistrations = ({ eventId, eventTitle, isOpen, onClose }) => {
     setError('');
     try {
       const response = await api.get(`/admin/events/${eventId}/registrations`);
-      setRegistrations(response.data.data.registrations || []);
+      // Backend retorna: { success, count, event, data: [registrations array] }
+      const fetchedRegistrations = response.data.data || [];
+
+      // Transformar datos del backend al formato esperado por el frontend
+      const formattedRegistrations = fetchedRegistrations.map(reg => ({
+        _id: reg._id,
+        name: reg.user?.name || reg.user?.preferredName || 'Sin nombre',
+        email: reg.user?.email || 'Sin email',
+        phone: reg.user?.phone,
+        profileImage: reg.user?.profileImage,
+        status: reg.status,
+        registeredAt: reg.registeredAt,
+        attended: reg.attended,
+        attendedAt: reg.attendedAt,
+      }));
+
+      setRegistrations(formattedRegistrations);
     } catch (err) {
       console.error('Error fetching registrations:', err);
       setError(err.response?.data?.message || 'Error al cargar las registraciones');
@@ -54,10 +109,13 @@ const EventRegistrations = ({ eventId, eventTitle, isOpen, onClose }) => {
 
     try {
       // Crear contenido CSV
-      const headers = ['Nombre', 'Email', 'Fecha de Registro'];
+      const headers = ['Nombre', 'Email', 'Teléfono', 'Estado', 'Asistió', 'Fecha de Registro'];
       const rows = registrations.map((reg) => [
         reg.name || 'Sin nombre',
         reg.email || 'Sin email',
+        reg.phone || 'Sin teléfono',
+        reg.status || 'confirmed',
+        reg.attended ? 'Sí' : 'No',
         formatDate(reg.registeredAt),
       ]);
 
@@ -102,6 +160,46 @@ const EventRegistrations = ({ eventId, eventTitle, isOpen, onClose }) => {
       hour: '2-digit',
       minute: '2-digit',
     });
+  };
+
+  /**
+   * Obtener badge de estado de registro
+   */
+  const getStatusBadge = (status, attended) => {
+    if (attended) {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+          ✓ Asistió
+        </span>
+      );
+    }
+
+    switch (status) {
+      case 'confirmed':
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            Confirmado
+          </span>
+        );
+      case 'cancelled':
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+            Cancelado
+          </span>
+        );
+      case 'pending':
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+            Pendiente
+          </span>
+        );
+      default:
+        return (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+            {status || 'N/A'}
+          </span>
+        );
+    }
   };
 
   /**
@@ -212,6 +310,12 @@ const EventRegistrations = ({ eventId, eventTitle, isOpen, onClose }) => {
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
+                        Foto
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Nombre
                       </th>
                       <th
@@ -219,6 +323,18 @@ const EventRegistrations = ({ eventId, eventTitle, isOpen, onClose }) => {
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Email
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Teléfono
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Estado
                       </th>
                       <th
                         scope="col"
@@ -235,12 +351,27 @@ const EventRegistrations = ({ eventId, eventTitle, isOpen, onClose }) => {
                           {index + 1}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex-shrink-0">
+                            <UserAvatar
+                              name={registration.name}
+                              profileImage={registration.profileImage}
+                              size="sm"
+                            />
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">
                             {registration.name || 'Sin nombre'}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-600">{registration.email}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-600">{registration.phone || 'N/A'}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {getStatusBadge(registration.status, registration.attended)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-600">
@@ -260,16 +391,33 @@ const EventRegistrations = ({ eventId, eventTitle, isOpen, onClose }) => {
                     key={registration._id || index}
                     className="bg-gray-50 border border-gray-200 rounded-lg p-4"
                   >
-                    <div className="flex items-start justify-between mb-2">
-                      <span className="text-xs font-semibold text-gray-500">#{index + 1}</span>
+                    <div className="flex items-start gap-3 mb-3">
+                      <UserAvatar
+                        name={registration.name}
+                        profileImage={registration.profileImage}
+                        size="md"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2 mb-1">
+                          <h4 className="font-semibold text-gray-900 truncate">
+                            {registration.name || 'Sin nombre'}
+                          </h4>
+                          <span className="text-xs font-semibold text-gray-500 flex-shrink-0">
+                            #{index + 1}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-1">{registration.email}</p>
+                        {registration.phone && (
+                          <p className="text-sm text-gray-600 mb-2">📱 {registration.phone}</p>
+                        )}
+                        <div className="flex items-center gap-2 mb-2">
+                          {getStatusBadge(registration.status, registration.attended)}
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          Registrado: {formatDate(registration.registeredAt)}
+                        </p>
+                      </div>
                     </div>
-                    <h4 className="font-semibold text-gray-900 mb-1">
-                      {registration.name || 'Sin nombre'}
-                    </h4>
-                    <p className="text-sm text-gray-600 mb-2">{registration.email}</p>
-                    <p className="text-xs text-gray-500">
-                      Registrado: {formatDate(registration.registeredAt)}
-                    </p>
                   </div>
                 ))}
               </div>
