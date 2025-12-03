@@ -102,7 +102,7 @@ const AdminBlogList = () => {
         params.append('search', searchQuery.trim());
       }
 
-      const response = await api.get(`/admin/blog?${params.toString()}`);
+      const response = await api.get(`/admin/blog/posts?${params.toString()}`);
 
       // Backend retorna: { success, count, total, page, pages, data: [posts array] }
       const responseData = response.data || {};
@@ -128,7 +128,7 @@ const AdminBlogList = () => {
    */
   const handleCreatePost = async (data, isDraft) => {
     try {
-      await api.post('/admin/blog', data);
+      await api.post('/admin/blog/posts', data);
       setShowCreateModal(false);
       fetchPosts();
       alert(isDraft ? 'Borrador guardado exitosamente' : 'Artículo publicado exitosamente');
