@@ -88,7 +88,7 @@ export const getAllTips = async (req, res, next) => {
     let tips;
     if (search) {
       tips = await Tip.find(query, { score: { $meta: 'textScore' } })
-        .populate('author', 'preferredName profileImage')
+        .populate('author', 'preferredName fullName profileImage')
         .sort({ score: { $meta: 'textScore' }, createdAt: -1 })
         .limit(limitNum)
         .skip(skip);
@@ -125,13 +125,14 @@ export const getAllTips = async (req, res, next) => {
               updatedAt: 1,
               'author._id': 1,
               'author.preferredName': 1,
+              'author.fullName': 1,
               'author.profileImage': 1,
             },
           },
         ]);
       } else {
         tips = await Tip.find(query)
-          .populate('author', 'preferredName profileImage')
+          .populate('author', 'preferredName fullName profileImage')
           .sort(sort)
           .limit(limitNum)
           .skip(skip);
@@ -180,12 +181,13 @@ export const getAllTips = async (req, res, next) => {
           author: tip.author
             ? {
                 _id: tip.author._id,
-                name: tip.author.preferredName,
+                preferredName: tip.author.preferredName,
+                fullName: tip.author.fullName || tip.author.preferredName,
                 profileImage: tip.author.profileImage,
               }
             : null,
-          views: tip.views,
-          likeCount: tip.likeCount || (tip.likes ? tip.likes.length : 0),
+          viewsCount: tip.views || 0,
+          likesCount: tip.likeCount || (tip.likes ? tip.likes.length : 0),
           createdAt: tip.createdAt,
           updatedAt: tip.updatedAt,
         })),
